@@ -9,7 +9,7 @@ sample.
 
 <p align="center">
   <a href="https://github.com/mino29/jav8-dl/releases/latest">
-    <img alt="Latest release" src="https://img.shields.io/badge/release-v1.2.0-blue">
+    <img alt="Latest release" src="https://img.shields.io/github/v/release/mino29/jav8-dl?label=release&sort=semver">
   </a>
 </p>
 
@@ -23,6 +23,63 @@ sample.
 A userscript manager is required. aria2 and qBittorrent send no CORS headers,
 so a plain script or a browser extension cannot reach them; the manager's
 privileged request is what makes the connection work.
+
+## You need a download client already set up
+
+**This script does not install, start or configure aria2 or qBittorrent. It only
+talks to one you already have.** Set the client up yourself first — by hand, or
+with one of the install guides its own project links to. Nothing here will start
+a client that is not running.
+
+### aria2 needs one extra step
+
+Out of the box **aria2 does not answer requests at all.** Its `--enable-rpc`
+option ships set to `false`, so until you turn it on there is nothing listening
+on port 6800 for this script — or anything else — to talk to. Add these to
+`aria2.conf`, or pass them on the command line, then restart aria2:
+
+```ini
+enable-rpc=true
+rpc-listen-all=false
+rpc-secret=choose-a-token
+```
+
+- `rpc-listen-all=false` binds loopback only, which is right when the browser is
+  on the same machine. Set it to `true` to reach aria2 from a phone or a second
+  machine — and in qBittorrent that is *Expose to local network* in
+  Preferences → Web UI.
+- `rpc-secret` is optional, but without one anything that can reach the port can
+  queue downloads on your machine. Paste the same token into the script's
+  **RPC secret** field.
+- Comments in `aria2.conf` start with `#`; the lines above have none.
+
+### Then tell the script where it is
+
+Open **Settings** in the panel. Each field shows the vendor default as a
+placeholder, and an empty field *means* "keep the default" — so you only fill in
+what you have changed.
+
+| Field | aria2 | qBittorrent |
+| --- | --- | --- |
+| **Host** | `http://localhost` | `http://localhost` |
+| **Port** | `6800` | `8080` |
+| **RPC secret** | your `rpc-secret` token | — |
+| **Username** / **Password** | — | Tools → Preferences → Web UI |
+| **Save dir** / **Save path** | optional; blank uses the client's own | optional |
+| **Category** | — | optional; blank uses the client's own |
+
+From a phone or a second machine, use your machine's LAN address as the Host
+instead of `localhost`.
+
+Press **Test connection** before downloading anything. The script also checks for
+itself at the start of every batch: if the client is not answering it says so
+once, names the likely reason, and sends nothing — so a client that is down costs
+you one request rather than one per work.
+
+| Client | Official source | Setup guide |
+| --- | --- | --- |
+| aria2 | [github.com/aria2/aria2](https://github.com/aria2/aria2) | [aria2.github.io manual](https://aria2.github.io/manual/en/html/index.html) |
+| qBittorrent | [github.com/qbittorrent/qBittorrent](https://github.com/qbittorrent/qBittorrent) | [wiki.qbittorrent.org](https://wiki.qbittorrent.org/) |
 
 ## Use it
 
@@ -112,6 +169,9 @@ it is getting your IP rate-limited by jav8.vip for asking too much too fast.
 - Sending **more than 25 works at once asks first**, and Cancel sends nothing.
   Under 25 it just goes, so the common case is not slowed by a dialog.
 - **Only one batch runs at a time**, even when several are queued.
+- **Every batch checks the client is there first**, so a client that is down costs
+  one request rather than one per work — and, just as importantly, costs zero
+  requests to jav8.vip, since nothing is fetched until the client answers.
 - If logins start failing the batch **stops after three**. qBittorrent bans your IP
   for an hour after five consecutive failures, so carrying on would lock you out
   of your own client.
@@ -149,6 +209,12 @@ be offered an update and there will be no error to explain why.
 
 The panel log says what went wrong. The usual ones:
 
+- **"aria2 is not answering"** — the batch did not start. The client is not
+  running, the address or port in **Settings** is wrong, or — the usual cause —
+  aria2's `enable-rpc` is still `false`. See
+  [aria2 needs one extra step](#aria2-needs-one-extra-step). This is checked once
+  at the start of a batch, so it appears as a single line rather than one per
+  work. Nothing was sent and nothing was unticked.
 - **"Could not reach the client"** — your manager is blocking the request. Add
   the host to `@connect`, or replace it with `@connect *`.
 - **"refused the request as cross-site"** — qBittorrent's CSRF protection is on.

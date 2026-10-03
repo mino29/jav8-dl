@@ -556,6 +556,25 @@ group("pendingWorkCount - what the panel promises is still to come");
   check("null entry in the list", api.pendingWorkCount([null, send(3, 1)]), 2);
 }
 
+group("jobNeedsProbe - check the client before spending requests on it");
+// Wrong in both directions here is expensive: skipping the check turns one dead
+// client into 34 identical failures, each of which first spends a request on
+// jav8.vip. Checking a collect-only job charges for a check nobody asked for.
+{
+  check("no job", api.jobNeedsProbe(null), false);
+  check("send job probes", api.jobNeedsProbe({ kind: "send", hrefs: ["/v/1"] }), true);
+  // A crawl that will hand over to a send job is going to dispatch, so it must be
+  // checked before the crawl rather than after - by then the whole career has
+  // been fetched for nothing.
+  check("collect in send mode probes", api.jobNeedsProbe({ kind: "collect", mode: "send" }), true);
+  // Staging dispatches nothing, so there is nothing to be unreachable for.
+  check("collect in stage mode does not probe", api.jobNeedsProbe({ kind: "collect", mode: "stage" }), false);
+  check("collect with no mode does not probe", api.jobNeedsProbe({ kind: "collect" }), false);
+  // Defensive: a job restored from older storage must not crash the queue.
+  check("unknown kind does not probe", api.jobNeedsProbe({ kind: "wat" }), false);
+  check("empty job does not probe", api.jobNeedsProbe({}), false);
+}
+
 group("MAX_LOGIN_FAILURES - a failed batch must not lock the user out");
 // qBittorrent bans an IP for an hour after a handful of consecutive failed
 // logins (web_ui_max_auth_fail_count defaults to 5). A selection of 17 that

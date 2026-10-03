@@ -2,7 +2,7 @@
 // @name         JAV8 Downloader
 // @namespace    https://github.com/mino29/jav8-dl
 // @homepage     https://github.com/mino29/jav8-dl
-// @version      1.6.0
+// @version      1.7.0
 // @icon          data:image/png;base64,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
 // @description  Tick covers to queue them, filter by VR, pick the best magnet by size, and send to aria2 or qBittorrent. Settings live in the browser, not in a config file.
 // @author       mino29
@@ -784,6 +784,26 @@
     return out;
   }
 
+  /**
+   * Whether a job should check the download client is alive before it starts.
+   *
+   * Pure, and extracted so it can be tested: getting this wrong is expensive in
+   * both directions. Skip the probe and a dead client turns one batch into
+   * thirty-four identical failures, each of which first spends a request on
+   * jav8.vip - the requests that actually risk an IP block. Probe a job that
+   * only collects and the user pays for a check they did not need, before work
+   * that would have succeeded anyway.
+   *
+   * A crawl in send mode needs the probe *before* the crawl, not after it: by the
+   * time the pages are collected the whole career has been fetched, and if the
+   * client was never reachable that was all wasted.
+   */
+  function jobNeedsProbe(job) {
+    if (!job) return false;
+    if (job.kind === "send") return true;
+    return job.kind === "collect" && job.mode === "send";
+  }
+
   // ==========================================================================
   // pure:end
   // ==========================================================================
@@ -1442,6 +1462,16 @@
   };
 
   /**
+   * Whether the active client has answered since the last time we changed it.
+   *
+   * Only ever read by the pre-batch probe. A send that fails against the client
+   * clears it, so the next batch checks again instead of trusting a stale yes -
+   * a client that was reachable and then stopped is exactly the case a cached
+   * "reachable" would hide.
+   */
+  var targetReachable = false;
+
+  /**
    * Read or write one persisted slot.
    *
    * Omitting `value` reads; passing anything else writes. Removal is separate
@@ -1538,6 +1568,46 @@
     pumpQueue();
   }
 
+  /**
+   * Confirm the download client is reachable, or explain why it is not.
+   *
+   * Resolves true when the client answered, false when it did not - never
+   * rejects, because the caller wants a decision rather than an exception. The
+   * message names the remedy instead of just the symptom, and says plainly that
+   * nothing was sent, so a failure that stops the batch cannot be mistaken for
+   * one that quietly succeeded.
+   *
+   * Already reachable is treated as success without a second request. That is
+   * safe because the only way a client stops answering between two sends is by
+   * going away in between, and the first send after that fails on its own with
+   * the same message. Re-probing per work would double the requests for a case
+   * the send path already covers.
+   */
+  function probeClient(epoch) {
+    var target = engine();
+    if (targetReachable) {
+      renderQueueStatus();
+      return Promise.resolve(true);
+    }
+    return target.probe().then(
+      function (message) {
+        targetReachable = true;
+        log(target.label + " reachable (" + message + ").", "mu");
+        renderQueueStatus();
+        return true;
+      },
+      function (err) {
+        log(
+          "Not sending anything: " + target.label + " is not answering - " +
+            describeSendError(err) + ". Nothing was sent and everything is still ticked.",
+          "er",
+        );
+        renderQueueStatus();
+        return false;
+      },
+    );
+  }
+
   function pumpQueue() {
     if (jobQueue.busy || !jobQueue.jobs.length) {
       if (!jobQueue.jobs.length) {
@@ -1552,7 +1622,20 @@
     jobQueue.busy = true;
     var epoch = jobQueue.epoch;
     renderQueueStatus();
-    var done = job.kind === "collect" ? runCollectJob(job, epoch) : runSendJob(job, epoch);
+
+    // Check the client is actually there before committing to the batch.
+    //
+    // One extra request per batch, against thirty-four wasted ones - each of
+    // which would first fetch a page from jav8.vip, so the saving is in *site*
+    // requests as much as client ones. It also converts the failure from a wall
+    // of identical messages into one that names the remedy.
+    var done = (jobNeedsProbe(job) ? probeClient(epoch) : Promise.resolve(true)).then(function (reachable) {
+      // A probe that failed, or that was overtaken by a cancel, stops the job
+      // here. Its work stays ticked, so fixing the client and pressing Download
+      // again is all it takes to retry.
+      if (reachable !== true || epoch !== jobQueue.epoch) return;
+      return job.kind === "collect" ? runCollectJob(job, epoch) : runSendJob(job, epoch);
+    });
     Promise.resolve(done).then(
       function () {
         if (epoch !== jobQueue.epoch) return;
@@ -2247,6 +2330,8 @@ function deselectWork(href) {
     });
     engineSel.addEventListener("change", function () {
       settings.active = engineSel.value;
+      // Different client, so the last answer says nothing about this one.
+      targetReachable = false;
       persist();
     });
     r1.appendChild(engineSel);
@@ -2493,6 +2578,10 @@ function deselectWork(href) {
             return { ok: true, text: result, size: picked.magnet.size };
           },
           function (err) {
+            // The client just refused, so the probe's "reachable" is stale. Clear
+            // it so the next batch checks again rather than skipping the check on
+            // a yes that no longer holds.
+            targetReachable = false;
             return { ok: false, reason: describeSendError(err) };
           },
         );
@@ -2788,6 +2877,9 @@ function deselectWork(href) {
 
     save.addEventListener("click", function () {
       collect();
+      // The client may have just been given a new address or password, so the
+      // last "reachable" describes a configuration that no longer exists.
+      targetReachable = false;
       persist();
       log("Settings saved", "ok");
       closeSettings();
