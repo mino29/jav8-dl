@@ -184,14 +184,74 @@ const HI = 100 * GB_;
   check("above ceiling excluded", picked.magnet.size, sizeOf(5.37, GB_));
 }
 {
-  // Boundary: exactly on the floor and ceiling both count as inside.
-  const picked = api.pickMagnet([mag(LO, "clean"), mag(HI, "clean")], LO, HI);
-  check("ceiling inclusive", picked.reason, "in-window");
-  check("ceiling value", picked.magnet.size, HI);
+  // Boundary: exactly on the floor and exactly on the ceiling both count as
+  // inside. Each is checked on its own, because which of the two *wins* is now
+  // a different question - that is decided by the preferred size, not by being
+  // at an edge. This test used to assert the 100GB entry won, which was the old
+  // "largest always wins" rule rather than anything about inclusivity.
+  check("floor inclusive", api.pickMagnet([mag(LO, "clean")], LO, HI, 5 * GB_).reason, "in-window");
+  check("ceiling inclusive", api.pickMagnet([mag(HI, "clean")], LO, HI, 5 * GB_).reason, "in-window");
+  check("one byte below the floor is out", api.pickMagnet([mag(LO - 1, "clean")], LO, HI, 5 * GB_).reason, "outside-window");
+  check("one byte above the ceiling is out", api.pickMagnet([mag(HI + 1, "clean")], LO, HI, 5 * GB_).reason, "outside-window");
 }
 {
   const picked = api.pickMagnet([mag(sizeOf(5.37, GB_), "clean")], LO, HI);
   check("single candidate", picked.reason, "in-window");
+}
+
+// --------------------------------------------------- the preferred-size rule
+group("closestToPreferred - the slider must actually change the outcome");
+// This group is the regression guard for the reported bug. The window is
+// deliberately wide - five times either side - so "largest wins" and "closest
+// wins" agree on a small list and disagree on a realistic one. Anything that
+// makes these pass without passing the preferred size through is the old bug.
+{
+  const window_ = api.windowFromPreferred(5 * GB_);
+  const lo = window_.min;
+  const hi = window_.max;
+  const set = [sizeOf(1.2, GB_), sizeOf(5.4, GB_), sizeOf(9, GB_), sizeOf(20, GB_)];
+  const named = (want, preferred) =>
+    api.pickMagnet(set.map((s) => mag(s, "clean")), lo, hi, preferred).magnet.size;
+
+  check("prefers 5GB when 5GB was asked for", named(sizeOf(5.4, GB_), 5 * GB_), sizeOf(5.4, GB_));
+  check("does not just take the largest", named(sizeOf(20, GB_), 5 * GB_) === sizeOf(20, GB_), false);
+  // Moving the slider must move the answer, or the control does nothing.
+  check("moving up picks the bigger one", named(sizeOf(9, GB_), 10 * GB_), sizeOf(9, GB_));
+  check("moving down picks the smaller one", named(sizeOf(1.2, GB_), 1.5 * GB_), sizeOf(1.2, GB_));
+  check("same list, different preference, different pick", named(sizeOf(5.4, GB_), 5 * GB_) === named(sizeOf(5.4, GB_), 15 * GB_), false);
+
+  // Log space, not linear: for two sizes, where the winner flips sits at their
+  // *geometric* mean rather than the arithmetic one. A linear comparison would
+  // flip much lower, calling a 1.2GB release the distant one from a 5GB
+  // preference. Tested on that pair alone - the four-way set above contains
+  // 5.4GB, which sits closer to any preference near 3GB than either of these.
+  const twoOnly = (preferred) =>
+    api.closestToPreferred([mag(sizeOf(1.2, GB_), "clean"), mag(sizeOf(9, GB_), "clean")], preferred).size;
+  const geoMid = Math.sqrt(1.2 * 9);
+  check("crossover is the geometric mean, below it", twoOnly(Math.round(geoMid * 0.99 * GB_)), sizeOf(1.2, GB_));
+  check("crossover is the geometric mean, above it", twoOnly(Math.round(geoMid * 1.01 * GB_)), sizeOf(9, GB_));
+
+  // An exact tie goes to the larger, keeping the old "fuller is better" instinct.
+  check("tie goes to the larger", api.closestToPreferred([mag(sizeOf(2.5, GB_), "clean"), mag(sizeOf(10, GB_), "clean")], 5 * GB_).size, sizeOf(10, GB_));
+
+  // A single candidate is returned unchanged.
+  check("single entry", api.closestToPreferred([mag(sizeOf(3, GB_), "clean")], 5 * GB_).size, sizeOf(3, GB_));
+
+  // A missing or nonsense preference falls back to the default rather than
+  // picking arbitrarily or throwing.
+  check("missing preference falls back", api.closestToPreferred([mag(sizeOf(5.4, GB_), "clean")], undefined).size, sizeOf(5.4, GB_));
+  check("nonsense preference falls back", api.closestToPreferred([mag(sizeOf(5.4, GB_), "clean")], "abc").size, sizeOf(5.4, GB_));
+
+  // The window still filters: a small sample below the floor loses even when it
+  // is the closest thing to the preference.
+  const withSample = api.pickMagnet([mag(sizeOf(200, MB_), "clean"), mag(sizeOf(9, GB_), "clean")], lo, hi, 5 * GB_);
+  check("floor still excludes a 200MB sample", withSample.magnet.size, sizeOf(9, GB_));
+
+  // When nothing fits the window at all, the largest real release is still
+  // used and still flagged.
+  const nothing = api.pickMagnet([mag(sizeOf(1.2, GB_), "clean"), mag(sizeOf(40, GB_), "clean")], 100 * GB_, 200 * GB_, 120 * GB_);
+  check("fallback is the largest", nothing.magnet.size, sizeOf(40, GB_));
+  check("fallback is flagged", nothing.reason, "outside-window");
 }
 
 // ------------------------------------------------------------- normalizeCode

@@ -58,6 +58,8 @@ export function loadApi() {
     "isVr",
     "classifyMagnet",
     "pickMagnet",
+    "closestToPreferred",
+    "largest",
     "readMagnets",
     "nextPageHref",
     "collectPages",

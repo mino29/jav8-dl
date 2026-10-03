@@ -43,11 +43,17 @@ The panel in the top right corner holds the controls:
 ### Preferred size
 
 One slider, from 1 GB to 50 GB, defaulting to 5 GB. It picks releases between a
-tenth and ten times that size, and among those it takes the largest. So the 5 GB
-setting means "between 512 MB and 50 GB".
+tenth and ten times that size, and among those it takes the one **closest to your
+setting**. So with 5 GB selected and releases of 1.2 GB, 5.4 GB and 9 GB
+available, you get the 5.4 GB one.
 
-The slider exists to skip the small samples without losing the big releases. If
-nothing fits the window, the script still sends the largest real one and says so,
+"Closest" is measured proportionally rather than in raw bytes: a 1 GB and a 9 GB
+release are equally far from a 5 GB preference, because what matters is which
+release is about the size you asked for.
+
+The floor still does its original job of skipping 200 MB samples, and the
+ceiling still excludes absurd multi-hundred-GB labels. If nothing fits the
+window at all, the script still sends the largest real release and says so,
 rather than quietly doing nothing.
 
 ### Filters
@@ -113,7 +119,7 @@ Short version:
 - Ignore adverts. Many magnet entries are ads; they are dimmed in the panel and
   never chosen automatically.
 - Ignore anything outside your size window.
-- Of what is left, take the **largest**.
+- Of what is left, take the one **closest to your preferred size**.
 
 Adverts are recognised by markers like `▷` or words like `夸克`, plus a
 deprioritised tier for names containing `@`. Nothing in this section is a guess:

@@ -2,7 +2,7 @@
 // @name         JAV8 Downloader
 // @namespace    https://github.com/mino29/jav8-dl
 // @homepage     https://github.com/mino29/jav8-dl
-// @version      1.2.0
+// @version      1.3.0
 // @icon          data:image/png;base64,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
 // @description  Tick covers to queue them, filter by VR, pick the best magnet by size, and send to aria2 or qBittorrent. Settings live in the browser, not in a config file.
 // @author       mino29
@@ -343,16 +343,25 @@
    * Choose one magnet for a work.
    *
    * Rule, in order:
-   *   1. clean magnets whose size sits inside the user's window
+   *   1. clean magnets whose size sits inside the user's window, and among
+   *      those the one *closest to their preferred size*
    *   2. if the window excludes everything clean, the largest clean magnet,
    *      flagged so the caller can say it fell outside
    *   3. if there are no clean magnets at all, a "suspect" one rather than
    *      nothing - but never an "ad"
    *
-   * Within a tier the largest wins: the user asked for a size floor, and among
-   * releases that clear it the full-quality version is the one they want.
+   * Within a tier, closest to preferred wins - NOT the largest. Taking the
+   * largest inside a window ten times either side of the target meant the
+   * slider barely changed the outcome: move it from 5 GB to 20 GB and both
+   * still picked whatever the biggest release happened to be, so the control
+   * looked broken while every number it displayed was correct. A preference you
+   * set and then cannot observe is not a preference.
+   *
+   * The floor keeps its original job - skipping 200 MB samples - and the ceiling
+   * keeps excluding the absurd multi-hundred-GB labels. Both still apply as a
+   * hard filter; only the tie-break within them changed.
    */
-  function pickMagnet(magnets, minBytes, maxBytes) {
+  function pickMagnet(magnets, minBytes, maxBytes, preferredBytes) {
     var pool = (magnets || []).filter(function (m) {
       return m && m.uri && m.size !== null && m.size !== undefined && m.size > 0;
     });
@@ -370,9 +379,37 @@
       return m.size >= minBytes && m.size <= maxBytes;
     });
     if (inWindow.length) {
-      return { magnet: largest(inWindow), reason: "in-window" };
+      return { magnet: closestToPreferred(inWindow, preferredBytes), reason: "in-window" };
     }
+    // Nothing the user asked for is available, so fall back to the biggest real
+    // release - and say so, rather than sending nothing.
     return { magnet: largest(candidates), reason: "outside-window" };
+  }
+
+  /**
+   * The entry whose size is nearest the preferred one.
+   *
+   * Compared in log space, because the window spans a factor of a hundred and a
+   * linear distance would call 1 GB a long way from 5 GB while treating 49 GB and
+   * 50 GB as interchangeable. Log space asks the question the slider actually
+   * poses: which release is about the size I asked for.
+   *
+   * An exact tie goes to the larger, keeping the old instinct that between two
+   * equally-close releases the fuller one is the better answer.
+   */
+  function closestToPreferred(list, preferredBytes) {
+    var target = Math.log(coerceSize(preferredBytes, DEFAULTS.preferredSize));
+    var best = null;
+    var bestDelta = Infinity;
+    list.forEach(function (m) {
+      var delta = Math.abs(Math.log(m.size) - target);
+      var tied = Math.abs(delta - bestDelta) < 1e-9;
+      if (best === null || delta < bestDelta || (tied && m.size > best.size)) {
+        best = m;
+        bestDelta = delta;
+      }
+    });
+    return best;
   }
 
   function largest(list) {
@@ -1826,6 +1863,17 @@
       : (settings.filter === "vr" ? "VR-only" : "non-VR-only") + " works on this page";
   }
 
+  /**
+ * Ask the work page's magnet list to re-mark its pick.
+ *
+ * Separate from requestBulkRefresh() because they answer to different controls:
+ * the buttons follow the VR filter, this follows the size preference.
+ */
+  function requestMagnetRefresh() {
+    var rows = document.querySelector(".jd-magnet-rows");
+    if (rows && rows._repick) rows._repick();
+  }
+
   /** Ask the panel to redraw the page-wide buttons, if it has been built yet. */
   function requestBulkRefresh() {
     var bulk = document.querySelector(".jd-bulk");
@@ -1930,7 +1978,11 @@
       slider.title =
         "Preferred size " + formatSize(preferred) +
         "; picks releases between " + formatSize(window_.min) + " and " + formatSize(window_.max) +
-        ". Within that, the largest real release wins.";
+        ". Within that, the release closest to " + formatSize(preferred) + " wins.";
+      // On a work page the panel highlights the magnet it would send, so the
+      // highlight has to move with the control that decides it. Without this the
+      // panel asserts a specific release while the slider sits somewhere else.
+      requestMagnetRefresh();
     }
     slider.addEventListener("input", paintSize);
     slider.addEventListener("change", function () {
@@ -2103,7 +2155,7 @@
       var label = (known.get(href) || {}).code || href;
       fetchMagnets(href)
         .then(function (detail) {
-          var picked = pickMagnet(detail.magnets, settings.minSize, settings.maxSize);
+          var picked = pickMagnet(detail.magnets, settings.minSize, settings.maxSize, settings.preferredSize);
           if (!picked.magnet) {
             failures++;
             log(label + ": " + (picked.reason === "ads-only" ? "only advert magnets" : "no magnets on this page"), "er");
@@ -2178,7 +2230,7 @@
         }
         box.appendChild(head);
 
-        var picked = pickMagnet(detail.magnets, settings.minSize, settings.maxSize);
+        var picked = pickMagnet(detail.magnets, settings.minSize, settings.maxSize, settings.preferredSize);
 
         // Marks this panel as populated so a repeat visit does not duplicate it.
         var rows = el("div", "jd-magnet-rows");
@@ -2192,7 +2244,7 @@
           .forEach(function (magnet) {
             var row = el("div", "jd-mrow");
             if (magnet.tier !== "clean") row.classList.add("ad");
-            if (picked.magnet && magnet.uri === picked.magnet.uri) row.classList.add("pick");
+            row.dataset.jdUri = magnet.uri;
 
             var name = el("div", "jd-mname", magnet.name || "(unnamed)");
             name.title = magnet.tier === "clean" ? "real release" : "advert - not queued automatically";
@@ -2217,18 +2269,43 @@
             rows.appendChild(row);
           });
 
+        /**
+         * Re-mark which magnet would be sent, without re-fetching anything.
+         *
+         * The list is built once, so moving the size slider used to leave the
+         * highlight on whatever was picked at load time. That is worse than a
+         * missing feature: the panel claimed a specific release "would be
+         * chosen" while the control that decides it had moved underneath.
+         */
+        rows._repick = function () {
+          var now = pickMagnet(detail.magnets, settings.minSize, settings.maxSize, settings.preferredSize);
+          Array.prototype.forEach.call(rows.children, function (row) {
+            row.classList.toggle("pick", !!(now.magnet && row.dataset.jdUri === now.magnet.uri));
+          });
+          var note = box.querySelector(".jd-window-note");
+          if (note) {
+            note.textContent = now.reason === "outside-window"
+              ? "No magnet fell inside " + formatSize(settings.minSize) + "–" +
+                formatSize(settings.maxSize) + "; the largest real one was used."
+              : "";
+            note.style.display = now.reason === "outside-window" ? "" : "none";
+          }
+        };
+        rows._repick();
+        // The panel may not exist yet when this page was decorated first.
+        requestMagnetRefresh();
+
         if (picked.reason === "outside-window") {
-          box.appendChild(
-            el(
-              "div",
-              "jd-wa",
-              "No magnet fell inside " +
-                formatSize(settings.minSize) +
-                "–" +
-                formatSize(settings.maxSize) +
-                "; the largest real one was used.",
-            ),
+          var note = el(
+            "div",
+            "jd-wa jd-window-note",
+            "No magnet fell inside " +
+              formatSize(settings.minSize) +
+              "–" +
+              formatSize(settings.maxSize) +
+              "; the largest real one was used.",
           );
+          box.appendChild(note);
         } else if (picked.reason === "ads-only") {
           box.appendChild(el("div", "jd-er", "Every entry here looks like an advert."));
         }

@@ -161,11 +161,38 @@
     "defaultMinBytes": 536870912,
     "defaultMaxBytes": 53687091200,
     "rule": [
-      "clean magnets whose size is inside the window",
+      "clean magnets whose size is inside the window, and among those the one closest to preferredSize",
       "if the window excludes every clean magnet, the largest clean one, flagged outside-window",
       "if there are no clean magnets, a suspect one rather than nothing",
       "never an ad"
-    ]
+    ],
+    "tieBreak": {
+      "$comment": [
+        "1.1 and earlier took the LARGEST release inside the window. The window",
+        "is ten times either side of the preference, so that made the slider",
+        "almost inert: move it from 5GB to 20GB and both picked whatever the",
+        "biggest release happened to be. Every number the control displayed was",
+        "correct and none of them changed the outcome, which reads as a broken",
+        "control rather than as a wrong rule.",
+        "",
+        "Now the preference decides, measured as the distance in log space so",
+        "that a 1GB and a 9GB release are equally far from a 5GB preference - the",
+        "question the slider asks is which release is about the size I asked",
+        "for, not which is furthest from it in absolute bytes.",
+        "",
+        "The floor and ceiling are unchanged as hard filters: the floor still",
+        "skips 200MB samples and the ceiling still excludes absurd multi-hundred",
+        "-GB labels. Only the tie-break inside the window changed.",
+        "",
+        "An exact tie goes to the larger release, keeping the old instinct that",
+        "between two equally-close releases the fuller one is the better answer.",
+        "When nothing fits the window at all the fallback is still the largest,",
+        "still flagged outside-window, so a preference never causes silence."
+      ],
+      "distance": "absolute difference of natural logs, so the crossover between two sizes is their geometric mean",
+      "tie": "the larger release",
+      "fallbackWhenNothingFits": "the largest real release, flagged outside-window"
+    }
   },
 
   "downloaders": {

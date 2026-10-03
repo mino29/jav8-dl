@@ -128,6 +128,18 @@ Kept here because they are the kind that come back:
   `git checkout-index -f -- <path>`, which takes the byte-exact staged copy.
   Verify afterwards with
   `[Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes(...))`.
+- A control can be *present, correct and inert*. The size slider set a window ten
+  times either side of the preference and then took the largest release inside
+  it, so the preference never reached the selection at all — `pickMagnet` was
+  never even given it. Every number the panel displayed was right and none of
+  them changed the outcome, which reads to a user as a broken control rather than
+  as a wrong rule. When a setting exists, write down what it changes and test
+  that moving it changes the answer; a test on the default value alone passes
+  happily either way.
+- Derived state shown next to a control must update with it. The work page
+  highlighted the magnet it "would send" once at load, so it kept asserting a
+  specific release after the slider moved elsewhere. If a control decides
+  something, the display of that decision belongs to the control.
 - A userscript only updates when `@version` rises. A forgotten bump produces no
   error and no update, which is indistinguishable from a broken `@updateURL`, so
   it is checked mechanically: `npm run check-bump`, and `npm run verify` for the
