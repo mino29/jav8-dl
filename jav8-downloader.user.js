@@ -2,7 +2,7 @@
 // @name         JAV8 Downloader
 // @namespace    https://github.com/mino29/jav8-dl
 // @homepage     https://github.com/mino29/jav8-dl
-// @version      1.5.0
+// @version      1.6.0
 // @icon          data:image/png;base64,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
 // @description  Tick covers to queue them, filter by VR, pick the best magnet by size, and send to aria2 or qBittorrent. Settings live in the browser, not in a config file.
 // @author       mino29
@@ -220,6 +220,25 @@
    * sensible time. Roughly the pace of a person clicking through a gallery.
    */
   var REQUEST_GAP_MS = 400;
+
+  /**
+   * How many works a list of jobs still has to send.
+   *
+   * Pure, and extracted precisely so it can be tested: this number is what the
+   * panel shows and what the resume log reports, and an off-by-one here would
+   * either promise work that is not left or hide work that is.
+   *
+   * Collect jobs count as zero - a crawl has no per-work cost until it hands over
+   * to a send job.
+   */
+  function pendingWorkCount(jobs) {
+    return (jobs || []).reduce(function (total, job) {
+      if (!job || job.kind !== "send") return total;
+      var total_hrefs = (job.hrefs || []).length;
+      var done = job.cursor || 0;
+      return total + Math.max(0, total_hrefs - done);
+    }, 0);
+  }
 
   /** A usable byte count, or the fallback. Slider and stored values both. */
   function coerceSize(bytes, fallback) {
@@ -1337,6 +1356,11 @@
 .jd-allof[disabled]{opacity:.35;cursor:progress}
 .jd-career{margin:7px 0 0}
 .jd-career .jd-btn{width:100%;padding:5px}
+.jd-queue{display:flex;align-items:center;gap:6px;margin:8px 0 0;padding:5px 6px;
+  background:rgba(47,111,235,.14);border:1px solid rgba(99,179,237,.45);border-radius:4px}
+.jd-queue-text{flex:1;min-width:0;font-size:10.5px;color:#9ab;line-height:1.35}
+.jd-btn.danger{background:#7b341e;border-color:#c05621;color:#fff}
+.jd-btn.danger:hover{background:#9b4220}
 .jd-btn{background:#2f6feb;color:#fff;border:1px solid #2f6feb;border-radius:3px;
   padding:4px 8px;font-size:11px;cursor:pointer}
 .jd-btn:hover{background:#2559c4}
@@ -1396,6 +1420,172 @@
   var known = new Map(); // href -> {code, title, vr}
   var logLines = [];
   var dragging = null;
+
+  // ===================================================================== queue
+  // Work outlives the page it was started from, for as long as the tab is open.
+  //
+  // sessionStorage is exactly the right lifetime here and not a compromise: it is
+  // scoped to one tab and dies with it, which is precisely the requirement that
+  // closing the tab terminates every queue. GM_setValue would have been wrong -
+  // it is per browser profile, so a queue would follow the user to every other
+  // tab and survive the one they meant to close.
+  var QUEUE_KEY = "jav8-downloader-queue";
+  var SELECTION_KEY = "jav8-downloader-selection";
+
+  var jobQueue = {
+    jobs: [],
+    busy: false,
+    // Bumped by cancel-all. Every continuation checks it, so work already in
+    // flight stops instead of quietly re-queueing the next item - a cancel that
+    // lets one more item through is not a cancel.
+    epoch: 0,
+  };
+
+  /**
+   * Read or write one persisted slot.
+   *
+   * Omitting `value` reads; passing anything else writes. Removal is separate
+   * and explicit, because the obvious shortcut - writing null - silently stores
+   * the *string* "null" instead of deleting the key. loadQueue() then reads that
+   * back as JSON null and finds no jobs, so a finished queue appeared never to
+   * resume. Passing null to delete is exactly the kind of shortcut that reads
+   * fine and does the wrong thing.
+   */
+  function queueStore(key, value) {
+    try {
+      if (arguments.length < 2) {
+        var raw = window.sessionStorage.getItem(key);
+        return raw ? JSON.parse(raw) : null;
+      }
+      window.sessionStorage.setItem(key, JSON.stringify(value));
+      return null;
+    } catch (e) {
+      // A full or disabled storage must not take the feature down; it only
+      // means the queue stops surviving navigation.
+      return null;
+    }
+  }
+
+  function clearStored(key) {
+    try {
+      window.sessionStorage.removeItem(key);
+    } catch (e) {
+      /* nothing to do; the slot simply lingers */
+    }
+  }
+
+  function loadQueue() {
+    var stored = queueStore(QUEUE_KEY);
+    if (!stored || !Array.isArray(stored.jobs)) return;
+    jobQueue.jobs = stored.jobs.filter(function (job) {
+      return job && (job.kind === "collect" || job.kind === "send");
+    });
+  }
+
+  function saveQueue() {
+    queueStore(QUEUE_KEY, { jobs: jobQueue.jobs });
+  }
+
+  /** Persist the ticked set so a page change does not silently drop it. */
+  function saveSelection() {
+    queueStore(SELECTION_KEY, Array.from(selected));
+  }
+
+  function restoreSelection() {
+    var stored = queueStore(SELECTION_KEY);
+    if (!Array.isArray(stored)) return;
+    stored.forEach(function (href) {
+      if (typeof href === "string") selected.add(href);
+    });
+  }
+
+  function queuedWorkCount() {
+    return pendingWorkCount(jobQueue.jobs);
+  }
+
+  function queueSummary() {
+    if (!jobQueue.jobs.length) return "";
+    var pending = queuedWorkCount();
+    var parts = jobQueue.jobs.map(function (job) {
+      return job.kind === "send" ? "sending" : "collecting";
+    });
+    var noun = jobQueue.jobs.length === 1 ? parts[0] : parts.length + " jobs";
+    return (jobQueue.busy ? noun : noun + " (waiting)") +
+      (pending ? " · " + pending + " works left" : "");
+  }
+
+  /**
+   * Add a job and make sure something is driving the queue.
+   *
+   * Jobs run strictly one at a time and in order. Concurrency here would mean
+   * parallel page requests to the site, which is the one thing REQUEST_GAP_MS
+   * exists to prevent.
+   */
+  function enqueue(job) {
+    if (job.kind === "send") {
+      // Snapshot the codes now, while the cards that supplied them are still on
+      // this page. See runSendJob() for why.
+      var labels = {};
+      (job.hrefs || []).forEach(function (href) {
+        var code = (known.get(href) || {}).code;
+        if (code) labels[href] = code;
+      });
+      job.labels = labels;
+    }
+    jobQueue.jobs.push(job);
+    saveQueue();
+    renderQueueStatus();
+    pumpQueue();
+  }
+
+  function pumpQueue() {
+    if (jobQueue.busy || !jobQueue.jobs.length) {
+      if (!jobQueue.jobs.length) {
+        // Nothing left: forget the persisted copy so a later visit does not
+        // resurrect a queue that already finished.
+        clearStored(QUEUE_KEY);
+      }
+      renderQueueStatus();
+      return;
+    }
+    var job = jobQueue.jobs[0];
+    jobQueue.busy = true;
+    var epoch = jobQueue.epoch;
+    renderQueueStatus();
+    var done = job.kind === "collect" ? runCollectJob(job, epoch) : runSendJob(job, epoch);
+    Promise.resolve(done).then(
+      function () {
+        if (epoch !== jobQueue.epoch) return;
+        jobQueue.jobs.shift();
+        saveQueue();
+        jobQueue.busy = false;
+        renderQueueStatus();
+        pumpQueue();
+      },
+      function () {
+        if (epoch !== jobQueue.epoch) return;
+        jobQueue.jobs.shift();
+        saveQueue();
+        jobQueue.busy = false;
+        renderQueueStatus();
+      },
+    );
+  }
+
+  /** Panic button: drop every job, stop anything in flight, forget it all. */
+  function cancelAllJobs() {
+    if (!jobQueue.jobs.length) {
+      log("Nothing queued to cancel.", "wa");
+      return;
+    }
+    var dropped = jobQueue.jobs.length;
+    jobQueue.jobs = [];
+    jobQueue.busy = false;
+    jobQueue.epoch++;
+    clearStored(QUEUE_KEY);
+    renderQueueStatus();
+    log("Cancelled " + dropped + (dropped === 1 ? " job" : " jobs") + ". Nothing further will be sent.", "wa");
+  }
 
   function log(message, tone) {
     logLines.push({ message: message, tone: tone || "mu" });
@@ -1488,6 +1678,9 @@
       if (info.vr) box.classList.remove("bad");
       updateCount();
       requestBulkRefresh();
+      // Ticks survive a page change, so a hand-picked selection is not lost by
+      // clicking through to the next page.
+      saveSelection();
     });
     box.classList.toggle("on", input.checked);
     card.appendChild(box);
@@ -1598,6 +1791,7 @@
     // "Selected 0" would be a straight contradiction on screen.
     updateCount();
     requestBulkRefresh();
+    saveSelection();
     return cards.length;
   }
 
@@ -1619,20 +1813,12 @@
   }
 
   /**
-   * Crawl a performer's pages and hand back everything matching the filter.
-   *
-   * One crawl, two callers. The button on a performer link stages the result and
-   * lets the user press Download selected; the panel button on her own page
-   * sends it immediately, because being on her page is already the decision.
-   * Splitting this into two functions once left the pagination rules, the filter
-   * pass and the error wording duplicated - free to drift, and only the less-used
-   * copy would get tested - so the traversal lives here once and the caller
-   * supplies only what it does with the answer.
-   *
-   * The VR filter is applied by the same matchesFilter() the listings use, and
-   * the size preference by pickMagnet() later, rather than a second copy of
-   * either rule here.
-   */
+ * Crawl a performer's pages and hand back everything matching the filter.
+ *
+ * Shared by the queued job and the one-shot path. The VR filter is applied by
+ * the same matchesFilter() the listings use, and the size preference by
+ * pickMagnet() later, rather than a second copy of either rule here.
+ */
   function crawlActress(href, name, button, onCollected) {
     var label = name || href;
     if (button) button.disabled = true;
@@ -1674,6 +1860,127 @@
       });
   }
 
+  /**
+   * Returns a promise so the queue can await it.
+   *
+   * crawlActress() predates the queue and reports through callbacks; the queued
+   * job needs to know when it is finished. Wrapping the callback in a promise
+   * keeps one implementation of the traversal rather than two.
+   */
+  function crawlActressAsync(href, name, button) {
+    return new Promise(function (resolve) {
+      crawlActress(href, name, button, function (hrefs, result, btn, label) {
+        resolve({ hrefs: hrefs, result: result, button: btn, label: label });
+      });
+    });
+  }
+
+  /** Collect job: crawl a performer, then stage what matched the filter. */
+  function runCollectJob(job, epoch) {
+    log("Collecting works for " + job.label + "…", "mu");
+    return crawlActressAsync(job.base, job.label, null).then(function (outcome) {
+      if (epoch !== jobQueue.epoch) return;
+      var result = outcome.result;
+      if (!result.works.length) {
+        log(job.label + ": no works found on any page.", "wa");
+        return;
+      }
+      outcome.hrefs.forEach(function (href) {
+        selected.add(href);
+      });
+      // The crawl survives navigation, so the ticks it produced must too.
+      saveSelection();
+      updateCount();
+      requestBulkRefresh();
+
+      var where = pagesPhrase(result.pages);
+      warnIfTruncated(result, where, "The works found so far are queued.");
+      if (!outcome.hrefs.length) {
+        log(job.label + ": " + result.works.length + " works found, but none match " + filterScope() + ".", "wa");
+        return;
+      }
+
+      if (job.mode === "send") {
+        // The panel button on her own page sends as it goes, so hand straight
+        // over to a send job. Enqueuing rather than calling keeps the traversal
+        // and both endings in one place.
+        if (!confirmSend(outcome.hrefs.length, job.label)) {
+          log("Cancelled - " + job.label + "'s works were not sent.", "wa");
+          return;
+        }
+        enqueue({ kind: "send", label: job.label, hrefs: outcome.hrefs, cursor: 0, sent: 0, failures: 0 });
+        log(
+          job.label + ": " + outcome.hrefs.length + " of " + result.works.length +
+            " works found (" + filterScope() + ", from " + where + "). Sending now.",
+          "ok",
+        );
+        return;
+      }
+      log(
+        job.label + ": " + outcome.hrefs.length + " of " + result.works.length +
+          " works queued (" + filterScope() + ", from " + where +
+          "). Press Download selected to send them.",
+        "ok",
+      );
+    });
+  }
+
+  /**
+   * Send job: dispatch a list of works, one at a time, resuming where it left off.
+   *
+   * The cursor is the whole point. A page change mid-batch must not resend the
+   * first thirty-nine works, and must not skip the fortieth either - so the
+   * cursor advances after each item is attempted, not before. That makes resume
+   * at-least-once: the only item that can be sent twice is one whose request was
+   * in flight when the page went away, which is the safe direction to err in.
+   */
+  function runSendJob(job, epoch) {
+    var hrefs = job.hrefs || [];
+    var cursor = job.cursor || 0;
+    var labels = job.labels || {};
+    log("Sending " + (hrefs.length - cursor) + " of " + hrefs.length + " to " + engine().label + "…", "mu");
+
+    function step() {
+      if (epoch !== jobQueue.epoch) return Promise.resolve();
+      if (cursor >= hrefs.length) {
+        // Only claim the selection is clear if it actually is. A work the user
+        // ticked after this batch started, or one that failed and they re-ticked,
+        // is still pending and should not be reported as done.
+        log(
+          "Batch finished: sent " + (job.sent || 0) + ", " + (job.failures || 0) + " failed." +
+            (selected.size ? " " + selected.size + " still ticked." : " Selection is clear."),
+          (job.failures || 0) ? "wa" : "ok",
+        );
+        return Promise.resolve();
+      }
+      var href = hrefs[cursor];
+      // Labels are snapshotted into the job when it is queued, because the
+      // `known` map is per page: a resumed batch would otherwise log raw hrefs
+      // for every work, because the cards it came from are on a page the tab has
+      // since left.
+      var label = labels[href] || (known.get(href) || {}).code || href;
+      return sendOne(href, label).then(function (outcome) {
+        if (epoch !== jobQueue.epoch) return;
+        if (outcome && outcome.ok) job.sent = (job.sent || 0) + 1;
+        else job.failures = (job.failures || 0) + 1;
+        // Processed is processed: untick it either way, so the selection empties
+        // itself as the batch runs and the count doubles as a progress display.
+        // Skipped when cancelled - the work was never attempted, so it stays
+        // ticked and stays available to retry.
+        deselectWork(href);
+        cursor++;
+        job.cursor = cursor;
+        saveQueue();
+        renderQueueStatus();
+        if (cursor >= hrefs.length) return step();
+        return new Promise(function (resolve) {
+          setTimeout(resolve, REQUEST_GAP_MS);
+        }).then(step);
+      });
+    }
+    return step();
+  }
+
   /** How many pages a crawl walked, phrased for a log line. */
   function pagesPhrase(pages) {
     return pages + (pages === 1 ? " page" : " pages");
@@ -1686,38 +1993,6 @@
     } else if (result.stopped === "page-failed") {
       log("Stopped early - a page would not load. " + tail, "wa");
     }
-  }
-
-  /**
-   * Outcome for the performer-link button: stage, and let the user confirm.
-   *
-   * Staged because reaching a performer through a link on some other page is an
-   * exploratory act, and a career can be a hundred works. Sending a hundred
-   * magnets on a single click is not a reasonable thing to do by accident.
-   */
-  function stageCollected(hrefs, result, button, label) {
-    hrefs.forEach(function (href) {
-      selected.add(href);
-    });
-    updateCount();
-    requestBulkRefresh();
-    if (button) button.disabled = false;
-
-    if (!result.works.length) {
-      log(label + ": no works found on any page.", "wa");
-      return;
-    }
-    var where = pagesPhrase(result.pages);
-    warnIfTruncated(result, where, "The works found so far are queued.");
-    if (!hrefs.length) {
-      log(label + ": " + result.works.length + " works found, but none match " + filterScope() + ".", "wa");
-      return;
-    }
-    log(
-      label + ": " + hrefs.length + " of " + result.works.length + " works queued (" +
-        filterScope() + ", from " + where + "). Press Download selected to send them.",
-      "ok",
-    );
   }
 
   /**
@@ -1775,7 +2050,7 @@
           });
         });
         btn.addEventListener("click", function () {
-          crawlActress(href, name, btn, stageCollected);
+          enqueue({ kind: "collect", label: name || href, base: href, mode: "stage" });
         });
         tile.appendChild(btn);
       })(tiles[i]);
@@ -1806,35 +2081,6 @@
   }
 
   /**
-   * Outcome for the panel button: send immediately.
-   *
-   * Being on her page is already the decision, so there is nothing to confirm -
-   * which is also why this differs from the link button's staging. The traversal
-   * is shared; only the ending is not.
-   */
-  function sendCollected(hrefs, result, button, label) {
-    if (!result.works.length) {
-      button.disabled = false;
-      log(label + ": no works found on any page.", "wa");
-      return;
-    }
-    var where = pagesPhrase(result.pages);
-    warnIfTruncated(result, where, "Sending what was found.");
-    if (!hrefs.length) {
-      button.disabled = false;
-      log(label + ": " + result.works.length + " works found, but none match " + filterScope() + ".", "wa");
-      return;
-    }
-    log(
-      label + ": sending " + hrefs.length + " of " + result.works.length +
-        " works (" + filterScope() + ", from " + where + ").",
-      "mu",
-    );
-    // The button stays disabled for the duration; sendHrefs re-enables it.
-    sendHrefs(hrefs, button);
-  }
-
-  /**
    * Add the career button to the panel, on her works page only.
    *
    * Lives in the panel rather than on the page because the page already has a
@@ -1860,7 +2106,14 @@
     };
     btn._retitle();
     btn.addEventListener("click", function () {
-      crawlActress(actressBasePath(), name, btn, sendCollected);
+      // Queued, not run inline: a crawl is several page fetches, and losing it
+      // halfway through a navigation would mean starting over.
+      enqueue({
+        kind: "collect",
+        label: name || "this performer",
+        base: actressBasePath(),
+        mode: "send",
+      });
     });
     row.appendChild(btn);
     body.appendChild(row);
@@ -1905,6 +2158,23 @@
     if (rows && rows._repick) rows._repick();
   }
 
+  /**
+ * Redraw the queue row.
+ *
+ * Kept outside buildPanel() because the queue is driven from many places - a
+ * crawl finishing, a send advancing, a cancel - and none of them should have to
+ * know whether the panel happens to exist yet.
+ */
+  function renderQueueStatus() {
+    var row = document.querySelector(".jd-queue");
+    if (!row) return;
+    var summary = queueSummary();
+    row.style.display = summary ? "flex" : "none";
+    if (summary) row.querySelector(".jd-queue-text").textContent = summary;
+    var go = document.querySelector(".jd-foot .jd-btn");
+    if (go) go.textContent = jobQueue.busy ? "Sending…" : "Download selected";
+  }
+
   /** Ask the panel to redraw the page-wide buttons, if it has been built yet. */
   function requestBulkRefresh() {
     var bulk = document.querySelector(".jd-bulk");
@@ -1915,6 +2185,37 @@
     document.querySelectorAll(".jd-allof, .jd-career .jd-btn").forEach(function (btn) {
       if (btn._retitle) btn._retitle();
     });
+  }
+
+  /**
+ * Untick one work once it has been processed.
+ *
+ * Called after every item, successful or not. The point is that a batch should
+ * empty itself as it goes: the user should never have to clear a finished
+ * selection by hand to work out what is left, and the count counting down is the
+ * progress display. A failure is still named in the log, so nothing becomes
+ * invisible, and re-ticking it is one click if they want to retry.
+ *
+ * Returns whether the work was actually still ticked, so a caller can tell a
+ * no-op from a real change.
+ */
+function deselectWork(href) {
+    var removed = selected.delete(href);
+    // Driven off the page's own cards rather than a stored node reference, so a
+    // work queued on a previous page and processed on this one still unticks.
+    worksOnPage().forEach(function (card) {
+      if (card.getAttribute("href") !== href) return;
+      var box = card.querySelector(".jd-box");
+      if (!box) return;
+      var input = box.querySelector("input");
+      if (input) input.checked = false;
+      box.classList.remove("on");
+    });
+    if (!removed) return false;
+    saveSelection();
+    updateCount();
+    requestBulkRefresh();
+    return true;
   }
 
   // ----------------------------------------------------------------- panel
@@ -2031,8 +2332,15 @@
     var bulk = el("div", "jd-bulk");
     var selectAll = el("button", "jd-btn ghost", "Select all");
     selectAll.type = "button";
-    var deselectAll = el("button", "jd-btn ghost", "Deselect all");
-    deselectAll.type = "button";
+    // Named Clear, and it clears everything.
+    //
+    // The old pair was Clear and Deselect all, which are not the same thing:
+    // Deselect all only unticked what the VR filter was showing, so with a
+    // filter set there was no way to untick the rest in one click. Two buttons
+    // whose names did not say which was which was the actual problem, so this is
+    // one button that always clears completely.
+    var clearBtn = el("button", "jd-btn ghost", "Clear");
+    clearBtn.type = "button";
 
     /**
      * Spell out what the buttons will act on, and how many.
@@ -2051,33 +2359,32 @@
       selectAll.title = cards.length
         ? "Tick all " + cards.length + " " + scoped + (total > cards.length ? " (of " + total + " works)" : "")
         : "Nothing to select";
-      deselectAll.title = "Untick the " + cards.length + " " + scoped;
+      var hidden = total - cards.length;
+      clearBtn.title = selected.size
+        ? "Untick all " + selected.size + " selected works, including " + hidden +
+          " hidden by the filter"
+        : "Nothing is ticked";
+      clearBtn.disabled = !selected.size;
       selectAll.disabled = !cards.length;
-      deselectAll.disabled = !cards.length;
     }
 
     // Exposed so the rest of the script can refresh the labels when the filter
     // or the card list changes, without buildPanel() having to own that.
     bulk._refresh = refreshBulkButtons;
 
-    function reportPageSelection(on) {
+    selectAll.addEventListener("click", function () {
       // Guarded rather than assumed: a listing that renders after the panel is
       // built has no cards to act on, and claiming "selected 34" would be a lie
       // the count would immediately contradict.
-      var touched = setPageSelection(on);
-      if (!touched) {
-        log(on ? "No works match the current filter." : "Nothing to deselect.", "wa");
-      }
-    }
-
-    selectAll.addEventListener("click", function () {
-      reportPageSelection(true);
+      if (!setPageSelection(true)) log("No works match the current filter.", "wa");
     });
-    deselectAll.addEventListener("click", function () {
-      reportPageSelection(false);
+    clearBtn.addEventListener("click", function () {
+      clearSelection();
+      saveSelection();
+      requestBulkRefresh();
     });
     bulk.appendChild(selectAll);
-    bulk.appendChild(deselectAll);
+    bulk.appendChild(clearBtn);
     body.appendChild(bulk);
 
     // Her whole career, from whichever page of it the user happens to be on.
@@ -2086,7 +2393,20 @@
     // - the only other caller of refreshBulkButtons() - never runs there. Without
     // this they sit enabled next to an empty grid and do nothing when clicked.
     selectAll.disabled = true;
-    deselectAll.disabled = true;
+    clearBtn.disabled = true;
+
+    // Queue status and the panic button. Only visible while something is
+    // actually queued, so it cannot be hit when there is nothing to cancel.
+    var queueRow = el("div", "jd-queue");
+    var queueText = el("span", "jd-queue-text");
+    var cancelAll = el("button", "jd-btn danger", "Cancel all");
+    cancelAll.type = "button";
+    cancelAll.title = "Stop every crawl and every download queue. Anything already sent stays sent.";
+    cancelAll.addEventListener("click", cancelAllJobs);
+    queueRow.appendChild(queueText);
+    queueRow.appendChild(cancelAll);
+    queueRow.style.display = "none";
+    body.appendChild(queueRow);
 
     var logBox = el("div", "jd-log");
     body.appendChild(logBox);
@@ -2102,12 +2422,9 @@
     go.addEventListener("click", function () {
       runSelection(go);
     });
-    var clear = el("button", "jd-btn ghost", "Clear");
-    clear.addEventListener("click", clearSelection);
     var cfg = el("button", "jd-btn ghost", "Settings");
     cfg.addEventListener("click", openSettings);
     foot.appendChild(go);
-    foot.appendChild(clear);
     foot.appendChild(cfg);
     panel.appendChild(foot);
 
@@ -2153,94 +2470,89 @@
    * Sequential on purpose - it is gentler on the site, and one torrent client
    * does not benefit from being hit in parallel.
    */
-  function sendHrefs(hrefs, button) {
+  /**
+   * Fetch one work, choose a magnet, send it, log the outcome.
+   *
+   * One item, no loop: shared by the queued send job and the one-shot path so
+   * there is a single definition of what "sending a work" means. Returns a
+   * promise that always resolves - a failed item must not stop the batch.
+   */
+  function sendOne(href, label) {
     var target = engine();
-
-    if (needsConfirmation(hrefs.length)) {
-      var go = window.confirm(
-        "Send " + hrefs.length + " works to " + target.label + "?\n\n" +
-          "That is " + hrefs.length + " page requests to jav8.vip, one after another. " +
-          "If you did not mean to queue this many, press Cancel.",
-      );
-      if (!go) {
-        log("Cancelled - " + hrefs.length + " works were not sent.", "wa");
-        return;
-      }
-    }
-
-    if (button) button.disabled = true;
-    log("Sending " + hrefs.length + " to " + target.label + "…", "mu");
-
-    var queue = hrefs.slice();
-    var failures = 0;
-    var sent = 0;
-
-    // Say which of the two systems failed. Reading the site and talking to the
-    // client are independent steps; a bare error message does not reveal which
-    // one broke, and the fixes are unrelated.
-    function describe(err) {
-      var reason = err && err.message ? err.message : String(err);
-      return err && err.fromSite
-        ? "could not read this page from jav8.vip: " + reason
-        : reason;
-    }
-
-    function next() {
-      if (!queue.length) {
-        if (button) button.disabled = false;
-        log(
-          (sent ? "Sent " + sent + " of " + hrefs.length + ". " : "") +
-            (failures ? "Done with " + failures + " failure(s)." : "All done."),
-          failures ? "wa" : "ok",
+    return fetchMagnets(href)
+      .then(function (detail) {
+        var picked = pickMagnet(detail.magnets, settings.minSize, settings.maxSize, settings.preferredSize);
+        if (!picked.magnet) {
+          return { ok: false, reason: picked.reason === "ads-only" ? "only advert magnets" : "no magnets on this page" };
+        }
+        if (picked.reason === "outside-window") {
+          log(label + ": " + formatSize(picked.magnet.size) + " is outside your size window", "wa");
+        }
+        return target.send(picked.magnet).then(
+          function (result) {
+            return { ok: true, text: result, size: picked.magnet.size };
+          },
+          function (err) {
+            return { ok: false, reason: describeSendError(err) };
+          },
         );
-        return;
-      }
-      var href = queue.shift();
-      var label = (known.get(href) || {}).code || href;
-      fetchMagnets(href)
-        .then(function (detail) {
-          var picked = pickMagnet(detail.magnets, settings.minSize, settings.maxSize, settings.preferredSize);
-          if (!picked.magnet) {
-            failures++;
-            log(label + ": " + (picked.reason === "ads-only" ? "only advert magnets" : "no magnets on this page"), "er");
-            return;
-          }
-          if (picked.reason === "outside-window") {
-            log(label + ": " + formatSize(picked.magnet.size) + " is outside your size window", "wa");
-          }
-          return target.send(picked.magnet).then(
-            function (result) {
-              sent++;
-              log(label + " → " + result + "  (" + formatSize(picked.magnet.size) + ")", "ok");
-            },
-            function (err) {
-              failures++;
-              log(label + ": " + describe(err), "er");
-            },
-          );
-        })
-        .catch(function (err) {
-          failures++;
-          log(label + ": " + describe(err), "er");
-        })
-        .then(function () {
-          // Pause between items. Already sequential, which is the important
-          // part, but "sequential" still means the next request leaves the
-          // instant the last one lands. A real gap is what makes a hundred-work
-          // crawl look like browsing rather than a script hammering the site.
-          if (queue.length) setTimeout(next, REQUEST_GAP_MS);
-          else next();
-        });
-    }
-    next();
+      })
+      .catch(function (err) {
+        return { ok: false, reason: describeSendError(err) };
+      })
+      .then(function (outcome) {
+        if (outcome.ok) log(label + " → " + outcome.text + "  (" + formatSize(outcome.size) + ")", "ok");
+        else log(label + ": " + outcome.reason, "er");
+        return outcome;
+      });
   }
 
+  /**
+   * Say which of the two systems failed.
+   *
+   * Reading the site and talking to the client are independent steps; a bare
+   * error message does not reveal which one broke, and the fixes are unrelated.
+   */
+  function describeSendError(err) {
+    var reason = err && err.message ? err.message : String(err);
+    return err && err.fromSite ? "could not read this page from jav8.vip: " + reason : reason;
+  }
+
+  /**
+   * Ask before queueing a large send.
+   *
+   * One place, because three call sites had the same dialog copy-pasted and would
+   * eventually disagree about what it said. Below the threshold it never appears,
+   * so the common case is untouched.
+   */
+  function confirmSend(count, what) {
+    if (!needsConfirmation(count)) return true;
+    return window.confirm(
+      "Send " + count + " works" + (what ? " (" + what + ")" : "") + " to " + engine().label + "?\n\n" +
+        "That is " + count + " page requests to jav8.vip, one after another. " +
+        "If you did not mean to queue this many, press Cancel.",
+    );
+  }
+
+  /**
+   * Queue the ticked works for sending.
+   *
+   * Goes through the job queue rather than running inline so that navigating
+   * away mid-batch does not lose the rest of it. The cursor is already part of
+   * the job, so a job started here resumes on the next page exactly where it
+   * stopped.
+   */
   function runSelection(button) {
     if (!selected.size) {
       log("Nothing ticked yet.", "wa");
       return;
     }
-    sendHrefs(Array.from(selected), button);
+    var hrefs = Array.from(selected);
+    if (!confirmSend(hrefs.length)) {
+      log("Cancelled - " + hrefs.length + " works were not sent.", "wa");
+      return;
+    }
+    enqueue({ kind: "send", label: "selection", hrefs: hrefs, cursor: 0, sent: 0, failures: 0 });
   }
 
   // ------------------------------------------------------- detail page panel
@@ -2524,7 +2836,27 @@
   function init() {
     if (!isTargetHost(location.hostname)) return;
     injectStyle();
+
+    // Restore before the panel is built, because the panel reads the queue to
+    // decide whether to show its status row.
+    restoreSelection();
+    loadQueue();
+
     buildPanel();
+    renderQueueStatus();
+
+    // Anything left over from the previous page in this tab picks up where it
+    // stopped. The job carries its own cursor, so this does not resend work that
+    // already went out.
+    if (jobQueue.jobs.length) {
+      var resumed = queuedWorkCount();
+      log(
+        "Resuming " + jobQueue.jobs.length + (jobQueue.jobs.length === 1 ? " job" : " jobs") +
+          (resumed ? " · " + resumed + " works left" : "") + ".",
+        "mu",
+      );
+      pumpQueue();
+    }
 
     // Every link to a performer gets a crawl button, on every route. This runs
     // before the work-page and listing branches below so that a performer named

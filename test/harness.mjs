@@ -138,17 +138,21 @@ function inject(html) {
  */
 const ROUTES = [
   [/^\/$/, "listing.html"],
-  [/^\/updated$/, "listing.html"],
-  [/^\/latest$/, "listing.html"],
-  [/^\/genre\/353$/, "listing-vr.html"],
+  [/^\/updated(\?.*)?$/, "listing.html"],
+  [/^\/latest(\?.*)?$/, "listing.html"],
+  [/^\/genre\/353(\?.*)?$/, "listing-vr.html"],
   // A two-page career, so autopagination can be walked to its real end. Page 2
   // is the last one and carries no pagination-next, which is the only signal
   // the crawler uses to stop.
-  [/^\/actress\/58956$/, "listing-actress-p1.html"],
+  //
+  // Order matters: the exact page-2 match must precede the bare actress match,
+  // because for these two fixtures the page number *is* the content - page 1
+  // has 17 works and a next link, page 2 has 12 and none.
   [/^\/actress\/58956\?page=2$/, "listing-actress-p2.html"],
-  [/^\/actress\/\d+/, "listing-actress.html"],
-  [/^\/top-actresses$/, "top-actresses.html"],
-  [/^\/v\/\d+/, "detail.html"],
+  [/^\/actress\/58956$/, "listing-actress-p1.html"],
+  [/^\/actress\/\d+(\?.*)?$/, "listing-actress.html"],
+  [/^\/top-actresses(\?.*)?$/, "top-actresses.html"],
+  [/^\/v\/\d+(\?.*)?$/, "detail.html"],
 ];
 
 /**

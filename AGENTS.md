@@ -128,6 +128,25 @@ Kept here because they are the kind that come back:
   `git checkout-index -f -- <path>`, which takes the byte-exact staged copy.
   Verify afterwards with
   `[Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes(...))`.
+- Choose the storage whose lifetime matches the requirement, not the one that is
+  convenient. "Queues stop when the tab closes" is `sessionStorage` and nothing
+  else - `GM_setValue` is per browser profile, so a queue would have followed the
+  user to every other tab and survived the one they meant to close.
+- A read/write helper whose "delete" path is a write of `null` will store the
+  string "null". Reading it back gives `null`, which looks like "no data", so the
+  real symptom is a feature that silently never restores - a queue that appeared
+  not to survive navigation. Make removal an explicit `removeItem` and make the
+  read/write split unambiguous (`arguments.length`).
+- A resumed job needs a cursor, and the cursor must advance *after* each item is
+  attempted, not before. Resuming at-least-once means the only work that can be
+  sent twice is one whose request was in flight when the page went away, which
+  is the safe direction to err in; the alternative silently skips a work.
+- Anything a cancel must stop has to check a generation counter in its
+  continuations. Clearing the job list is not enough - whatever is already in
+  flight will resolve, find the queue empty, and start the next item.
+- Label state that is only in memory reads as garbage after a navigation. The
+  `known` map is per page, so a resumed batch logged raw hrefs for every work.
+  Snapshot the labels into the job when it is queued.
 - The failure mode that matters on a third-party site is not a crash, it is a
   rate-limit: enough requests in a row earn a temporary IP block, which looks
   like the site breaking rather than the script misbehaving. So: send strictly
@@ -161,6 +180,13 @@ Kept here because they are the kind that come back:
   highlighted the magnet it "would send" once at load, so it kept asserting a
   specific release after the slider moved elsewhere. If a control decides
   something, the display of that decision belongs to the control.
+- The same argument runs the other way: a number that cannot change while work
+  happens gives the user no progress at all. Unticking each work as the batch
+  processes it turns `Selected 17` into the progress bar for free - but it is
+  also a behaviour change, so the honest cases have to be spelled out. A work
+  that failed is still attempted, so it unticks; a work the user cancelled
+  before it started is not attempted, so it must stay ticked or the retry path
+  disappears with it. "Successful or not" is not the same as "processed or not".
 - A userscript only updates when `@version` rises. A forgotten bump produces no
   error and no update, which is indistinguishable from a broken `@updateURL`, so
   it is checked mechanically: `npm run check-bump`, and `npm run verify` for the

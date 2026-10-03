@@ -81,6 +81,7 @@ export function loadApi() {
     "CONFIRM_THRESHOLD",
     "needsConfirmation",
     "REQUEST_GAP_MS",
+    "pendingWorkCount",
   ];
   const context = vm.createContext({});
   vm.runInContext(

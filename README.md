@@ -29,6 +29,13 @@ privileged request is what makes the connection work.
 On any listing page a small tick box appears on every cover. Tick what you want
 and press **Download selected**. VR releases get a `VR` badge.
 
+**Each work unticks itself once it has been dealt with**, whether it downloaded
+or failed, so the batch empties the selection as it runs and the `Selected 17`
+counter counts down as your progress bar. There is nothing to clear afterwards.
+A failure is still named in the log, and re-ticking it is one click if you want
+to retry. Works you stop with **Cancel all** stay ticked, since they were never
+attempted.
+
 The panel in the top right corner holds the controls:
 
 | Control | What it does |
@@ -36,9 +43,10 @@ The panel in the top right corner holds the controls:
 | **Client** | aria2 or qBittorrent |
 | **Filter** | All, VR only, or non-VR only |
 | **Size** | Preferred size, on a slider |
-| **Select all / Deselect all** | Tick or untick everything currently showing |
+| **Select all / Clear** | Tick everything showing, or untick everything |
 | **All works** | On a performer's page: send her entire filmography |
 | **＋** | On any performer link: queue her entire filmography |
+| **Cancel all** | Stop every crawl and download in progress |
 | **Settings** | Client address, credentials, save path |
 
 ### Preferred size
@@ -60,7 +68,26 @@ rather than quietly doing nothing.
 ### Filters
 
 `VR only` and `non-VR only` hide the cards that do not match. **Select all**
-respects the filter, so it only ticks what you can actually see.
+respects the filter, so it only ticks what you can actually see. **Clear** does
+the opposite and unticks everything, including what the filter is hiding, so
+there is one button that always clears completely.
+
+### Queues survive page changes
+
+Starting a batch puts it in a queue, and the queue keeps going when you navigate
+to another page or refresh. Click through to a work page and come back and it is
+still sending, picking up exactly where it left off rather than starting again.
+Your ticked works survive the same way, so clicking through to the next page does
+not quietly empty your selection.
+
+**Closing the tab ends everything.** The queue is kept per tab and dies with it,
+so nothing is left running once you close it, and a queue will not follow you
+into another tab.
+
+A blue strip appears in the panel while anything is queued, showing what is
+happening and how many works are left. **Cancel all** in that strip stops
+everything at once. It only appears when there is something to stop, so it cannot
+be hit by accident. Work already sent stays sent.
 
 ### A performer's whole filmography
 
@@ -84,6 +111,7 @@ it is getting your IP rate-limited by jav8.vip for asking too much too fast.
   through a gallery.
 - Sending **more than 25 works at once asks first**, and Cancel sends nothing.
   Under 25 it just goes, so the common case is not slowed by a dialog.
+- **Only one batch runs at a time**, even when several are queued.
 - If logins start failing the batch **stops after three**. qBittorrent bans your IP
   for an hour after five consecutive failures, so carrying on would lock you out
   of your own client.
@@ -137,6 +165,12 @@ an hour after five, so pushing on would lock you out of your own client.
 - **Too many downloads queued at once?** Sending stops and asks when a single
   action covers more than 25 works — see [Looking after the
   site](#looking-after-the-site).
+- **It is still going after I closed the page?** Queues are per tab. Closing the
+  tab stops everything; opening a new one starts clean.
+- **My selection is empty and I only wanted some of them?** Nothing deleted it.
+  Every work unticks itself once it has been attempted, so an empty selection
+  after a batch means all of them were dealt with. Works that failed are named in
+  the log — tick those again to retry them.
 - **jav8.vip starts ignoring you?** That is rate limiting. Wait an hour; the
   script is already as gentle as it can be while still being useful.
 

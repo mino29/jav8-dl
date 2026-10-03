@@ -534,6 +534,28 @@ check("not instant", api.REQUEST_GAP_MS >= 200, true);
 check("not glacial", api.REQUEST_GAP_MS <= 1000, true);
 check("a 25-item batch stays under a minute", 25 * api.REQUEST_GAP_MS < 60000, true);
 
+group("pendingWorkCount - what the panel promises is still to come");
+// This number is what the status row shows and what the resume log reports, so an
+// off-by-one either promises work that is not left or hides work that is.
+{
+  const send = (n, cursor) => ({ kind: "send", hrefs: Array.from({ length: n }, (_, i) => "/v/" + i), cursor });
+  check("no jobs", api.pendingWorkCount([]), 0);
+  check("undefined jobs", api.pendingWorkCount(undefined), 0);
+  check("fresh batch counts every work", api.pendingWorkCount([send(34, 0)]), 34);
+  check("partial progress subtracts", api.pendingWorkCount([send(34, 30)]), 4);
+  check("finished batch is zero", api.pendingWorkCount([send(34, 34)]), 0);
+  // A cursor past the end must not report a negative count, which would render
+  // as "sending · -3 works left".
+  check("cursor past the end clamps at zero", api.pendingWorkCount([send(34, 99)]), 0);
+  check("several queued batches add up", api.pendingWorkCount([send(10, 4), send(5, 0)]), 11);
+  // A crawl has no per-work cost until it becomes a send job.
+  check("collect jobs count as zero", api.pendingWorkCount([{ kind: "collect", base: "/actress/1" }]), 0);
+  check("mixed collect and send", api.pendingWorkCount([{ kind: "collect" }, send(7, 2)]), 5);
+  // Defensive: a job restored from storage must not be able to produce NaN.
+  check("job with no hrefs", api.pendingWorkCount([{ kind: "send" }]), 0);
+  check("null entry in the list", api.pendingWorkCount([null, send(3, 1)]), 2);
+}
+
 group("MAX_LOGIN_FAILURES - a failed batch must not lock the user out");
 // qBittorrent bans an IP for an hour after a handful of consecutive failed
 // logins (web_ui_max_auth_fail_count defaults to 5). A selection of 17 that
