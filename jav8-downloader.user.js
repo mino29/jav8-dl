@@ -2,7 +2,7 @@
 // @name         JAV8 Downloader
 // @namespace    https://github.com/mino29/jav8-dl
 // @homepage     https://github.com/mino29/jav8-dl
-// @version      1.3.0
+// @version      1.4.0
 // @icon          data:image/png;base64,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
 // @description  Tick covers to queue them, filter by VR, pick the best magnet by size, and send to aria2 or qBittorrent. Settings live in the browser, not in a config file.
 // @author       mino29
@@ -1572,18 +1572,136 @@
     return cards.length;
   }
 
-  // ------------------------------------------------------ performer index page
-  function isActressIndex() {
-    return /^\/top-actresses/.test(location.pathname);
+  // ---------------------------------------------- performer links, site-wide
+  /**
+   * The performer's name from a link to her page.
+   *
+   * Two shapes exist on the site: the performer index wraps the name in
+   * <p class="actress-name">, while a work page renders it as a bare text node
+   * beside the avatar with no element to read. Reading only the first would
+   * label every button "this performer" on exactly the pages most likely to be
+   * browsed, which is how the feature would have looked broken on arrival.
+   */
+  function actressTileName(tile) {
+    var named = tile.querySelector(SELECTORS.actressName);
+    if (named && named.textContent.trim()) return named.textContent.trim();
+    // textContent skips the <img>, so the avatar contributes nothing here.
+    return (tile.textContent || "").replace(/\s+/g, " ").trim();
   }
 
   /**
-   * Put a "queue her whole career" button on each performer tile.
+   * Crawl a performer's pages and hand back everything matching the filter.
+   *
+   * One crawl, two callers. The button on a performer link stages the result and
+   * lets the user press Download selected; the panel button on her own page
+   * sends it immediately, because being on her page is already the decision.
+   * Splitting this into two functions once left the pagination rules, the filter
+   * pass and the error wording duplicated - free to drift, and only the less-used
+   * copy would get tested - so the traversal lives here once and the caller
+   * supplies only what it does with the answer.
+   *
+   * The VR filter is applied by the same matchesFilter() the listings use, and
+   * the size preference by pickMagnet() later, rather than a second copy of
+   * either rule here.
+   */
+  function crawlActress(href, name, button, onCollected) {
+    var label = name || href;
+    if (button) button.disabled = true;
+    log("Collecting works for " + label + "…", "mu");
+
+    function parse(html) {
+      return new DOMParser().parseFromString(html, "text/html");
+    }
+
+    function loadPage(pageHref) {
+      return getText(new URL(pageHref, location.origin).href)
+        .then(parse)
+        .catch(function () {
+          // A page that will not load ends the crawl and keeps what was already
+          // found. Failing the whole thing would throw away a hundred collected
+          // works over one bad request.
+          return null;
+        });
+    }
+
+    getText(new URL(href, location.origin).href)
+      .then(parse)
+      .then(function (firstDoc) {
+        return collectPages(firstDoc, loadPage);
+      })
+      .then(function (result) {
+        var hrefs = [];
+        result.works.forEach(function (work) {
+          // Recorded even when filtered out, so switching the filter afterwards
+          // does not show a stale count for works already collected.
+          known.set(work.href, workInfoFromCard(work.card));
+          if (matchesFilter(work.card)) hrefs.push(work.href);
+        });
+        onCollected(hrefs, result, button, label);
+      })
+      .catch(function (err) {
+        if (button) button.disabled = false;
+        log(label + ": could not read her works page - " + (err.message || err), "er");
+      });
+  }
+
+  /** How many pages a crawl walked, phrased for a log line. */
+  function pagesPhrase(pages) {
+    return pages + (pages === 1 ? " page" : " pages");
+  }
+
+  /** Warn about a crawl that stopped early, whatever the caller intended. */
+  function warnIfTruncated(result, where, tail) {
+    if (result.stopped === "page-cap") {
+      log("Stopped at the " + where + " limit; some works were not seen. " + tail, "wa");
+    } else if (result.stopped === "page-failed") {
+      log("Stopped early - a page would not load. " + tail, "wa");
+    }
+  }
+
+  /**
+   * Outcome for the performer-link button: stage, and let the user confirm.
+   *
+   * Staged because reaching a performer through a link on some other page is an
+   * exploratory act, and a career can be a hundred works. Sending a hundred
+   * magnets on a single click is not a reasonable thing to do by accident.
+   */
+  function stageCollected(hrefs, result, button, label) {
+    hrefs.forEach(function (href) {
+      selected.add(href);
+    });
+    updateCount();
+    requestBulkRefresh();
+    if (button) button.disabled = false;
+
+    if (!result.works.length) {
+      log(label + ": no works found on any page.", "wa");
+      return;
+    }
+    var where = pagesPhrase(result.pages);
+    warnIfTruncated(result, where, "The works found so far are queued.");
+    if (!hrefs.length) {
+      log(label + ": " + result.works.length + " works found, but none match " + filterScope() + ".", "wa");
+      return;
+    }
+    log(
+      label + ": " + hrefs.length + " of " + result.works.length + " works queued (" +
+        filterScope() + ", from " + where + "). Press Download selected to send them.",
+      "ok",
+    );
+  }
+
+  /**
+   * Put a "queue her whole career" button on every link to a performer.
+   *
+   * Site-wide rather than only on /top-actresses: the links appear on work
+   * pages, listings and searches, and that is where the decision "do I want
+   * everything she has" is actually made. Gating this on one route meant the
+   * button existed on the one page least likely to prompt its use.
    *
    * The tile is an <a>, so the button needs the same treatment as a cover tick:
    * the click must not reach the anchor, or the user lands on her page instead
-   * of queueing her. That is the whole reason this is a button inside a link
-   * rather than a separate control beside it.
+   * of queueing her.
    */
   function decorateActressTiles() {
     var tiles = document.querySelectorAll(SELECTORS.actressTile);
@@ -1591,7 +1709,9 @@
     if (!document.getElementById("jd-actress-style")) {
       var style = document.createElement("style");
       style.id = "jd-actress-style";
-      style.textContent = ".actresses .actress{position:relative}";
+      // Applied to every performer link, not just the ones inside .actresses, because
+      // the button now appears wherever the site links to a performer.
+      style.textContent = "a.actress{position:relative}";
       document.head.appendChild(style);
     }
 
@@ -1599,8 +1719,7 @@
       (function (tile) {
         if (tile.dataset.jdActress === "1") return;
         tile.dataset.jdActress = "1";
-        var nameEl = tile.querySelector(SELECTORS.actressName);
-        var name = nameEl ? nameEl.textContent.trim() : "";
+        var name = actressTileName(tile);
         var href = tile.getAttribute("href");
 
         var btn = el("button", "jd-allof", "＋");
@@ -1627,85 +1746,12 @@
           });
         });
         btn.addEventListener("click", function () {
-          queueActress(href, name, btn);
+          crawlActress(href, name, btn, stageCollected);
         });
         tile.appendChild(btn);
       })(tiles[i]);
     }
     return true;
-  }
-
-  /**
-   * Crawl a performer's pages and stage every matching work for sending.
-   *
-   * Staged rather than sent: a career can be a hundred works, and queueing them
-   * straight to the client would start a hundred detail fetches with no way to
-   * see or stop what was collected. The user confirms with Download selected.
-   *
-   * The VR filter is applied here by the same matchesFilter() the listings use,
-   * and the size preference is applied later by pickMagnet() - so this reuses
-   * the one definition of both rather than re-deriving a second copy here.
-   */
-  function queueActress(href, name, btn) {
-    var label = name || href;
-    if (btn) btn.disabled = true;
-    log("Collecting works for " + label + "…", "mu");
-
-    function parse(html) {
-      return new DOMParser().parseFromString(html, "text/html");
-    }
-
-    function loadPage(pageHref) {
-      return getText(new URL(pageHref, location.origin).href)
-        .then(parse)
-        .catch(function () {
-          // A page that will not load ends the crawl and keeps what was already
-          // found. Failing the whole thing would throw away a hundred collected
-          // works over one bad request.
-          return null;
-        });
-    }
-
-    getText(new URL(href, location.origin).href)
-      .then(parse)
-      .then(function (firstDoc) {
-        return collectPages(firstDoc, loadPage);
-      })
-      .then(function (result) {
-        var kept = 0;
-        result.works.forEach(function (work) {
-          var info = workInfoFromCard(work.card);
-          // Known entries are recorded even when filtered out, so switching the
-          // filter later does not show a stale count for works already collected.
-          known.set(work.href, info);
-          if (!matchesFilter(work.card)) return;
-          selected.add(work.href);
-          kept++;
-        });
-        updateCount();
-        requestBulkRefresh();
-        if (btn) btn.disabled = false;
-
-        if (!result.works.length) {
-          log(label + ": no works found on any page.", "wa");
-          return;
-        }
-        var where = result.pages + (result.pages === 1 ? " page" : " pages");
-        if (result.stopped === "page-cap") {
-          log(label + ": stopped at the " + where + " limit; some works were not seen.", "wa");
-        } else if (result.stopped === "page-failed") {
-          log(label + ": stopped early - a page would not load. The works found so far are queued.", "wa");
-        }
-        log(
-          label + ": " + kept + " of " + result.works.length + " works queued (" +
-            filterScope() + ", from " + where + "). Press Download selected to send them.",
-          kept ? "ok" : "wa",
-        );
-      })
-      .catch(function (err) {
-        if (btn) btn.disabled = false;
-        log(label + ": could not read her works page - " + (err.message || err), "er");
-      });
   }
 
   // ------------------------------------------------- performer: career crawl
@@ -1731,76 +1777,32 @@
   }
 
   /**
-   * Crawl a performer's pages and send everything matching the filter.
+   * Outcome for the panel button: send immediately.
    *
-   * Sends as it goes rather than staging first, which is what this button is
-   * for - unlike the tile on /top-actresses, where the choice of performer is
-   * exploratory and staging costs nothing.
-   *
-   * The VR filter and the size preference are applied by the same
-   * matchesFilter() and pickMagnet() the listings use, rather than a second
-   * copy of either rule here.
+   * Being on her page is already the decision, so there is nothing to confirm -
+   * which is also why this differs from the link button's staging. The traversal
+   * is shared; only the ending is not.
    */
-  function downloadActressCareer(href, name, button) {
-    var label = name || "this performer";
-    button.disabled = true;
-    log("Collecting every work by " + label + "…", "mu");
-
-    function parse(html) {
-      return new DOMParser().parseFromString(html, "text/html");
+  function sendCollected(hrefs, result, button, label) {
+    if (!result.works.length) {
+      button.disabled = false;
+      log(label + ": no works found on any page.", "wa");
+      return;
     }
-
-    function loadPage(pageHref) {
-      return getText(new URL(pageHref, location.origin).href)
-        .then(parse)
-        .catch(function () {
-          // A page that will not load ends the crawl and keeps what was already
-          // found. Failing the whole thing would discard a hundred collected
-          // works over one bad request.
-          return null;
-        });
+    var where = pagesPhrase(result.pages);
+    warnIfTruncated(result, where, "Sending what was found.");
+    if (!hrefs.length) {
+      button.disabled = false;
+      log(label + ": " + result.works.length + " works found, but none match " + filterScope() + ".", "wa");
+      return;
     }
-
-    getText(new URL(href, location.origin).href)
-      .then(parse)
-      .then(function (firstDoc) {
-        return collectPages(firstDoc, loadPage);
-      })
-      .then(function (result) {
-        var hrefs = [];
-        result.works.forEach(function (work) {
-          known.set(work.href, workInfoFromCard(work.card));
-          if (matchesFilter(work.card)) hrefs.push(work.href);
-        });
-
-        var where = result.pages + (result.pages === 1 ? " page" : " pages");
-        if (!result.works.length) {
-          button.disabled = false;
-          log(label + ": no works found on any page.", "wa");
-          return;
-        }
-        if (result.stopped === "page-cap") {
-          log(label + ": stopped at the " + where + " limit, so some works were not seen.", "wa");
-        } else if (result.stopped === "page-failed") {
-          log(label + ": stopped early - a page would not load. Sending what was found.", "wa");
-        }
-        if (!hrefs.length) {
-          button.disabled = false;
-          log(label + ": " + result.works.length + " works found, but none match " + filterScope() + ".", "wa");
-          return;
-        }
-        log(
-          label + ": sending " + hrefs.length + " of " + result.works.length +
-            " works (" + filterScope() + ", from " + where + ").",
-          "mu",
-        );
-        // The button stays disabled for the duration; sendHrefs re-enables it.
-        sendHrefs(hrefs, button);
-      })
-      .catch(function (err) {
-        button.disabled = false;
-        log(label + ": could not read her works page - " + (err.message || err), "er");
-      });
+    log(
+      label + ": sending " + hrefs.length + " of " + result.works.length +
+        " works (" + filterScope() + ", from " + where + ").",
+      "mu",
+    );
+    // The button stays disabled for the duration; sendHrefs re-enables it.
+    sendHrefs(hrefs, button);
   }
 
   /**
@@ -1829,7 +1831,7 @@
     };
     btn._retitle();
     btn.addEventListener("click", function () {
-      downloadActressCareer(actressBasePath(), name, btn);
+      crawlActress(actressBasePath(), name, btn, sendCollected);
     });
     row.appendChild(btn);
     body.appendChild(row);
@@ -2474,20 +2476,19 @@
     if (!isTargetHost(location.hostname)) return;
     injectStyle();
     buildPanel();
+
+    // Every link to a performer gets a crawl button, on every route. This runs
+    // before the work-page and listing branches below so that a performer named
+    // on a work page gets one too - which is where the link mostly appears.
+    if (!decorateActressTiles()) {
+      // Some routes render their content client-side; try once more.
+      setTimeout(function () {
+        decorateActressTiles();
+      }, 1200);
+    }
+
     if (isDetailPage()) {
       buildDetailPanel();
-      return;
-    }
-    if (isActressIndex()) {
-      // A performer index has no work cards to decorate, but it is where
-      // "download everything she has" is offered, so it decorates in its own
-      // right rather than falling through to the listing path and finding
-      // nothing.
-      if (!decorateActressTiles()) {
-        setTimeout(function () {
-          decorateActressTiles();
-        }, 1200);
-      }
       return;
     }
     if (!decorateAll()) {

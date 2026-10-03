@@ -128,6 +128,18 @@ Kept here because they are the kind that come back:
   `git checkout-index -f -- <path>`, which takes the byte-exact staged copy.
   Verify afterwards with
   `[Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes(...))`.
+- A browser cache will silently defeat a harness that re-reads the script per
+  request. It did: a fixed size preference appeared not to work in the browser
+  while the pure logic computed the right answer, because the tab was running a
+  cached copy of the script and every assertion still passed. `/__harness__/script.js`
+  and the fixture pages are now served `no-store`. When the browser disagrees with
+  a test that passes, suspect a stale copy before suspecting the code — and prove
+  it with a reload, which is what settled this one.
+- Two entry points doing the same traversal will drift. `queueActress()` and
+  `downloadActressCareer()` were ~90% identical — same page loader, same filter
+  pass, same error prose — differing only in whether they staged or sent, and only
+  the less-used copy was ever tested. They are now one `crawlActress()` with the
+  caller supplying only what it does with the result.
 - A control can be *present, correct and inert*. The size slider set a window ten
   times either side of the preference and then took the largest release inside
   it, so the preference never reached the selection at all — `pickMagnet` was

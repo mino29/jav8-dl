@@ -38,6 +38,7 @@ The panel in the top right corner holds the controls:
 | **Size** | Preferred size, on a slider |
 | **Select all / Deselect all** | Tick or untick everything currently showing |
 | **All works** | On a performer's page: send her entire filmography |
+| **＋** | On any performer link: queue her entire filmography |
 | **Settings** | Client address, credentials, save path |
 
 ### Preferred size
@@ -63,13 +64,15 @@ respects the filter, so it only ticks what you can actually see.
 
 ### A performer's whole filmography
 
-On `/actress/<id>` the panel shows an **All works** button. It walks every page
-of that performer's filmography — starting from page 1 even if you are on page 4
-— applies your filter and size setting, and sends everything it finds.
+Every link to a performer gets a **＋** button — on work pages, listings,
+searches, and the performers index. Press it and the script walks all of her
+pages, following pagination from page 1, applies your filter and size setting,
+and queues the lot. Nothing is sent until you press **Download selected**, so you
+can check the count first. A career can be a hundred works.
 
-The same works are available on [the performers
-page](https://jav8.vip/top-actresses), where each performer has a **＋** button.
-That one only collects them, so you can check the count before sending anything.
+On `/actress/<id>` itself the panel also shows **All works**, which does the same
+thing but sends immediately — you are already on her page, so there is nothing to
+confirm.
 
 ## Settings
 

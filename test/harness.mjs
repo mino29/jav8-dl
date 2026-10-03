@@ -251,7 +251,15 @@ const server = createServer((req, res) => {
       res.end(String(err));
       return;
     }
-    res.writeHead(200, { "Content-Type": "text/javascript; charset=utf-8" });
+    // no-store, deliberately. loadPatched() re-reads the file per request so an
+    // edit shows up on reload without restarting the harness - but a cached
+    // response quietly defeats that, and the symptom is the worst kind: the page
+    // under test runs yesterday's logic while every assertion still passes. That
+    // is how a size-preference fix appeared to "not work" here when it did.
+    res.writeHead(200, {
+      "Content-Type": "text/javascript; charset=utf-8",
+      "Cache-Control": "no-store, max-age=0",
+    });
     res.end(text);
     return;
   }
@@ -273,7 +281,10 @@ const server = createServer((req, res) => {
   }
   try {
     const html = readFileSync(join(fixtures, route[1]), "utf8");
-    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    res.writeHead(200, {
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "no-store, max-age=0",
+    });
     res.end(inject(html));
   } catch (err) {
     res.writeHead(500, { "Content-Type": "text/plain" });
