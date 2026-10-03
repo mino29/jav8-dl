@@ -84,6 +84,37 @@ const SHIM = `
       });
     return { abort: function () {} };
   };
+
+  /**
+   * Opt-in strict CSRF mode, standing in for the real client.
+   *
+   * qBittorrent answers 401 to any request whose Origin or Referer is not the
+   * client itself, and a privileged request inherits both from the page it runs
+   * on. That is why the script sets them, and this is the check that would
+   * notice if it stopped. It is off by default because a browser fetch() strips
+   * the forbidden header names on its way out, so enforcing it here would fail
+   * every request regardless of what the script did - it reports what the script
+   * *asked* for, not what a browser would actually transmit.
+   */
+  window.__csrfStrict = false;
+  window.GM_xmlhttpRequest = (function (inner) {
+    return function (opts) {
+      if (!window.__csrfStrict) return inner(opts);
+      var headers = opts.headers || {};
+      var base = new URL(opts.url).origin;
+      var origin = headers.Origin || "";
+      var referer = headers.Referer || "";
+      if (origin && origin !== base) {
+        if (opts.onload) opts.onload({ status: 401, responseText: "", responseHeaders: "" });
+        return { abort: function () {} };
+      }
+      if (referer && referer.replace(/\\/$/, "") !== base) {
+        if (opts.onload) opts.onload({ status: 401, responseText: "", responseHeaders: "" });
+        return { abort: function () {} };
+      }
+      return inner(opts);
+    };
+  })(window.GM_xmlhttpRequest);
 })();
 </script>
 `;
@@ -96,11 +127,27 @@ function inject(html) {
   return SHIM + tag + html;
 }
 
+/**
+ * Route table.
+ *
+ * Matched against pathname *and* query, not pathname alone. An earlier version
+ * matched only the pathname, so `/actress/58956?page=2` resolved to the same
+ * fixture as page 1 and the crawler cheerfully "walked two pages" of identical
+ * markup - reporting success while testing nothing. Pagination is the whole
+ * reason the query has to be part of the key.
+ */
 const ROUTES = [
   [/^\/$/, "listing.html"],
   [/^\/updated$/, "listing.html"],
   [/^\/latest$/, "listing.html"],
   [/^\/genre\/353$/, "listing-vr.html"],
+  // A two-page career, so autopagination can be walked to its real end. Page 2
+  // is the last one and carries no pagination-next, which is the only signal
+  // the crawler uses to stop.
+  [/^\/actress\/58956$/, "listing-actress-p1.html"],
+  [/^\/actress\/58956\?page=2$/, "listing-actress-p2.html"],
+  [/^\/actress\/\d+/, "listing-actress.html"],
+  [/^\/top-actresses$/, "top-actresses.html"],
   [/^\/v\/\d+/, "detail.html"],
 ];
 
@@ -135,6 +182,11 @@ function handleStub(req, res, url) {
       return;
     }
 
+    // The stub speaks 4.x by default. Real 5.x answers 204 with an empty body
+    // and names the cookie QBT_SID_<port>, both of which broke the script
+    // silently, so ?v5=1 switches it and keeps that path exercised.
+    const speakV5 = url.searchParams.get("v5") === "1";
+
     if (path === "/jsonrpc") {
       stubHits.aria2.push({ path, body });
       res.writeHead(200, { "Content-Type": "application/json" });
@@ -143,17 +195,30 @@ function handleStub(req, res, url) {
     }
 
     if (path.startsWith("/api/v2/")) {
-      stubHits.qbittorrent.push({ path, body });
+      stubHits.qbittorrent.push({ path, body, origin: req.headers.origin || null, referer: req.headers.referer || null });
       if (path.endsWith("/auth/login")) {
         // A real manager surfaces Set-Cookie; the shim reads this X- header to
         // simulate that. Loading the page with ?nocookie=1 hides it, which is
         // how the "manager hides Set-Cookie" fallback gets exercised.
-        res.writeHead(200, {
+        const cookie = speakV5
+          ? "QBT_SID_8980=stub-v5-session; path=/; HttpOnly"
+          : "SID=stub-session-id; path=/; HttpOnly";
+        // 5.x answers 204 with no body. Both are accepted by the script; a 4.x
+        // "Fails." body is how a rejected password is signalled.
+        const failed = /password=wrong|badpass|wrongpass/i.test(body);
+        if (failed) {
+          // A real 4.x answers 200 "Fails."; 5.x answers 401. Both are accepted
+          // as "credentials rejected", so the stub mimics each per ?v5.
+          res.writeHead(speakV5 ? 401 : 200, { "Content-Type": "text/plain" });
+          res.end(speakV5 ? "Unauthorized" : "Fails.");
+          return;
+        }
+        res.writeHead(speakV5 ? 204 : 200, {
           "Content-Type": "text/plain",
-          "Set-Cookie": "SID=stub-session-id; path=/; HttpOnly",
-          "X-Stub-Set-Cookie": "SID=stub-session-id; path=/; HttpOnly",
+          "Set-Cookie": cookie,
+          "X-Stub-Set-Cookie": cookie,
         });
-        res.end("Ok.");
+        res.end(speakV5 ? "" : "Ok.");
         return;
       }
       if (path.endsWith("/app/version")) {
@@ -200,10 +265,10 @@ const server = createServer((req, res) => {
     return;
   }
 
-  const route = ROUTES.find(([re]) => re.test(path));
+  const route = ROUTES.find(([re]) => re.test(path + (url.search || "")));
   if (!route) {
     res.writeHead(404, { "Content-Type": "text/plain" });
-    res.end("no fixture for " + path);
+    res.end("no fixture for " + path + (url.search || ""));
     return;
   }
   try {
@@ -220,5 +285,8 @@ server.listen(port, "127.0.0.1", () => {
   console.log(`harness on http://127.0.0.1:${port}`);
   console.log(`  listing      http://127.0.0.1:${port}/updated`);
   console.log(`  VR listing   http://127.0.0.1:${port}/genre/353`);
+  console.log(`  actress     http://127.0.0.1:${port}/actress/18787`);
+  console.log(`  actress 2p  http://127.0.0.1:${port}/actress/58956`);
+  console.log(`  performers  http://127.0.0.1:${port}/top-actresses`);
   console.log(`  detail       http://127.0.0.1:${port}/v/557564`);
 });

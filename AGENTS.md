@@ -17,6 +17,12 @@ anything that has to be compiled before a user can install it is a liability.
 | `test/fixtures/` | captured pages, committed so tests need no network |
 | `tools/fetch_fixtures.py` | re-captures the fixtures |
 
+Routes worth knowing about when debugging the harness: `/actress/58956` serves a
+two-page career so autopagination can be walked to a real end, and the route
+table matches pathname **and** query — matching only the pathname once made
+`?page=2` serve page 1 again, and the crawler "successfully" walked two identical
+pages.
+
 ## Invariants worth preserving
 
 **One copy of the logic.** The userscript must stay a single file, so tests
@@ -75,3 +81,46 @@ Kept here because they are the kind that come back:
 - The harness once read the request body as `opts.body` instead of `opts.data`
   and sent empty requests; the real aria2 called it "Parse error" and it looked
   like a userscript bug.
+- qBittorrent version numbers hide behaviour changes. It "worked" against a
+  stock install while doing nothing at all, because three assumptions were all
+  true of 4.x and false of 5.x: the cookie is `QBT_SID_<port>` not `SID`, login
+  answers 204 with an empty body not `200 "Ok."`, and any request carrying a
+  cross-site `Origin`/`Referer` is refused with a bare 401. Nothing errored.
+  When a client is "working for me", reproduce against the user's actual server
+  before changing anything.
+- The harness's browser `fetch()` **silently drops `Referer` and `Origin`** —
+  both are forbidden header names. Verified by having the stub report what it
+  received: the page's URL came back, not what the script set. So a green harness
+  run does **not** prove the same-origin fix works; only a real userscript manager
+  can. Do not tighten the harness into believing otherwise.
+- Errors must keep the fact that distinguishes them. Wrapping a failure to add a
+  human-readable message threw away `err.transport`, and the header fallback that
+  depends on "did this ever reach the server?" then silently never ran. Copy the
+  discriminator onto the wrapper; do not pattern-match the message text.
+- Anything captured once at a decision point goes stale if an earlier step can
+  change it. `withOrigin` was read before the login that *discovers* it, so the
+  first call after discovery repeated the request it had just been told to stop
+  making. Read it inside the continuation, not before the promise.
+- `@connect` is not a firewall rule and has no subnet wildcards. Tampermonkey
+  documents it as accepting a domain, `self`, `localhost`, a single IP, or `*`;
+  `@connect 192.168.*` is not among them. Where one is not honoured the request
+  is refused *before it leaves the browser*, so the only symptom is a network
+  error with **no HTTP status** — indistinguishable from an unreachable client.
+  Days went into the qBittorrent protocol before anyone checked the one line
+  that stopped the request leaving at all. When a privileged request fails with
+  no status, suspect permissions before suspecting the protocol.
+- The user's real host is a credential-adjacent detail. Reproducing against it
+  is right; committing it is not. It ended up in the userscript's doc comment,
+  the README and two test files before being caught — use a documentation-range
+  address in examples, and grep the whole repo for the real one before declaring
+  a task done.
+- Carrying a status only inside an error message is not enough. `statusOf()`
+  re-parsed the text, so when a lower layer replaced a precise message with a
+  vaguer one the higher layer read a stale status and reported the wrong
+  problem: "banned for too many logins" became "could not reach the host",
+  sending the user to `@connect` for a bad password. Status is now a field, and
+  `explained()` stops a precise message being overwritten downstream.
+- Never rewrite an existing file with PowerShell `WriteAllText`/`Out-File` to fix
+  one byte. Those default to a legacy codepage here and silently destroyed every
+  em dash in this file while looking like it worked. Use the edit tool, and verify
+  with `[Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes(...))` afterwards.

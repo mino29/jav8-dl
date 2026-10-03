@@ -1,17 +1,12 @@
 // ==UserScript==
 // @name         JAV8 Downloader
 // @namespace    https://github.com/mino29/jav-scraper
-// @version      1.0.0
+// @version      1.1.0
 // @description  Tick covers to queue them, filter by VR, pick the best magnet by size, and send to aria2 or qBittorrent. Settings live in the browser, not in a config file.
 // @author       mino29
 // @match        *://jav8.vip/*
 // @match        *://*.jav8.vip/*
-// @connect      localhost
-// @connect      127.0.0.1
-// @connect      host.docker.internal
-// @connect      192.168.*
-// @connect      10.*
-// @connect      172.16.*
+// @connect      *
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_xmlhttpRequest
@@ -41,9 +36,44 @@
  * - `第一人称` (first person) appears on ordinary flat releases and is NOT a
  *   VR signal. Do not add it.
  *
+ * qBittorrent note, measured against a live v5.2.3 WebUI rather than assumed:
+ *
+ * - It refuses any request carrying a cross-site `Origin` or `Referer`, which is
+ *   exactly what a privileged request inherits from the page it runs on. Its own
+ *   wiki says to set both to the client's own base URL, so every request here
+ *   does. If the userscript manager strips them anyway (Chrome forbids setting
+ *   them, and not every manager passes them through), the failure is a bare 401
+ *   and the only fix is one WebUI toggle - so qbFailure() names it.
+ * - The session cookie is `SID` on 4.x but `QBT_SID_<port>` on 5.x, which allows
+ *   several WebUIs to share a host. A pattern anchored on `SID` found nothing at
+ *   all against a 5.x server and silently degraded to the manager's cookie jar.
+ * - Login answers `200 "Ok."` on 4.x and `204` with an empty body on 5.x, so the
+ *   body alone cannot decide whether a login succeeded.
+ *
  * Cross-origin note: aria2 and qBittorrent send no CORS headers, so a plain
  * fetch() from the page cannot reach them. GM_xmlhttpRequest is what makes
  * this work; without a userscript manager there is nothing to fall back to.
+ *
+ * @connect note, read before changing the metadata block:
+ *
+ * The shipped line is `@connect *`, which is what makes this work against a
+ * client on any address without the user editing anything. Listing one host per
+ * client was tried first and rejected: @connect is read once, when the manager
+ * installs the script, so it cannot be filled in at runtime - a user who has to
+ * edit the script to make it work has a script that does not work. There is no
+ * middle ground, because a subnet wildcard such as `192.168.*` is not a valid
+ * value and silently grants nothing; that cost an afternoon to find out.
+ *
+ * What `*` costs: the script may send a privileged request to any host the
+ * browser can reach. In practice it talks only to the download client and to
+ * jav8.vip, and sends no page content anywhere. To narrow it, replace the line
+ * with one entry per client you actually run:
+ *
+ *   @connect localhost
+ *   @connect 127.0.0.1
+ *   @connect 192.168.1.50
+ *
+ * If a request is ever refused, qbFailure() names the host it wanted.
  */
 (function () {
   "use strict";
@@ -85,7 +115,40 @@
     detailCode: "dl dt.highlight",
     detailTitle: "h1.text-zh",
     detailTag: "a.tag",
+    // Performer index (/top-actresses). Each tile is a link to her works page.
+    actressTile: 'a.actress[href^="/actress/"]',
+    actressName: ".actress-name",
+    // Every paginated route uses the same control, so autopagination is one
+    // lookup rather than one per route. Verified on /actress/<id>?page=N,
+    // /top-actresses?page=N and the listing routes.
+    paginationNext: "a.pagination-next[href]",
   };
+
+  /**
+   * How wide a window one preferred-size stop buys: [P / 10, P * 10].
+   *
+   * A single slider has to stand in for the old Min and Max boxes, so the two
+   * bounds are derived from one number instead of being set independently. The
+   * floor is the half that carried the documented intent - it exists to skip
+   * 200 MB samples - so the ratio is symmetric around the preferred size and
+   * wide enough that the full-quality version of a release still clears it.
+   */
+  var SIZE_WINDOW_RATIO = 10;
+
+  /**
+   * Stops for the preferred-size slider, ascending, in bytes.
+   *
+   * Discrete stops rather than a continuous range on purpose: every position
+   * then lands on a round number a user would actually type, the control is
+   * keyboard- and screen-reader-navigable without any ARIA of our own, and a
+   * persisted preference is always one of a known set rather than a float that
+   * drifted. The ladder spans what the site actually labels (1-50 GB, with
+   * plenty of headroom above the largest releases seen) rather than a
+   * mathematically even range.
+   */
+  var SIZE_LADDER = [1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 30, 50].map(function (gb) {
+    return gb * GB;
+  });
 
   /**
    * Vendor defaults for a stock install.
@@ -115,9 +178,75 @@
     },
     active: "aria2",
     filter: "all", // all | vr | non-vr
-    minSize: 500 * MB,
-    maxSize: 100 * GB,
+    preferredSize: 5 * GB,
   };
+
+  // minSize/maxSize are what pickMagnet() compares against, but they are derived
+  // and never stored: persisting both a slider position and the window it implies
+  // would be two answers to one question, and they would eventually disagree.
+  DEFAULTS.minSize = Math.round(DEFAULTS.preferredSize / SIZE_WINDOW_RATIO);
+  DEFAULTS.maxSize = Math.round(DEFAULTS.preferredSize * SIZE_WINDOW_RATIO);
+
+  /** A usable byte count, or the fallback. Slider and stored values both. */
+  function coerceSize(bytes, fallback) {
+    var n = Number(bytes);
+    return isFinite(n) && n > 0 ? n : fallback;
+  }
+
+  /** The [min, max] window one preferred-size stop implies. */
+  function windowFromPreferred(bytes) {
+    var preferred = coerceSize(bytes, DEFAULTS.preferredSize);
+    return {
+      min: Math.round(preferred / SIZE_WINDOW_RATIO),
+      max: Math.round(preferred * SIZE_WINDOW_RATIO),
+    };
+  }
+
+  /**
+   * Index of the ladder stop a byte count names, or the nearest one.
+   *
+   * Distance is compared in log space because the ladder is geometric-ish: a
+   * linear comparison would treat the gap from 1 GB to 2 GB as twice as
+   * important as 49 GB to 50 GB and put almost every stop in the top half.
+   */
+  function preferredIndex(bytes) {
+    var target = Math.log(coerceSize(bytes, DEFAULTS.preferredSize));
+    var best = 0;
+    for (var i = 1; i < SIZE_LADDER.length; i++) {
+      if (
+        Math.abs(Math.log(SIZE_LADDER[i]) - target) <
+        Math.abs(Math.log(SIZE_LADDER[best]) - target)
+      ) {
+        best = i;
+      }
+    }
+    return best;
+  }
+
+  /** The ladder stop at an index, clamped to the ladder. */
+  function preferredAtIndex(index) {
+    var i = Number(index);
+    if (!isFinite(i)) i = preferredIndex(DEFAULTS.preferredSize);
+    return SIZE_LADDER[Math.max(0, Math.min(SIZE_LADDER.length - 1, Math.round(i)))];
+  }
+
+  /**
+   * One-off migration off the removed Min/Max boxes.
+   *
+   * Only the floor is carried across: it was the half with a stated purpose
+   * ("skip 200 MB samples"), whereas a window spanning 500 MB to 100 GB has no
+   * single centre worth recovering - its geometric mean sits near 240 MB, which
+   * would hand back a window far narrower than the one the user had. So the
+   * slider is positioned to preserve the old floor and the ceiling follows.
+   */
+  function preferredFromFloor(minBytes) {
+    var budget = coerceSize(minBytes, DEFAULTS.minSize) * SIZE_WINDOW_RATIO;
+    var pick = SIZE_LADDER[0];
+    for (var i = 0; i < SIZE_LADDER.length; i++) {
+      if (SIZE_LADDER[i] <= budget) pick = SIZE_LADDER[i];
+    }
+    return pick;
+  }
 
   /** "5.37GB" -> bytes. Returns null when the text is not a size. */
   function parseSize(text) {
@@ -274,6 +403,276 @@
     return h + (chosen ? ":" + chosen : "") + path;
   }
 
+  /**
+   * The scheme://host:port a client lives at - no path, no trailing slash.
+   *
+   * qBittorrent compares this against the request's Origin and Referer, so it
+   * has to be composable on its own rather than as one of several endpoints.
+   */
+  function origin(host, port) {
+    return endpoint(host, port, "").replace(/\/+$/, "");
+  }
+
+  /**
+   * The bare hostname, which is what a userscript manager's @connect needs.
+   *
+   * Tampermonkey documents @connect as accepting a domain, `self`, `localhost`,
+   * an IP address, or `*`. A subnet wildcard such as `192.168.*` is not among
+   * them, so it does not reliably grant access - and when it does not, the
+   * request is refused before it leaves the browser and arrives as a network
+   * error with no HTTP status at all. That is the failure this whole function
+   * exists to make fixable: it strips the scheme, port and IPv6 brackets so the
+   * message can name a value that is correct rather than one that has to be
+   * worked out.
+   */
+  function connectHost(host, port) {
+    var full = endpoint(host, port, "");
+    var afterScheme = full.replace(/^[a-z][a-z0-9+.-]*:\/\//i, "");
+    var hostOnly = afterScheme.replace(/:\d{1,5}$/, "");
+    // [::1]:8080 -> ::1. The brackets are IPv6 syntax, not part of the name.
+    var unwrapped = hostOnly.replace(/^\[(.+)\]$/, "$1");
+    return unwrapped || full;
+  }
+
+  /**
+   * qBittorrent's session cookie.
+   *
+   * 4.x sets `SID`; 5.x sets `QBT_SID_<port>` so several WebUIs can share one
+   * host. Anchoring on `SID` alone matched nothing at all against a 5.x server,
+   * because of the `_8082` before the `=`, and the symptom was silence: no
+   * cookie, no error, and every call quietly depending on the manager's own jar.
+   *
+   * Deliberately not anchored to the start of a header, because the value is
+   * read out of a whole `responseHeaders` blob whose formatting is not ours.
+   */
+  var SID_COOKIE_RE = /((?:QBT_)?SID(?:_\d{1,5})?)\s*=\s*([^;\r\n]+)/i;
+
+  /**
+   * responseHeaders is a string in most managers, an object in some.
+   *
+   * Set-Cookie is a forbidden header name for a plain fetch and is not surfaced
+   * by every userscript manager at all, so both shapes have to be tolerated
+   * before concluding there is no cookie to read.
+   */
+  function headerString(headers) {
+    if (typeof headers === "string") return headers;
+    if (!headers) return "";
+    if (Array.isArray(headers)) return headers.join("\n");
+    if (typeof headers === "object") {
+      return Object.keys(headers)
+        .map(function (key) {
+          return key + ": " + headers[key];
+        })
+        .join("\n");
+    }
+    return String(headers);
+  }
+
+  /** The "name=value" pair for a Cookie header, or null when there is none. */
+  function parseSidCookie(headers) {
+    var match = SID_COOKIE_RE.exec(headerString(headers));
+    return match ? match[1] + "=" + match[2].trim() : null;
+  }
+
+  /**
+   * Did a login response actually authenticate?
+   *
+   * 4.x answered `200` with the body `Ok.`, or `Fails.` on bad credentials. 5.x
+   * answers `204` with an empty body, so the body alone cannot decide this and
+   * a check against `Fails.` alone is dead code on a current server. request()
+   * has already rejected anything outside 2xx, so transport is not in question.
+   */
+  function loginAccepted(status, body) {
+    return !/^\s*fails/i.test(String(body === undefined || body === null ? "" : body));
+  }
+
+  /**
+   * The status code out of a request() error, or 0 when it is not an HTTP one.
+   *
+   * Prefers the field request() attaches, then falls back to the message: a
+   * rejection can also come from a caller wrapping the error itself, and 0 is a
+   * safe answer because it routes to the "never arrived" advice rather than
+   * guessing at a status.
+   */
+  function statusOf(err) {
+    if (err && err.status) return Number(err.status);
+    var match = /HTTP (\d{3})/.exec(err && err.message ? String(err.message) : "");
+    return match ? Number(match[1]) : 0;
+  }
+
+  /**
+   * Mark a failure as already explained, so a caller further up does not
+   * replace a precise message with a vaguer one.
+   *
+   * The layers here are login -> session -> call, and each has a different
+   * remedy. Without this, a login rejected for bad credentials was re-reported
+   * by the request layer as an unreachable host, pointing the user at @connect
+   * for a problem that had nothing to do with it.
+   */
+  function explained(message) {
+    var err = new Error(message);
+    err.explained = true;
+    return err;
+  }
+
+  /**
+   * Consecutive login failures tolerated before giving up on a batch.
+   *
+   * qBittorrent's web_ui_max_auth_fail_count defaults to 5 and its ban lasts an
+   * hour, so a selection of 17 that keeps retrying a wrong password does not
+   * merely fail - it locks the user out of their own client, from their own
+   * machine, which is worse than the bug it started as. Three leaves margin
+   * under that default while still letting a transient blip through.
+   *
+   * Kept here rather than inline so the threshold is asserted rather than
+   * rediscovered when someone tunes it.
+   */
+  var MAX_LOGIN_FAILURES = 3;
+
+  /**
+   * Explain a qBittorrent failure in terms the user can act on.
+   *
+   * Every failure here arrives as a bare status code, and 401 in particular
+   * means three different things depending on where in the exchange it landed.
+   * Passing "HTTP 401" up to the log would leave the user with no way to tell a
+   * typo'd password from a server-side security toggle, so the phase decides
+   * what is said.
+   */
+  function qbFailure(status, phase, base) {
+    if (!status) {
+      // No status at all means the request never produced an HTTP response. In a
+      // userscript that is almost always @connect: the manager refuses the call
+      // before it leaves the browser, so the refusal cannot look like anything
+      // else. Naming the exact value is the whole point - "add 192.168.1.50" is a
+      // two-second fix, "check your @connect settings" is a guessing game.
+      return (
+        "Could not reach qBittorrent at " + (base || "the configured host") +
+        ". The request was stopped before it reached the server, which for a " +
+        "userscript almost always means it is not permitted. Add this line to " +
+        "the metadata block at the very top of this script, then reinstall or " +
+        "save it in your manager:\n\n" +
+        "// @connect      " + (connectHint(base) || "<host>") + "\n\n" +
+        "Nothing in this script can add it for you at runtime - @connect is read " +
+        "once, when the manager installs the script. There is no subnet wildcard " +
+        "that covers a range of addresses; the exact host is required."
+      );
+    }
+    if (phase === "login") {
+      if (status === 403) {
+        return (
+          "qBittorrent refused the login with 403, which it returns when it has " +
+          "banned this IP after too many failed attempts. Wait for the ban to " +
+          "expire (Web UI > Security > ban duration) or restart qBittorrent."
+        );
+      }
+      return (
+        "qBittorrent at " + (base || "the configured host") + " refused the login " +
+        "(HTTP " + (status || 401) + "). Either the username or password is wrong, or the " +
+        "request reached the server as cross-site because this userscript manager " +
+        "stripped the Origin and Referer headers the script sets. Check the " +
+        "password and the host first; if both are right, uncheck \"Use CSRF " +
+        "protection\" in Tools > Preferences > Web UI."
+      );
+    }
+    if (status === 401 || status === 403) {
+      return (
+        "qBittorrent refused the request as cross-site (HTTP " + status + "). Its " +
+        "CSRF protection rejects any request whose Origin or Referer is not the " +
+        "client itself, and this userscript manager stripped the ones the script " +
+        "sets. Uncheck \"Use CSRF protection\" in Tools > Preferences > Web UI " +
+        "(and \"Validate host header\" if that is what is refusing)."
+      );
+    }
+    return "qBittorrent returned HTTP " + status + ".";
+  }
+
+  /**
+   * Turn a base URL back into the value a @connect line needs.
+   *
+   * Takes the composed URL rather than the raw host field so it works for every
+   * shape a user can type - bare hostname, hostname with an embedded port, or a
+   * full URL - and so it cannot disagree with the URL actually being requested.
+   */
+  function connectHint(base) {
+    if (!base) return "";
+    return connectHost(base, "");
+  }
+
+  /**
+   * The page after this one, or null when this is the last one.
+   *
+   * Every paginated route on the site renders the same control, so one lookup
+   * covers /actress/<id>, /top-actresses and the listings. The *absence* of the
+   * link is the only dependable end-of-list signal - there is no total count in
+   * the markup to divide up - so returning null rather than guessing a page
+   * count is what stops the crawl at the right place.
+   */
+  function nextPageHref(doc) {
+    var link = doc.querySelector(SELECTORS.paginationNext);
+    if (!link) return null;
+    var href = link.getAttribute("href");
+    return href ? href : null;
+  }
+
+  /**
+   * Follow an ?page=N chain and collect every work reference on the way.
+   *
+   * Takes a "fetch this href and hand me a document" function rather than doing
+   * any I/O itself, so the traversal - which is where the bugs live - can be
+   * exercised without a browser or a network. That callback is asynchronous
+   * because every real page load is, and pretending otherwise here would have
+   * meant the first page was parsed synchronously while the rest were not.
+   *
+   * Stops on: no next link (the last page), the page cap, a page that fails to
+   * load, or a next link pointing somewhere already visited. Each is a real way
+   * this could otherwise run forever, and a runaway crawl of someone else's site
+   * is not a failure mode worth shipping.
+   */
+  function collectPages(firstDoc, loadDoc, options) {
+    var opts = options || {};
+    var maxPages = opts.maxPages || 40;
+    var works = [];
+    var seenHrefs = {};
+    var visited = {};
+    var pagesFetched = 0;
+    var stopped = "last-page";
+
+    function absorb(doc) {
+      var cards = doc.querySelectorAll(SELECTORS.card);
+      for (var i = 0; i < cards.length; i++) {
+        var href = cards[i].getAttribute("href");
+        if (!href || seenHrefs[href]) continue;
+        seenHrefs[href] = true;
+        works.push({ href: href, card: cards[i] });
+      }
+    }
+
+    function step(doc) {
+      if (!doc) {
+        stopped = "page-failed";
+        return Promise.resolve();
+      }
+      pagesFetched++;
+      absorb(doc);
+      if (pagesFetched >= maxPages) {
+        stopped = "page-cap";
+        return Promise.resolve();
+      }
+      var next = nextPageHref(doc);
+      if (!next) return Promise.resolve();
+      if (visited[next]) {
+        stopped = "loop";
+        return Promise.resolve();
+      }
+      visited[next] = true;
+      return Promise.resolve(loadDoc(next)).then(step);
+    }
+
+    return step(firstDoc).then(function () {
+      return { works: works, pages: pagesFetched, stopped: stopped };
+    });
+  }
+
   /** Read magnets out of a detail page document. */
   function readMagnets(doc) {
     var out = [];
@@ -351,7 +750,36 @@
   // default", whereas a pre-filled value cannot be told apart from a real
   // override.
   var storedSettings = readStore();
+
+  // 1.0 persisted a minSize/maxSize pair;1.1 derives both from one slider.
+  // Leaving the old keys in place would let them overwrite the derived values
+  // while the slider still showed the default, so the window on screen would not
+  // match the control that is supposed to own it. Migrate the floor once, then
+  // drop the keys: they are not user data worth preserving beyond that, since
+  // nothing can edit them any more.
+  if (!storedSettings.preferredSize) {
+    storedSettings.preferredSize = preferredFromFloor(storedSettings.minSize);
+  }
+  delete storedSettings.minSize;
+  delete storedSettings.maxSize;
+
   var settings = deepMerge(DEFAULTS, storedSettings);
+
+  /**
+   * Re-derive the size window from the slider.
+   *
+   * Called after anything that can change settings wholesale, so minSize and
+   * maxSize can never disagree with preferredSize. They are kept as fields
+   * because pickMagnet() and the detail panel both read them, and deriving them
+   * at the point of use instead would spread this ratio across the file.
+   */
+  function applyPreferredSize() {
+    var window_ = windowFromPreferred(settings.preferredSize);
+    settings.minSize = window_.min;
+    settings.maxSize = window_.max;
+  }
+
+  applyPreferredSize();
 
   /** The stored override for one field, or undefined if the default applies. */
   function overrideFor(engine, key) {
@@ -362,11 +790,14 @@
   function persist() {
     // settings.downloaders holds resolved values; persist only the sparse
     // overrides the user typed.
+    //
+    // preferredSize is stored, never minSize/maxSize: the window is derived from
+    // it on load, so writing both would persist a redundant copy that can only
+    // ever disagree with the control that owns it.
     writeStore({
       active: settings.active,
       filter: settings.filter,
-      minSize: settings.minSize,
-      maxSize: settings.maxSize,
+      preferredSize: settings.preferredSize,
       downloaders: storedSettings.downloaders || {},
     });
   }
@@ -374,6 +805,7 @@
   function resetAll() {
     storedSettings = {};
     settings = deepMerge(DEFAULTS, {});
+    applyPreferredSize();
     writeStore({});
   }
 
@@ -415,16 +847,34 @@
         anonymous: false,
         onload: function (res) {
           if (res.status >= 200 && res.status < 300) finish(null, res);
-          else
-            finish(
-              new Error("HTTP " + res.status + " from " + url + ": " + String(res.responseText || "").slice(0, 160)),
+          else {
+            // The status rides on the error object rather than only inside the
+            // message. Scraping it back out of the text works right up until
+            // something rewrites the message - and an already-explained failure
+            // being re-explained by a different layer is how a "banned for too
+            // many logins" turned into "could not reach the host".
+            var err = new Error(
+              "HTTP " + res.status + " from " + url + ": " + String(res.responseText || "").slice(0, 160),
             );
+            err.status = res.status;
+            finish(err);
+          }
         },
         onerror: function (res) {
-          finish(new Error("network error reaching " + url + (res && res.status ? " (HTTP " + res.status + ")" : "")));
+          // transport records *how* the request died, which the HTTP status
+          // cannot express. "never reached the server" and "the server took too
+          // long" call for different responses, and only the first one is worth
+          // retrying with different headers.
+          var err = new Error(
+            "network error reaching " + url + (res && res.status ? " (HTTP " + res.status + ")" : ""),
+          );
+          err.transport = "network";
+          finish(err);
         },
         ontimeout: function () {
-          finish(new Error("timed out reaching " + url));
+          var err = new Error("timed out reaching " + url);
+          err.transport = "timeout";
+          finish(err);
         },
       });
     });
@@ -472,75 +922,262 @@
     },
   };
 
-var qbittorrent = {
-    label: "qBittorrent",
-    // qBittorrent hands out a SID cookie on login and expects it back on every
-    // later call. Reading it out of responseHeaders is the reliable path, but
-    // Set-Cookie is a forbidden header name for a normal fetch and not every
-    // userscript manager surfaces it. So when no SID can be read the request is
-    // still attempted without an explicit Cookie header and the manager's own
-    // cookie jar is relied on - rather than failing outright.
-    _sid: null,
+/**
+ * Consecutive login failures tolerated before giving up on a batch.
+ *
+ * qBittorrent's web_ui_max_auth_fail_count defaults to 5 and its ban lasts an
+ * hour, so a selection of 17 that keeps retrying a wrong password does not
+ * merely fail - it locks the user out of their own client for an hour, from
+ * their own machine. Three leaves margin under that default while still letting
+ * a transient blip through. Measured from a default install, not guessed; see
+ * spec/site.json.
+ */
+  var MAX_LOGIN_FAILURES = 3;
 
-    _login: function () {
+  var qbittorrent = {
+    label: "qBittorrent",
+    // The session cookie as "name=value", e.g. "QBT_SID_8082=abc". Kept across
+    // calls so a batch of magnets costs one login rather than one per magnet.
+    //
+    // A cookie is not guaranteed: Set-Cookie is a forbidden header name for a
+    // plain fetch and is not surfaced by every userscript manager. When none can
+    // be read the request is still attempted without an explicit Cookie header
+    // and the manager's own jar is relied on, rather than failing outright.
+    _cookie: null,
+
+    // A login in flight, so concurrent sends do not each start their own.
+    _pendingLogin: null,
+
+    // Consecutive login failures this page load, and the reason we stopped.
+    _loginFailures: 0,
+    _stoppedWarned: false,
+
+    /**
+     * Whether this manager tolerates us setting Origin and Referer.
+     *
+     * null   - not discovered yet; try with them, since that is what the client
+     *         wants when it can be told
+     * "set"  - they are accepted
+     * "off"  - setting them makes the manager drop the request, so omit them
+     *
+     * Chrome treats both as forbidden header names, and managers differ: some
+     * pass them through, some strip them silently, and some refuse the whole
+     * call. A refusal looks exactly like a blocked @connect - a network error
+     * with no status - so guessing wrong here would send the user chasing the
+     * wrong fix. Discovering it at runtime removes the question.
+     */
+    _originMode: null,
+
+    _base: function () {
       var cfg = settings.downloaders.qbittorrent;
-      var body = "username=" + encodeURIComponent(cfg.username) + "&password=" + encodeURIComponent(cfg.password);
-      return request("POST", endpoint(cfg.host, cfg.port, "/api/v2/auth/login"), {
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: body,
-      }).then(function (res) {
-        var text = (res.responseText || "").trim();
-        if (text === "Fails.") throw new Error("qBittorrent rejected the username or password");
-        var match = /SID\s*=\s*([^;\r\n]+)/i.exec(res.responseHeaders || "");
-        qbittorrent._sid = match ? match[1] : null;
-        return qbittorrent._sid;
-      });
+      return origin(cfg.host, cfg.port);
     },
 
-    _authHeaders: function (extra) {
-      var headers = extra || {};
-      if (qbittorrent._sid) headers.Cookie = "SID=" + qbittorrent._sid;
+    /**
+     * qBittorrent refuses any request carrying a cross-site Origin or Referer,
+     * answering 401 with no explanation - and a privileged request inherits
+     * exactly those from the page the userscript runs on. Its own documentation
+     * says to set both to the client's own base URL, so every request here does.
+     *
+     * A cross-origin POST from a content script sends the *page's* Origin, which
+     * is not the client's, and that is what made this fail against a stock
+     * install rather than only against an unusual one.
+     */
+    _headers: function (extra, withOrigin) {
+      var headers = {};
+      var key;
+      for (key in extra || {}) headers[key] = extra[key];
+      if (withOrigin) {
+        var base = qbittorrent._base();
+        headers.Origin = base;
+        headers.Referer = base + "/";
+      }
+      if (qbittorrent._cookie) headers.Cookie = qbittorrent._cookie;
       return headers;
     },
 
-    probe: function () {
+    _login: function (withOrigin) {
       var cfg = settings.downloaders.qbittorrent;
-      return qbittorrent._login().then(function () {
-        return request("GET", endpoint(cfg.host, cfg.port, "/api/v2/app/version"), {
-          headers: qbittorrent._authHeaders(),
-        }).then(
-          function (res) {
-            return "qBittorrent " + String(res.responseText).trim();
+      var body = "username=" + encodeURIComponent(cfg.username) + "&password=" + encodeURIComponent(cfg.password);
+      return request("POST", endpoint(cfg.host, cfg.port, "/api/v2/auth/login"), {
+        headers: qbittorrent._headers({ "Content-Type": "application/x-www-form-urlencoded" }, withOrigin),
+        body: body,
+      }).then(
+        function (res) {
+          if (!loginAccepted(res.status, res.responseText)) {
+            // A 2xx login carrying "Fails." is 4.x's way of saying the
+            // credentials were wrong, not an IP ban - 4.x reports that as 403.
+            throw explained(qbFailure(401, "login", qbittorrent._base()));
+          }
+          var cookie = parseSidCookie(res.responseHeaders);
+          if (cookie) qbittorrent._cookie = cookie;
+          return cookie;
+        },
+        function (err) {
+          // statusOf() reads the code request() attached; a bare network error
+          // has none, and the remedy for that is @connect rather than anything
+          // on the server.
+          var wrapped = explained(qbFailure(statusOf(err), "login", qbittorrent._base()));
+          // Carried across the wrap. Without it the caller can no longer tell a
+          // request that never left the browser from one the server refused, and
+          // the header fallback below - which depends on exactly that
+          // distinction - silently never runs.
+          if (err && err.transport) wrapped.transport = err.transport;
+          throw wrapped;
+        },
+      );
+    },
+
+    /**
+     * Log in, falling back to omitting Origin/Referer if this manager refuses
+     * the request when they are set.
+     *
+     * Only a transport failure triggers the retry. A 401 or a "Fails." means the
+     * server answered, so the headers got through and retrying without them
+     * would just be a second wrong answer.
+     */
+    _loginAdaptive: function () {
+      if (qbittorrent._originMode === "off") return qbittorrent._login(false);
+      return qbittorrent._login(true).catch(function (err) {
+        // Only a *transport* failure means the request never got an answer, so
+        // the headers are a plausible suspect. A 401 or a "Fails." means the
+        // server did answer, so the headers arrived and retrying without them
+        // would only produce a second wrong answer.
+        if (!err || err.transport !== "network") throw err;
+        return qbittorrent._login(false).then(
+          function (value) {
+            qbittorrent._originMode = "off";
+            log(
+              "This userscript manager refuses requests that set Origin/Referer, so " +
+                "they are now omitted. qBittorrent still accepted the login.",
+              "wa",
+            );
+            return value;
           },
-          function (err) {
-            if (!qbittorrent._sid && /403/.test(err.message)) {
-              throw new Error(
-                "logged in, but the session id could not be read and the request was " +
-                  "refused. Your userscript manager is hiding Set-Cookie; " +
-                  "Tampermonkey and Violentmonkey both work here.",
-              );
-            }
+          function () {
+            // Report the original: if both attempts failed the likelier cause is
+            // still whatever stopped the first one, such as a blocked host.
             throw err;
           },
         );
       });
     },
 
-    send: function (magnet) {
+    /**
+     * One login per page load, however many magnets are sent.
+     *
+     * Split out from _login so concurrent sends share a single request; a batch
+     * of ten used to mean ten logins, and qBittorrent bans an IP after a handful
+     * of consecutive failures.
+     */
+    _ensureSession: function () {
+      if (qbittorrent._cookie) return Promise.resolve(qbittorrent._cookie);
+      if (qbittorrent._loginFailures >= MAX_LOGIN_FAILURES) {
+        // Explain the stop once, then stay quiet. Repeating a paragraph for
+        // every remaining item buries the log - and buries the *first* failure,
+        // which is the one that says what is actually wrong.
+        var detail =
+          "Stopped after " + qbittorrent._loginFailures + " failed logins. qBittorrent " +
+          "bans an IP for an hour after a handful of consecutive failures, so " +
+          "continuing would lock you out of your own client. Fix the cause " +
+          "above, then use Test connection in Settings.";
+        var message = qbittorrent._stoppedWarned ? "skipped - not attempted." : detail;
+        qbittorrent._stoppedWarned = true;
+        return Promise.reject(explained(message));
+      }
+      if (!qbittorrent._pendingLogin) {
+        var attempt = qbittorrent._loginAdaptive();
+        // Cleared whether the login succeeded or failed: keeping a rejected
+        // promise cached would make every later send replay the same failure
+        // with no chance to recover after the user fixes their password.
+        qbittorrent._pendingLogin = attempt.then(
+          function (value) {
+            qbittorrent._loginFailures = 0;
+            qbittorrent._pendingLogin = null;
+            return value;
+          },
+          function (err) {
+            qbittorrent._loginFailures++;
+            qbittorrent._pendingLogin = null;
+            throw err;
+          },
+        );
+      }
+      return qbittorrent._pendingLogin;
+    },
+
+    /**
+     * Forget what the last run learned, so a corrected setting gets a clean try.
+     *
+     * A stale cookie or a stale header mode would otherwise keep reproducing the
+     * failure that produced it, which is the most confusing kind of bug to
+     * diagnose: fix the setting, press Test connection, get the same error.
+     */
+    reset: function () {
+      qbittorrent._cookie = null;
+      qbittorrent._pendingLogin = null;
+      qbittorrent._loginFailures = 0;
+      qbittorrent._stoppedWarned = false;
+      qbittorrent._originMode = null;
+    },
+
+    _api: function (method, path, extra, body) {
       var cfg = settings.downloaders.qbittorrent;
-      return qbittorrent._login().then(function () {
-        var body = "urls=" + encodeURIComponent(magnet.uri);
-        if (cfg.savePath) body += "&savepath=" + encodeURIComponent(cfg.savePath);
-        if (cfg.category) body += "&category=" + encodeURIComponent(cfg.category);
-        return request("POST", endpoint(cfg.host, cfg.port, "/api/v2/torrents/add"), {
-          headers: qbittorrent._authHeaders({
-            "Content-Type": "application/x-www-form-urlencoded",
-          }),
+      return qbittorrent._ensureSession().then(function () {
+        // Read after the session resolves, not before. The login is what
+        // discovers whether this manager tolerates the headers, so a value
+        // captured earlier is stale for the very first call - which made the
+        // fallback look broken: the login succeeded, then the call after it
+        // repeated the same refused request.
+        return request(method, endpoint(cfg.host, cfg.port, path), {
+          headers: qbittorrent._headers(extra, qbittorrent._originMode !== "off"),
           body: body,
-        }).then(function () {
-          return "added";
         });
       });
+    },
+
+    _decode: function (res) {
+      return res && res.responseText ? String(res.responseText).trim() : "";
+    },
+
+    probe: function () {
+      // A probe is the one call that should not inherit anything from an earlier
+      // batch: the user is asking "can I reach this right now", and a stale
+      // cookie or a stale header mode would answer about the past instead.
+      qbittorrent.reset();
+      return qbittorrent._api("GET", "/api/v2/app/version").then(
+        function (res) {
+          return (
+          "qBittorrent " + qbittorrent._decode(res) +
+          (qbittorrent._originMode === "off" ? " (no Origin/Referer)" : "")
+        );
+        },
+        function (err) {
+          // A login failure arrives here too, already carrying the right
+          // explanation. Replacing it would send the user chasing @connect for
+          // what is really a wrong password.
+          if (err && err.explained) throw err;
+          throw explained(qbFailure(statusOf(err), "request", qbittorrent._base()));
+        },
+      );
+    },
+
+    send: function (magnet) {
+      var cfg = settings.downloaders.qbittorrent;
+      var body = "urls=" + encodeURIComponent(magnet.uri);
+      if (cfg.savePath) body += "&savepath=" + encodeURIComponent(cfg.savePath);
+      if (cfg.category) body += "&category=" + encodeURIComponent(cfg.category);
+      return qbittorrent._api("POST", "/api/v2/torrents/add", {
+        "Content-Type": "application/x-www-form-urlencoded",
+      }, body).then(
+        function () {
+          return "added";
+        },
+        function (err) {
+          if (err && err.explained) throw err;
+          throw explained(qbFailure(statusOf(err), "request", qbittorrent._base()));
+        },
+      );
     },
   };
 
@@ -569,7 +1206,14 @@ var qbittorrent = {
       })
       .catch(function (err) {
         delete detailCache[href];
-        throw err;
+        // Marked so the caller can tell a failure to read the *site* from a
+        // failure to reach the *client*. Both arrive as a bare Error on the same
+        // log line otherwise, and they have nothing in common: one is jav8.vip
+        // being slow or rate-limiting, the other is the download client being
+        // unreachable. Acting on the wrong one wastes the user's time.
+        var wrapped = new Error(err && err.message ? err.message : String(err));
+        wrapped.fromSite = true;
+        throw wrapped;
       });
     return detailCache[href];
   }
@@ -577,13 +1221,13 @@ var qbittorrent = {
   // -------------------------------------------------------------------- UI
   var STYLE_ID = "jav8-dl-style";
   var CSS = `
-.jd-box{position:absolute;top:4px;left:4px;z-index:40;width:20px;height:20px;
-  border-radius:4px;background:rgba(12,16,20,.78);border:1px solid rgba(255,255,255,.35);
-  display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:.25;
-  transition:opacity .12s,background .12s}
+.jd-box{position:absolute;top:4px;left:4px;z-index:40;width:24px;height:24px;
+  border-radius:5px;background:rgba(10,14,18,.86);border:1px solid rgba(255,255,255,.55);
+  box-shadow:0 1px 4px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;opacity:.62;transition:opacity .12s,background .12s}
 .jd-box:hover{opacity:1}
 .jd-box.on{opacity:1;background:#2b6cb0;border-color:#63b3ed}
-.jd-box input{width:13px;height:13px;margin:0;cursor:pointer;accent-color:#63b3ed}
+.jd-box input{width:17px;height:17px;margin:0;cursor:pointer;accent-color:#63b3ed}
 .jd-box.bad{opacity:1;background:#7b341e;border-color:#f6ad55}
 .jd-badge{position:absolute;bottom:4px;left:4px;z-index:40;font-size:9px;line-height:1.5;
   padding:0 4px;border-radius:3px;background:rgba(12,16,20,.8);color:#9ab;pointer-events:none}
@@ -599,8 +1243,27 @@ var qbittorrent = {
 .jd-body{padding:9px 10px}
 .jd-row{display:flex;align-items:center;gap:6px;margin-bottom:7px}
 .jd-row label{color:#7f8c99;min-width:44px;font-size:11px}
-.jd-row select,.jd-row input{flex:1;min-width:0;background:#2b2d30;color:#fff;
+.jd-row select,.jd-row input:not(.jd-slider){flex:1;min-width:0;background:#2b2d30;color:#fff;
   border:1px solid #474747;border-radius:3px;padding:3px 5px;font-size:11px}
+/* The slider fills its own row: it needs the width, and a text-sized input
+  style would leave it unusably narrow inside a 264px panel. */
+.jd-sizerow{align-items:flex-start}
+.jd-sizewrap{flex:1;min-width:0}
+.jd-slider{display:block;width:100%;margin:2px 0 1px;accent-color:#2f6feb;cursor:pointer}
+.jd-sizeout{display:block;font-size:10px;color:#7f8c99;text-align:center;
+  font-variant-numeric:tabular-nums}
+.jd-bulk{display:flex;gap:6px;margin:8px 0 0}
+.jd-bulk .jd-btn{flex:1;padding:3px 6px;font-size:10.5px}
+/* Performer tiles are small and image-led, so the button has to stay out of the
+   way until wanted - visible on hover, but never invisible. */
+.jd-allof{position:absolute;top:3px;right:3px;z-index:41;width:22px;height:22px;
+  display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer;
+  font:600 14px/1 -apple-system,Segoe UI,Roboto,sans-serif;color:#fff;
+  background:rgba(12,16,20,.8);border:1px solid rgba(255,255,255,.5);border-radius:4px;
+  opacity:.55;transition:opacity .12s,background .12s}
+.actress:hover .jd-allof{opacity:1}
+.jd-allof:hover{background:#2b6cb0;border-color:#63b3ed}
+.jd-allof[disabled]{opacity:.35;cursor:progress}
 .jd-btn{background:#2f6feb;color:#fff;border:1px solid #2f6feb;border-radius:3px;
   padding:4px 8px;font-size:11px;cursor:pointer}
 .jd-btn:hover{background:#2559c4}
@@ -700,6 +1363,18 @@ var qbittorrent = {
     return { code: code, title: title, vr: isVr(code, title) };
   }
 
+  /**
+   * Read a work's code, title and VR flag out of a card from any document.
+   *
+   * Takes the card rather than an href because the collected pages arrive as
+   * detached parsed documents, where nothing can be looked up by id. VR is
+   * re-derived from that card's own code and title rather than assumed from the
+   * performer, so the same isVr() decides everywhere.
+   */
+  function workInfoFromCard(card) {
+    return card ? cardInfo(card) : { code: "", title: "", vr: false };
+  }
+
   function decorateCard(card) {
     if (card.dataset.jdDone === "1") return;
     card.dataset.jdDone = "1";
@@ -739,6 +1414,7 @@ var qbittorrent = {
       box.classList.toggle("on", input.checked);
       if (info.vr) box.classList.remove("bad");
       updateCount();
+      requestBulkRefresh();
     });
     box.classList.toggle("on", input.checked);
     card.appendChild(box);
@@ -749,19 +1425,44 @@ var qbittorrent = {
     }
   }
 
+  /**
+   * Does this card survive the current VR filter?
+   *
+   * One predicate for both hiding cards and for the page-wide buttons, so
+   * "select all" cannot quietly disagree with what the filter is showing. When
+   * those were separate, selecting all with a filter applied ticked the hidden
+   * cards too - the count then claimed more than the user could see, and
+   * switching the filter back revealed ticks they had never asked for.
+   */
+  function matchesFilter(card) {
+    var info = known.get(card.getAttribute("href"));
+    if (!info) {
+      // Not in `known` yet: a card from a crawled page that has not been
+      // recorded. Derive it from the card itself rather than assuming it
+      // passes, or a VR filter would quietly admit everything crawled.
+      info = workInfoFromCard(card);
+      if (card.getAttribute("href")) known.set(card.getAttribute("href"), info);
+    }
+    return (
+      settings.filter === "all" ||
+      (settings.filter === "vr" && info.vr) ||
+      (settings.filter === "non-vr" && !info.vr)
+    );
+  }
+
   function applyFilter() {
     var hidden = 0;
     worksOnPage().forEach(function (card) {
       var info = known.get(card.getAttribute("href"));
       if (!info) return;
-      var show =
-        settings.filter === "all" ||
-        (settings.filter === "vr" && info.vr) ||
-        (settings.filter === "non-vr" && !info.vr);
+      var show = matchesFilter(card);
       card.style.display = show ? "" : "none";
       if (!show) hidden++;
     });
     updateCount(hidden);
+    // The buttons carry the filtered count in their label, so they are part of
+    // what the filter changes - not just what decorates it.
+    requestBulkRefresh();
   }
 
   function updateCount(hidden) {
@@ -782,6 +1483,225 @@ var qbittorrent = {
       box.classList.remove("on");
     });
     updateCount();
+  }
+
+  /**
+   * Cards this page can actually queue.
+   *
+   * worksOnPage() alone is not enough: it also returns cards that decorateCard()
+   * has not reached yet, and ticking those by writing to .jd-box would silently
+   * do nothing.
+   */
+  function selectableCards() {
+    return worksOnPage().filter(function (card) {
+      // Only what the user can currently see. Filtering on the marker keeps
+      // this in step with decoration; filtering on matchesFilter() is what makes
+      // the buttons honour the VR filter rather than reaching past it.
+      return card.dataset.jdDone === "1" && matchesFilter(card);
+    });
+  }
+
+  /**
+   * Apply one selection state to every eligible card.
+   *
+   * Driven from the card list rather than from a click handler per checkbox so
+   * that it cannot disagree with `selected` however many cards there are, and so
+   * the visible state and the model are always updated together.
+   */
+  function setPageSelection(on) {
+    var cards = selectableCards();
+    cards.forEach(function (card) {
+      var href = card.getAttribute("href");
+      if (on) selected.add(href);
+      else selected.delete(href);
+      var box = card.querySelector(".jd-box");
+      if (!box) return;
+      var input = box.querySelector("input");
+      if (input) input.checked = on;
+      box.classList.toggle("on", on);
+    });
+    // Both, not just the button state: the count is the only place the total is
+    // reported, and a select-all that ticked 17 cards while still saying
+    // "Selected 0" would be a straight contradiction on screen.
+    updateCount();
+    requestBulkRefresh();
+    return cards.length;
+  }
+
+  // ------------------------------------------------------ performer index page
+  function isActressIndex() {
+    return /^\/top-actresses/.test(location.pathname);
+  }
+
+  /**
+   * Put a "queue her whole career" button on each performer tile.
+   *
+   * The tile is an <a>, so the button needs the same treatment as a cover tick:
+   * the click must not reach the anchor, or the user lands on her page instead
+   * of queueing her. That is the whole reason this is a button inside a link
+   * rather than a separate control beside it.
+   */
+  function decorateActressTiles() {
+    var tiles = document.querySelectorAll(SELECTORS.actressTile);
+    if (!tiles.length) return false;
+    if (!document.getElementById("jd-actress-style")) {
+      var style = document.createElement("style");
+      style.id = "jd-actress-style";
+      style.textContent = ".actresses .actress{position:relative}";
+      document.head.appendChild(style);
+    }
+
+    for (var i = 0; i < tiles.length; i++) {
+      (function (tile) {
+        if (tile.dataset.jdActress === "1") return;
+        tile.dataset.jdActress = "1";
+        var nameEl = tile.querySelector(SELECTORS.actressName);
+        var name = nameEl ? nameEl.textContent.trim() : "";
+        var href = tile.getAttribute("href");
+
+        var btn = el("button", "jd-allof", "＋");
+        btn.type = "button";
+        // Retitled whenever the filter changes: the promise this button makes is
+        // filter-dependent, and a stale tooltip is a promise the script breaks.
+        btn._retitle = function () {
+          btn.title =
+            "Queue every work on " + (name || "her") + "'s pages (" +
+            filterScope() + "), following pagination. " +
+            "Nothing is sent until you press Download selected.";
+        };
+        btn._retitle();
+        btn.setAttribute("aria-label", "Queue all works by " + (name || "this performer"));
+
+        btn.addEventListener("click", function (event) {
+          // stopPropagation only: preventDefault() here would cancel the button.
+          event.preventDefault();
+          event.stopPropagation();
+        });
+        ["mousedown", "mouseup", "auxclick", "contextmenu", "keydown"].forEach(function (type) {
+          btn.addEventListener(type, function (event) {
+            event.stopPropagation();
+          });
+        });
+        btn.addEventListener("click", function () {
+          queueActress(href, name, btn);
+        });
+        tile.appendChild(btn);
+      })(tiles[i]);
+    }
+    return true;
+  }
+
+  /**
+   * Crawl a performer's pages and stage every matching work for sending.
+   *
+   * Staged rather than sent: a career can be a hundred works, and queueing them
+   * straight to the client would start a hundred detail fetches with no way to
+   * see or stop what was collected. The user confirms with Download selected.
+   *
+   * The VR filter is applied here by the same matchesFilter() the listings use,
+   * and the size preference is applied later by pickMagnet() - so this reuses
+   * the one definition of both rather than re-deriving a second copy here.
+   */
+  function queueActress(href, name, btn) {
+    var label = name || href;
+    if (btn) btn.disabled = true;
+    log("Collecting works for " + label + "…", "mu");
+
+    function parse(html) {
+      return new DOMParser().parseFromString(html, "text/html");
+    }
+
+    function loadPage(pageHref) {
+      return getText(new URL(pageHref, location.origin).href)
+        .then(parse)
+        .catch(function () {
+          // A page that will not load ends the crawl and keeps what was already
+          // found. Failing the whole thing would throw away a hundred collected
+          // works over one bad request.
+          return null;
+        });
+    }
+
+    getText(new URL(href, location.origin).href)
+      .then(parse)
+      .then(function (firstDoc) {
+        return collectPages(firstDoc, loadPage);
+      })
+      .then(function (result) {
+        var kept = 0;
+        result.works.forEach(function (work) {
+          var info = workInfoFromCard(work.card);
+          // Known entries are recorded even when filtered out, so switching the
+          // filter later does not show a stale count for works already collected.
+          known.set(work.href, info);
+          if (!matchesFilter(work.card)) return;
+          selected.add(work.href);
+          kept++;
+        });
+        updateCount();
+        requestBulkRefresh();
+        if (btn) btn.disabled = false;
+
+        if (!result.works.length) {
+          log(label + ": no works found on any page.", "wa");
+          return;
+        }
+        var where = result.pages + (result.pages === 1 ? " page" : " pages");
+        if (result.stopped === "page-cap") {
+          log(label + ": stopped at the " + where + " limit; some works were not seen.", "wa");
+        } else if (result.stopped === "page-failed") {
+          log(label + ": stopped early - a page would not load. The works found so far are queued.", "wa");
+        }
+        log(
+          label + ": " + kept + " of " + result.works.length + " works queued (" +
+            filterScope() + ", from " + where + "). Press Download selected to send them.",
+          kept ? "ok" : "wa",
+        );
+      })
+      .catch(function (err) {
+        if (btn) btn.disabled = false;
+        log(label + ": could not read her works page - " + (err.message || err), "er");
+      });
+  }
+
+  /**
+   * The label the current filter puts in front of a count.
+   *
+   * Pure data so the panel cannot describe a filter differently from the one
+   * matchesFilter() is actually applying. `all` reads as a noun phrase on its
+   * own, which is why it is not "all only".
+   */
+  var FILTER_LABEL = { all: "all works", vr: "VR only", "non-vr": "non-VR only" };
+
+  /** The filter as a scope, for a sentence. */
+  function filterScope() {
+    return FILTER_LABEL[settings.filter] || FILTER_LABEL.all;
+  }
+
+  /**
+   * What the page-wide buttons are about to act on, as a noun phrase.
+   *
+   * Separate from filterScope() because the two read differently in place: "29
+   * of 29 works queued (VR only)" versus "Tick all 3 VR-only works on this
+   * page". Squeezing one string into both positions produced "Tick all 17 on
+   * this page", which named no thing at all.
+   */
+  function countScope() {
+    return settings.filter === "all"
+      ? "works on this page"
+      : (settings.filter === "vr" ? "VR-only" : "non-VR-only") + " works on this page";
+  }
+
+  /** Ask the panel to redraw the page-wide buttons, if it has been built yet. */
+  function requestBulkRefresh() {
+    var bulk = document.querySelector(".jd-bulk");
+    if (bulk && bulk._refresh) bulk._refresh();
+    // The performer tiles describe the filter too, and they were written once at
+    // decoration time - so without this they keep promising "all works" after
+    // the user switches to VR only.
+    document.querySelectorAll(".jd-allof").forEach(function (btn) {
+      if (btn._retitle) btn._retitle();
+    });
   }
 
   // ----------------------------------------------------------------- panel
@@ -841,45 +1761,112 @@ var qbittorrent = {
     body.appendChild(r2);
 
     // Size window
-    var r3 = el("div", "jd-row");
-    r3.appendChild(el("label", null, "Min"));
-    var minIn = el("input");
-    minIn.type = "number";
-    minIn.min = "0";
-    minIn.step = "100";
-    minIn.value = String(Math.round((settings.minSize / MB) * 100) / 100);
-    minIn.title = "Lower bound in MB";
-    r3.appendChild(minIn);
+    // Preferred size. One slider replaces the old Min and Max boxes: the floor
+    // and ceiling are derived from this single number (see SIZE_WINDOW_RATIO),
+    // so there is no way for the two to disagree or to be set into an inverted
+    // window - the old inputs could be, and silently swapped themselves on save.
+    var r3 = el("div", "jd-row jd-sizerow");
+    var sizeLabel = el("label", null, "Size");
+    sizeLabel.htmlFor = "jd-size-slider";
+    r3.appendChild(sizeLabel);
+    var sizeWrap = el("div", "jd-sizewrap");
+    var slider = el("input", "jd-slider");
+    slider.type = "range";
+    slider.id = "jd-size-slider";
+    slider.min = "0";
+    slider.max = String(SIZE_LADDER.length - 1);
+    slider.step = "1";
+    slider.value = String(preferredIndex(settings.preferredSize));
+    sizeWrap.appendChild(slider);
+    var sizeOut = el("span", "jd-sizeout");
+    sizeWrap.appendChild(sizeOut);
+    r3.appendChild(sizeWrap);
     body.appendChild(r3);
 
-    var r4 = el("div", "jd-row");
-    r4.appendChild(el("label", null, "Max"));
-    var maxIn = el("input");
-    maxIn.type = "number";
-    maxIn.min = "0";
-    maxIn.step = "100";
-    maxIn.value = String(Math.round((settings.maxSize / MB) * 100) / 100);
-    maxIn.title = "Upper bound in MB";
-    r4.appendChild(maxIn);
-    body.appendChild(r4);
-
-    function commitSizes() {
-      var lo = parseFloat(minIn.value);
-      var hi = parseFloat(maxIn.value);
-      if (isFinite(lo) && lo > 0) settings.minSize = Math.round(lo * MB);
-      if (isFinite(hi) && hi > 0) settings.maxSize = Math.round(hi * MB);
-      if (settings.minSize > settings.maxSize) {
-        var swap = settings.minSize;
-        settings.minSize = settings.maxSize;
-        settings.maxSize = swap;
-      }
-      persist();
+    function paintSize() {
+      var preferred = preferredAtIndex(slider.value);
+      settings.preferredSize = preferred;
+      applyPreferredSize();
+      var window_ = windowFromPreferred(preferred);
+      // The readout states the window, because the slider controls something
+      // abstract: without the derived numbers there is no way to tell that
+      // moving one stop shifts both bounds.
+      sizeOut.textContent =
+        formatSize(preferred) + " · " + formatSize(window_.min) + "–" + formatSize(window_.max);
+      slider.title =
+        "Preferred size " + formatSize(preferred) +
+        "; picks releases between " + formatSize(window_.min) + " and " + formatSize(window_.max) +
+        ". Within that, the largest real release wins.";
     }
-    minIn.addEventListener("change", commitSizes);
-    maxIn.addEventListener("change", commitSizes);
+    slider.addEventListener("input", paintSize);
+    slider.addEventListener("change", function () {
+      paintSize();
+      persist();
+    });
+    paintSize();
 
     var count = el("div", "jd-count");
     body.appendChild(count);
+
+    // Page-wide selection. Scoped to this page on purpose: `selected` is keyed by
+    // href and is cleared per navigation, so "all" can only ever mean the works
+    // in front of the user.
+    var bulk = el("div", "jd-bulk");
+    var selectAll = el("button", "jd-btn ghost", "Select all");
+    selectAll.type = "button";
+    var deselectAll = el("button", "jd-btn ghost", "Deselect all");
+    deselectAll.type = "button";
+
+    /**
+     * Spell out what the buttons will act on, and how many.
+     *
+     * A button that says "Select all" while a filter is hiding two thirds of the
+     * page is asking to be misunderstood. The count moves with the filter, so
+     * the label is the confirmation.
+     */
+    function refreshBulkButtons() {
+      var cards = selectableCards();
+      var total = worksOnPage().filter(function (card) {
+        return card.dataset.jdDone === "1";
+      }).length;
+      var scoped = countScope();
+      selectAll.textContent = cards.length ? "Select all (" + cards.length + ")" : "Select all";
+      selectAll.title = cards.length
+        ? "Tick all " + cards.length + " " + scoped + (total > cards.length ? " (of " + total + " works)" : "")
+        : "Nothing to select";
+      deselectAll.title = "Untick the " + cards.length + " " + scoped;
+      selectAll.disabled = !cards.length;
+      deselectAll.disabled = !cards.length;
+    }
+
+    // Exposed so the rest of the script can refresh the labels when the filter
+    // or the card list changes, without buildPanel() having to own that.
+    bulk._refresh = refreshBulkButtons;
+
+    function reportPageSelection(on) {
+      // Guarded rather than assumed: a listing that renders after the panel is
+      // built has no cards to act on, and claiming "selected 34" would be a lie
+      // the count would immediately contradict.
+      var touched = setPageSelection(on);
+      if (!touched) {
+        log(on ? "No works match the current filter." : "Nothing to deselect.", "wa");
+      }
+    }
+
+    selectAll.addEventListener("click", function () {
+      reportPageSelection(true);
+    });
+    deselectAll.addEventListener("click", function () {
+      reportPageSelection(false);
+    });
+    bulk.appendChild(selectAll);
+    bulk.appendChild(deselectAll);
+    body.appendChild(bulk);
+    // Disabled from the outset: a work page has no cards at all, and decorateAll()
+    // - the only other caller of refreshBulkButtons() - never runs there. Without
+    // this they sit enabled next to an empty grid and do nothing when clicked.
+    selectAll.disabled = true;
+    deselectAll.disabled = true;
 
     var logBox = el("div", "jd-log");
     body.appendChild(logBox);
@@ -947,6 +1934,16 @@ var qbittorrent = {
     var queue = hrefs.slice();
     var failures = 0;
 
+    // Log one line that says which of the two systems failed. Reading the site
+    // and talking to the client are independent steps; a bare error message does
+    // not reveal which one broke, and the fixes are unrelated.
+    function describe(err, what) {
+      var reason = err && err.message ? err.message : String(err);
+      return err && err.fromSite
+        ? "could not read this page from jav8.vip: " + reason
+        : reason;
+    }
+
     function next() {
       if (!queue.length) {
         button.disabled = false;
@@ -960,7 +1957,7 @@ var qbittorrent = {
           var picked = pickMagnet(detail.magnets, settings.minSize, settings.maxSize);
           if (!picked.magnet) {
             failures++;
-            log(label + ": " + (picked.reason === "ads-only" ? "only advert magnets" : "no magnets"), "er");
+            log(label + ": " + (picked.reason === "ads-only" ? "only advert magnets" : "no magnets on this page"), "er");
             return;
           }
           if (picked.reason === "outside-window") {
@@ -972,13 +1969,13 @@ var qbittorrent = {
             },
             function (err) {
               failures++;
-              log(label + ": " + err.message, "er");
+              log(label + ": " + describe(err, "client"), "er");
             },
           );
         })
         .catch(function (err) {
           failures++;
-          log(label + ": " + err.message, "er");
+          log(label + ": " + describe(err), "er");
         })
         .then(next);
     }
@@ -1232,6 +2229,9 @@ var qbittorrent = {
     cards.forEach(decorateCard);
     applyFilter();
     updateCount();
+    // Cards are only decorated now, so this is the first point at which the
+    // page-wide buttons have anything to act on.
+    requestBulkRefresh();
     return true;
   }
 
@@ -1241,6 +2241,18 @@ var qbittorrent = {
     buildPanel();
     if (isDetailPage()) {
       buildDetailPanel();
+      return;
+    }
+    if (isActressIndex()) {
+      // A performer index has no work cards to decorate, but it is where
+      // "download everything she has" is offered, so it decorates in its own
+      // right rather than falling through to the listing path and finding
+      // nothing.
+      if (!decorateActressTiles()) {
+        setTimeout(function () {
+          decorateActressTiles();
+        }, 1200);
+      }
       return;
     }
     if (!decorateAll()) {

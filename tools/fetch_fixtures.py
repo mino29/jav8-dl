@@ -51,6 +51,12 @@ def clean(soup):
 targets = {
     "listing.html": "/updated",
     "listing-vr.html": "/genre/353?page=3",
+    "listing-actress.html": "/actress/18787",
+    # A short career, so the harness can exercise autopagination end to end
+    # without needing a fixture for every page of a long one.
+    "listing-actress-p1.html": "/actress/58956",
+    "listing-actress-p2.html": "/actress/58956?page=2",
+    "top-actresses.html": "/top-actresses",
     "detail.html": "/v/557564",
 }
 
@@ -64,10 +70,12 @@ for filename, path in targets.items():
     works = len(soup.select('a.work[href^="/v/"]'))
     with_cover = len([a for a in soup.select('a.work[href^="/v/"]') if a.select_one("img.work-cover")])
     magnets = len(soup.select(".magnet"))
+    actresses = len(soup.select("a.actress[href^='/actress/']"))
+    next_links = len(soup.select("a.pagination-next"))
     vr_titles = len([1 for t in soup.select(".work-title") if "【VR】" in (t.get("title") or "")])
     print(
-        f"{filename:<18} {path:<22} works={works:<4} with-cover={with_cover:<4} "
-        f"magnets={magnets:<4} vr-titles={vr_titles}"
+        f"{filename:<26} {path:<24} works={works:<4} cover={with_cover:<4} "
+        f"magnets={magnets:<4} vr={vr_titles:<4} actresses={actresses:<4} next={next_links}"
     )
 
 print(f"\nfixtures written to {OUT}")

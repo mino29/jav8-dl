@@ -28,10 +28,19 @@
       "/genre/*"
     ],
     "detailRoutePattern": "^/v/[0-9]+$",
+    "actressRoutePattern": "^/actress/[0-9]+$",
+    "actressIndexRoute": "/top-actresses",
     "notes": [
       "The site injects promotional cards with absolute hrefs via its adworker",
       "script. Requiring the /v/ prefix on the card selector skips them.",
-      "Studio-strip cards have no cover image and get no tick box."
+      "Studio-strip cards have no cover image and get no tick box.",
+      "",
+      "Pagination is a plain ?page=N query on every paginated route, and every",
+      "one of them renders the same control: <a class=\"pagination-next\"",
+      "href=\"...\">. The last page omits it, which is the only reliable end",
+      "signal - there is no total count in the markup to compute the page",
+      "count from. Verified on /actress/<id> (a 7-page career paginates to",
+      "?page=7), /top-actresses and the listing routes."
     ]
   },
 
@@ -47,6 +56,9 @@
     "detailCode": "dl dt.highlight",
     "detailTitle": "h1.text-zh",
     "detailTag": "a.tag",
+    "actressTile": "a.actress[href^=\"/actress/\"]",
+    "actressName": ".actress-name",
+    "paginationNext": "a.pagination-next[href]",
     "navigation": ".tabs a[href]"
   },
 
@@ -122,10 +134,31 @@
   "selection": {
     "$comment": [
       "Order of preference, and why the largest wins inside the window.",
-      "See pickMagnet() in the userscript."
+      "See pickMagnet() in the userscript.",
+      "",
+      "1.0 exposed two independent Min/Max boxes in MB. 1.1 replaced both with a",
+      "single Preferred size slider, because the pair could be set into an",
+      "inverted window and had to swap itself on save to recover. The bounds are",
+      "now derived from the one number:",
+      "",
+      "  min = preferredSize / SIZE_WINDOW_RATIO",
+      "  max = preferredSize * SIZE_WINDOW_RATIO",
+      "",
+      "Only preferredSize is persisted. The window is recomputed on load so the",
+      "two can never disagree. preferredSize defaults to 5GB, which yields a",
+      "512MB floor - the floor is the half that carries the intent, since its job",
+      "is skipping 200MB samples, so it is kept tight enough to keep doing that.",
+      "",
+      "SIZE_LADDER is the set of stops the slider can take, in GB. Discrete stops",
+      "rather than a continuous range: every position is a round number a user",
+      "would type, the control stays keyboard- and screen-reader-navigable",
+      "without custom ARIA, and a stored preference is always one of a known set."
     ],
-    "defaultMinBytes": 524288000,
-    "defaultMaxBytes": 107374182400,
+    "defaultPreferredBytes": 5368709120,
+    "windowRatio": 10,
+    "sliderLadderGb": [1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 30, 50],
+    "defaultMinBytes": 536870912,
+    "defaultMaxBytes": 53687091200,
     "rule": [
       "clean magnets whose size is inside the window",
       "if the window excludes every clean magnet, the largest clean one, flagged outside-window",
@@ -170,10 +203,71 @@
       "loginPath": "/api/v2/auth/login",
       "addPath": "/api/v2/torrents/add",
       "versionPath": "/api/v2/app/version",
-      "auth": "SID cookie from the login response",
+      "auth": "SID cookie from the login response, sent back as Cookie",
+      "cookieName": {
+        "$comment": [
+          "Measured against a live v5.2.3 WebUI, not assumed.",
+          "4.x sets SID. 5.x sets QBT_SID_<port> so several WebUIs can share one",
+          "host. A pattern anchored on SID alone matches nothing against 5.x,",
+          "because of the _8082 before the =, and the symptom is silence rather",
+          "than an error: no cookie, so every call silently falls back to the",
+          "userscript manager's own jar."
+        ],
+        "legacy": "SID",
+        "current": "QBT_SID_<port>",
+        "pattern": "((?:QBT_)?SID(?:_\\d{1,5})?)\\s*=\\s*([^;\\r\\n]+)"
+      },
+      "loginResponse": {
+        "$comment": [
+          "4.x answers 200 with the body Ok., or Fails. on bad credentials.",
+          "5.x answers 204 with an empty body, so the body alone cannot decide",
+          "whether a login succeeded and a Fails. check alone is dead code on a",
+          "current server."
+        ],
+        "v4": { "status": 200, "body": "Ok.", "failure": "Fails." },
+        "v5": { "status": 204, "body": "" }
+      },
+      "sameOriginHeaders": {
+        "$comment": [
+          "The fix for the bug that made this client fail outright against a",
+          "stock install.",
+          "",
+          "qBittorrent answers 401 to any request carrying a cross-site Origin or",
+          "Referer - which is exactly what a privileged request inherits from the",
+          "page the userscript runs on. Measured on a live v5.2.3:",
+          "  login with Origin of the page's origin -> 401",
+          "  authenticated GET with Referer of a foreign host -> 401",
+          "  authenticated GET with neither -> 200",
+          "",
+          "Its own documentation says to set both to the client's own base URL, so",
+          "every request in the userscript carries them. If the userscript manager",
+          "strips them anyway - Chrome forbids setting them and not every manager",
+          "passes them through - the failure stays a bare 401, and the only remedy",
+          "is one WebUI toggle. qbFailure() names that toggle instead of letting",
+          "a bare status code reach the log."
+        ],
+        "headers": ["Origin", "Referer"],
+        "value": "the client's own scheme://host:port"
+      },
+      "authFailurePolicy": {
+        "$comment": [
+          "qBittorrent bans an IP after web_ui_max_auth_fail_count consecutive",
+          "failed logins (default 5) for web_ui_ban_duration seconds (default",
+          "3600). Without a cap, a batch of 17 magnets retrying a wrong password",
+          "would lock the user out of their own client for an hour - a",
+          "self-inflicted outage worse than the original bug. The limit is",
+          "deliberately under the vendor default so there is margin.",
+          "",
+          "A CSRF-rejected login also returns 401 and may count toward that",
+          "total, which is why the fallback path matters."
+        ],
+        "vendorMaxAuthFailCount": 5,
+        "vendorBanDurationSeconds": 3600,
+        "scriptMaxLoginFailures": 3
+      },
       "note": [
         "Set-Cookie is a forbidden header name for a plain fetch and is not",
-        "surfaced by every userscript manager, so a missing SID falls back to",
+        "surfaced by every userscript manager, so a missing cookie falls back to",
         "relying on the manager's cookie jar rather than failing outright."
       ]
     }

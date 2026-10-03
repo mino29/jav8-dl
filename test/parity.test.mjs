@@ -28,10 +28,28 @@ r.check("size window defaults", [api.DEFAULTS.minSize, api.DEFAULTS.maxSize], [
   spec.selection.defaultMaxBytes,
 ]);
 
-// The user's brief: a 500MB-100GB preferred size. Asserted in MB and GB so a
-// change to either number has to be deliberate.
-r.check("default min is 500MB", api.DEFAULTS.minSize / api.MB, 500);
-r.check("default max is 100GB", api.DEFAULTS.maxSize / api.GB, 100);
+// The user's brief is a preferred size, and 1.1 derives the whole window from it.
+// Asserted in GB so a change to the default has to be deliberate.
+r.check("default preferred size is 5GB", api.DEFAULTS.preferredSize / api.GB, 5);
+
+// The window must be *derived*, never stored independently, or the slider and the
+// window it is supposed to control would eventually disagree.
+r.check("window ratio", api.SIZE_WINDOW_RATIO, spec.selection.windowRatio);
+r.check(
+  "min is derived from preferred",
+  api.DEFAULTS.minSize,
+  Math.round(api.DEFAULTS.preferredSize / api.SIZE_WINDOW_RATIO),
+);
+r.check(
+  "max is derived from preferred",
+  api.DEFAULTS.maxSize,
+  Math.round(api.DEFAULTS.preferredSize * api.SIZE_WINDOW_RATIO),
+);
+// And the derivation must reproduce the spec's literal numbers exactly.
+r.check("spec preferred matches code", api.DEFAULTS.preferredSize, spec.selection.defaultPreferredBytes);
+r.check("spec ladder matches code", api.SIZE_LADDER, spec.selection.sliderLadderGb.map((gb) => gb * api.GB));
+// The floor has to stay able to do its job: its purpose is skipping 200MB samples.
+r.check("floor still skips a 200MB sample", api.DEFAULTS.minSize > 200 * api.MB, true);
 
 // ------------------------------------------------------------------ selectors
 const card = spec.selectors.card;
@@ -39,6 +57,17 @@ r.check("card selector requires the /v/ prefix", /^\/v\//.test("x".replace("x", 
 r.check("card selector is used in the script", api.SELECTORS.card, card);
 r.check("cover selector", api.SELECTORS.cover, spec.selectors.cover);
 r.check("magnet size selector", api.SELECTORS.magnetSize, spec.selectors.magnetSize);
+
+// The performer-index and pagination selectors are what autopagination depends
+// on, so a change to either has to be deliberate.
+r.check("actress tile selector", api.SELECTORS.actressTile, spec.selectors.actressTile);
+r.check("actress name selector", api.SELECTORS.actressName, spec.selectors.actressName);
+r.check("pagination next selector", api.SELECTORS.paginationNext, spec.selectors.paginationNext);
+// The tile selector must be as strict about the route as the card selector was:
+// an absolute href is an advert, not a performer.
+r.check("actress tile requires the /actress/ prefix", /^\/actress\//.test(api.SELECTORS.actressTile.slice(api.SELECTORS.actressTile.indexOf("/actress/"))), true);
+r.check("actress route pattern documented", spec.site.actressRoutePattern, "^/actress/[0-9]+$");
+r.check("performer index route documented", spec.site.actressIndexRoute, "/top-actresses");
 
 // ------------------------------------------------------------------ size base
 r.check("size base is 1024", spec.size.base, 1024);
@@ -89,6 +118,37 @@ r.check("aria2 rpc path", spec.protocols.aria2.path, "/jsonrpc");
 r.check("aria2 rpc method", spec.protocols.aria2.method, "aria2.addUri");
 r.check("qb login path", spec.protocols.qbittorrent.loginPath, "/api/v2/auth/login");
 r.check("qb add path", spec.protocols.qbittorrent.addPath, "/api/v2/torrents/add");
+r.check("qb version path", spec.protocols.qbittorrent.versionPath, "/api/v2/app/version");
+
+// The cookie pattern is the fix for a silent failure, so it is held against the
+// real header text a 5.x server sends rather than only against the spec.
+r.check("sid pattern agrees with spec", api.SID_COOKIE_RE.source, spec.protocols.qbittorrent.cookieName.pattern);
+// Both spellings must be understood, and the legacy one must not be the only one.
+r.check(
+  "5.x port-suffixed cookie",
+  api.parseSidCookie("set-cookie: QBT_SID_8082=FRdLSYsATim/s6l204MBCzv1FDUqspy+; path=/; HttpOnly"),
+  "QBT_SID_8082=FRdLSYsATim/s6l204MBCzv1FDUqspy+",
+);
+r.check("4.x legacy cookie", api.parseSidCookie("set-cookie: SID=hBc7TxF76ERhvIw0jQQ4LZ7Z1jQUV0tQ; path=/"), "SID=hBc7TxF76ERhvIw0jQQ4LZ7Z1jQUV0tQ");
+
+// The same-origin headers are what make the client usable against a stock
+// install, so the value they carry is worth pinning.
+r.check("origin header targets the client", api.origin("http://192.168.1.50", 8082), "http://192.168.1.50:8082");
+
+// The failure cap exists to stop the script banning the user out of their own
+// client, so it is held against the vendor default it has to stay under.
+r.check(
+  "failure cap matches the spec",
+  api.MAX_LOGIN_FAILURES,
+  spec.protocols.qbittorrent.authFailurePolicy.scriptMaxLoginFailures,
+);
+r.check("vendor ban threshold", spec.protocols.qbittorrent.authFailurePolicy.vendorMaxAuthFailCount, 5);
+r.check("vendor ban duration", spec.protocols.qbittorrent.authFailurePolicy.vendorBanDurationSeconds, 3600);
+r.check(
+  "cap stays under the vendor threshold",
+  api.MAX_LOGIN_FAILURES < spec.protocols.qbittorrent.authFailurePolicy.vendorMaxAuthFailCount,
+  true,
+);
 
 // The documented defaults must actually compose into working endpoints.
 r.check(
