@@ -1,0 +1,26 @@
+# Dependencies: nothing to install. The tests and the userscript are plain
+# Node/browser script with no third-party imports. node_modules/ is ignored
+# only so an accidental install cannot get committed.
+node_modules/
+
+# The userscript is a single file that a user installs by opening it, so a
+# build step here would be a liability. Kept as a guard against someone adding
+# one without thinking.
+dist/
+build/
+*.min.js
+
+# Editor and OS noise
+.vscode/
+.idea/
+*.swp
+*~
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Local scratch
+*.log
+npm-debug.log*
+.env
+.env.local

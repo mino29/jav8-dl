@@ -1,0 +1,13 @@
+{
+  "name": "jav8-dl",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Userscript for jav8.vip: tick covers, filter by VR, pick the best magnet by size, send to aria2 or qBittorrent",
+  "type": "module",
+  "scripts": {
+    "test": "node test/pure.test.mjs && node test/parity.test.mjs",
+    "harness": "node test/harness.mjs 8980",
+    "fixtures": "python tools/fetch_fixtures.py"
+  },
+  "license": "UNLICENSED"
+}

@@ -1,0 +1,20 @@
+# The userscript must stay byte-identical regardless of who clones it on which
+# platform: line endings are normalised in the repository and checked out as LF,
+# so a Windows checkout cannot silently produce a different file from the one a
+# user's manager was shown.
+* text=auto eol=lf
+
+*.js  text eol=lf
+*.mjs text eol=lf
+*.json text eol=lf
+*.md  text eol=lf
+*.py  text eol=lf
+
+# Captured site pages: keep them exactly as fetched so a fixture change is
+# always a deliberate re-capture, never a whitespace edit.
+test/fixtures/*.html -text
+
+# Binary-safe rule for anything unexpected.
+*.png binary
+*.jpg binary
+*.ico binary

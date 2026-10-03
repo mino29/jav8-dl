@@ -1,0 +1,181 @@
+{
+  "$comment": [
+    "Machine-readable contract for everything this project assumes about",
+    "jav8.vip, and for the download-client defaults.",
+    "",
+    "The userscript has to ship as a single file, so these values are inlined",
+    "in the script. test/parity.test.mjs asserts the inlined copies match this",
+    "file, so they cannot drift apart silently.",
+    "",
+    "The jav-scraper project (Python) implements the same site knowledge",
+    "separately, in user_modules/scraper.py and user_modules/downloaders.py.",
+    "Language differs so no code is literally shared, but the facts below are",
+    "the shared contract - see README.md for how each was measured."
+  ],
+
+  "site": {
+    "root": "https://jav8.vip",
+    "listingRoutes": [
+      "/",
+      "/latest",
+      "/updated",
+      "/top-videos",
+      "/rank/*",
+      "/soon",
+      "/search",
+      "/actress/*",
+      "/studio/*",
+      "/genre/*"
+    ],
+    "detailRoutePattern": "^/v/[0-9]+$",
+    "notes": [
+      "The site injects promotional cards with absolute hrefs via its adworker",
+      "script. Requiring the /v/ prefix on the card selector skips them.",
+      "Studio-strip cards have no cover image and get no tick box."
+    ]
+  },
+
+  "selectors": {
+    "$comment": "CSS selectors verified against captured pages in test/fixtures.",
+    "card": "a.work[href^=\"/v/\"]",
+    "cover": "img.work-cover",
+    "cardCode": ".work-id",
+    "cardTitle": ".work-title",
+    "magnetBlock": ".magnet",
+    "magnetSize": ".magnet-size",
+    "magnetLink": ".magnet-title a[href^=\"magnet:\"]",
+    "detailCode": "dl dt.highlight",
+    "detailTitle": "h1.text-zh",
+    "detailTag": "a.tag",
+    "navigation": ".tabs a[href]"
+  },
+
+  "size": {
+    "$comment": [
+      "1024-based on purpose: the site labels GiB as GB almost everywhere, and",
+      "one consistent basis keeps every window comparison self-consistent."
+    ],
+    "base": 1024,
+    "units": ["B", "KB", "MB", "GB", "TB", "KiB", "MiB", "GiB", "TiB"],
+    "pattern": "^\\s*([0-9]+(?:[.,][0-9]+)?)\\s*([A-Za-z]+)\\s*$",
+    "examples": ["5.37GB", "900.94MB", "1.28GB", "1.5GB", "2.82GB", "700MB"]
+  },
+
+  "vr": {
+    "$comment": [
+      "The rule is: title marker OR a VR substring in the code prefix.",
+      "",
+      "Measured disagreement between the two signals is the reason both are",
+      "needed: the title marker caught 17/17 known VR releases, the code",
+      "pattern caught 6 more that the title missed, and the code pattern",
+      "produced zero false positives across 98 flat releases.",
+      "",
+      "A hand-listed set of prefixes was tried first and caught only 6 of 26,",
+      "so it is deliberately not used.",
+      "",
+      "Do not treat 第一人称 (first person) as a VR signal: it appears on many",
+      "ordinary flat releases."
+    ],
+    "titleMarker": "【VR】",
+    "titleMarkerPattern": "[［\\[]\\s*VR\\s*[］\\]]",
+    "codePattern": "^[A-Z0-9]*VR[A-Z0-9]*-\\d",
+    "observedVrPrefixes": [
+      "CJVR",
+      "DSVR",
+      "EBVR",
+      "KIWVR",
+      "KAVR",
+      "MDVR",
+      "PXVR",
+      "PXVRW",
+      "SAVR",
+      "SIVR",
+      "URVRSP",
+      "VRKM"
+    ],
+    "notVrSignals": ["第一人称", "8K"]
+  },
+
+  "magnetTiers": {
+    "$comment": [
+      "A meaningful share of magnet entries are adverts. Across 262 real",
+      "entries the three tiers below separate them cleanly: no clean release",
+      "matched an ad rule, and no advert escaped one.",
+      "",
+      "The bare @ is deliberate. An earlier rule required a domain after it",
+      "and so missed real entries such as 第一會所新片@SIS001@DDH-451 and",
+      "ALDN-433.[4K]@R90s, where nothing follows the @ but a dotted domain."
+    ],
+    "ad": {
+      "strongPattern": "[▷▶]",
+      "wordsPattern": "(夸克|無广告|无广告|旗舰APP|成人APP|1视频|月新地址)"
+    },
+    "suspect": {
+      "pattern": "@",
+      "note": "Deprioritised, used only when no clean release exists."
+    },
+    "clean": {
+      "note": "A plain catalog name such as IPZZ-961 or 259LUXU-1900."
+    }
+  },
+
+  "selection": {
+    "$comment": [
+      "Order of preference, and why the largest wins inside the window.",
+      "See pickMagnet() in the userscript."
+    ],
+    "defaultMinBytes": 524288000,
+    "defaultMaxBytes": 107374182400,
+    "rule": [
+      "clean magnets whose size is inside the window",
+      "if the window excludes every clean magnet, the largest clean one, flagged outside-window",
+      "if there are no clean magnets, a suspect one rather than nothing",
+      "never an ad"
+    ]
+  },
+
+  "downloaders": {
+    "$comment": [
+      "Stock-install defaults for the products, shown as placeholders in the",
+      "settings form. These are publicly documented product defaults, not",
+      "credentials. Only what a user types is persisted.",
+      "",
+      "These same defaults exist in jav-scraper as",
+      "user_modules/downloaders.py::VENDOR_DEFAULTS."
+    ],
+    "aria2": {
+      "host": "http://localhost",
+      "port": 6800,
+      "secret": "",
+      "dir": ""
+    },
+    "qbittorrent": {
+      "host": "http://localhost",
+      "port": 8080,
+      "username": "admin",
+      "password": "adminadmin",
+      "savePath": "",
+      "category": "jav"
+    }
+  },
+
+  "protocols": {
+    "aria2": {
+      "path": "/jsonrpc",
+      "method": "aria2.addUri",
+      "auth": "params[0] = 'token:<secret>' when a secret is set",
+      "note": "No CORS headers, so GM_xmlhttpRequest is required."
+    },
+    "qbittorrent": {
+      "loginPath": "/api/v2/auth/login",
+      "addPath": "/api/v2/torrents/add",
+      "versionPath": "/api/v2/app/version",
+      "auth": "SID cookie from the login response",
+      "note": [
+        "Set-Cookie is a forbidden header name for a plain fetch and is not",
+        "surfaced by every userscript manager, so a missing SID falls back to",
+        "relying on the manager's cookie jar rather than failing outright."
+      ]
+    }
+  }
+}
