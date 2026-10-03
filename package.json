@@ -7,7 +7,12 @@
   "scripts": {
     "test": "node test/pure.test.mjs && node test/parity.test.mjs",
     "harness": "node test/harness.mjs 8980",
-    "fixtures": "python tools/fetch_fixtures.py"
+    "fixtures": "python tools/fetch_fixtures.py",
+    "icon": "python tools/embed_icon.py",
+    "icon:check": "python tools/embed_icon.py --check",
+    "check-bump": "node tools/check-bump.mjs",
+    "readme": "python tools/check_readme.py",
+    "verify": "npm run icon:check && npm run readme && npm test && npm run check-bump -- --staged"
   },
   "license": "UNLICENSED"
 }

@@ -58,6 +58,7 @@
     "detailTag": "a.tag",
     "actressTile": "a.actress[href^=\"/actress/\"]",
     "actressName": ".actress-name",
+    "actressTitle": "h1.actress-title",
     "paginationNext": "a.pagination-next[href]",
     "navigation": ".tabs a[href]"
   },

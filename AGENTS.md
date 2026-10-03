@@ -120,7 +120,15 @@ Kept here because they are the kind that come back:
   problem: "banned for too many logins" became "could not reach the host",
   sending the user to `@connect` for a bad password. Status is now a field, and
   `explained()` stops a precise message being overwritten downstream.
-- Never rewrite an existing file with PowerShell `WriteAllText`/`Out-File` to fix
-  one byte. Those default to a legacy codepage here and silently destroyed every
-  em dash in this file while looking like it worked. Use the edit tool, and verify
-  with `[Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes(...))` afterwards.
+- Never rewrite an existing file with PowerShell `WriteAllText`/`Out-File`/
+  `Set-Content` to fix one byte or to run a quick negative test. They default to
+  a legacy codepage here and silently destroyed every em dash in this file, and
+  on a later occasion mangled `【VR】` into mojibake, both times while looking
+  like they had worked. Use the edit tool. If a file must be restored, prefer
+  `git checkout-index -f -- <path>`, which takes the byte-exact staged copy.
+  Verify afterwards with
+  `[Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes(...))`.
+- A userscript only updates when `@version` rises. A forgotten bump produces no
+  error and no update, which is indistinguishable from a broken `@updateURL`, so
+  it is checked mechanically: `npm run check-bump`, and `npm run verify` for the
+  whole pre-publish set (icon freshness, tests, version bump).

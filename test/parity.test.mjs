@@ -62,6 +62,8 @@ r.check("magnet size selector", api.SELECTORS.magnetSize, spec.selectors.magnetS
 // on, so a change to either has to be deliberate.
 r.check("actress tile selector", api.SELECTORS.actressTile, spec.selectors.actressTile);
 r.check("actress name selector", api.SELECTORS.actressName, spec.selectors.actressName);
+// Her name comes from the page heading, used only to label the career button.
+r.check("actress title selector", api.SELECTORS.actressTitle, spec.selectors.actressTitle);
 r.check("pagination next selector", api.SELECTORS.paginationNext, spec.selectors.paginationNext);
 // The tile selector must be as strict about the route as the card selector was:
 // an absolute href is an advert, not a performer.

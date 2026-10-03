@@ -1,12 +1,16 @@
 // ==UserScript==
 // @name         JAV8 Downloader
-// @namespace    https://github.com/mino29/jav-scraper
-// @version      1.1.0
+// @namespace    https://github.com/mino29/jav8-dl
+// @homepage     https://github.com/mino29/jav8-dl
+// @version      1.2.0
+// @icon          data:image/png;base64,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
 // @description  Tick covers to queue them, filter by VR, pick the best magnet by size, and send to aria2 or qBittorrent. Settings live in the browser, not in a config file.
 // @author       mino29
 // @match        *://jav8.vip/*
 // @match        *://*.jav8.vip/*
 // @connect      *
+// @updateURL    https://raw.githubusercontent.com/mino29/jav8-dl/main/jav8-downloader.user.js
+// @downloadURL  https://raw.githubusercontent.com/mino29/jav8-dl/main/jav8-downloader.user.js
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_xmlhttpRequest
@@ -118,6 +122,7 @@
     // Performer index (/top-actresses). Each tile is a link to her works page.
     actressTile: 'a.actress[href^="/actress/"]',
     actressName: ".actress-name",
+    actressTitle: "h1.actress-title",
     // Every paginated route uses the same control, so autopagination is one
     // lookup rather than one per route. Verified on /actress/<id>?page=N,
     // /top-actresses?page=N and the listing routes.
@@ -1264,6 +1269,8 @@
 .actress:hover .jd-allof{opacity:1}
 .jd-allof:hover{background:#2b6cb0;border-color:#63b3ed}
 .jd-allof[disabled]{opacity:.35;cursor:progress}
+.jd-career{margin:7px 0 0}
+.jd-career .jd-btn{width:100%;padding:5px}
 .jd-btn{background:#2f6feb;color:#fff;border:1px solid #2f6feb;border-radius:3px;
   padding:4px 8px;font-size:11px;cursor:pointer}
 .jd-btn:hover{background:#2559c4}
@@ -1664,6 +1671,133 @@
       });
   }
 
+  // ------------------------------------------------- performer: career crawl
+  /** The performer's own page, with any ?page=N stripped. */
+  function isActressWorksPage() {
+    return /^\/actress\/\d+/.test(location.pathname);
+  }
+
+  /**
+   * Her base URL, always page 1.
+   *
+   * Stripping the query is the whole point: arriving on page 4 of a career must
+   * not mean starting the crawl at page 4. Without this the button would
+   * collect the last page and call it her filmography.
+   */
+  function actressBasePath() {
+    return location.pathname.replace(/\/+$/, "");
+  }
+
+  function performerName() {
+    var el = document.querySelector("h1.actress-title");
+    return el ? el.textContent.trim() : "";
+  }
+
+  /**
+   * Crawl a performer's pages and send everything matching the filter.
+   *
+   * Sends as it goes rather than staging first, which is what this button is
+   * for - unlike the tile on /top-actresses, where the choice of performer is
+   * exploratory and staging costs nothing.
+   *
+   * The VR filter and the size preference are applied by the same
+   * matchesFilter() and pickMagnet() the listings use, rather than a second
+   * copy of either rule here.
+   */
+  function downloadActressCareer(href, name, button) {
+    var label = name || "this performer";
+    button.disabled = true;
+    log("Collecting every work by " + label + "…", "mu");
+
+    function parse(html) {
+      return new DOMParser().parseFromString(html, "text/html");
+    }
+
+    function loadPage(pageHref) {
+      return getText(new URL(pageHref, location.origin).href)
+        .then(parse)
+        .catch(function () {
+          // A page that will not load ends the crawl and keeps what was already
+          // found. Failing the whole thing would discard a hundred collected
+          // works over one bad request.
+          return null;
+        });
+    }
+
+    getText(new URL(href, location.origin).href)
+      .then(parse)
+      .then(function (firstDoc) {
+        return collectPages(firstDoc, loadPage);
+      })
+      .then(function (result) {
+        var hrefs = [];
+        result.works.forEach(function (work) {
+          known.set(work.href, workInfoFromCard(work.card));
+          if (matchesFilter(work.card)) hrefs.push(work.href);
+        });
+
+        var where = result.pages + (result.pages === 1 ? " page" : " pages");
+        if (!result.works.length) {
+          button.disabled = false;
+          log(label + ": no works found on any page.", "wa");
+          return;
+        }
+        if (result.stopped === "page-cap") {
+          log(label + ": stopped at the " + where + " limit, so some works were not seen.", "wa");
+        } else if (result.stopped === "page-failed") {
+          log(label + ": stopped early - a page would not load. Sending what was found.", "wa");
+        }
+        if (!hrefs.length) {
+          button.disabled = false;
+          log(label + ": " + result.works.length + " works found, but none match " + filterScope() + ".", "wa");
+          return;
+        }
+        log(
+          label + ": sending " + hrefs.length + " of " + result.works.length +
+            " works (" + filterScope() + ", from " + where + ").",
+          "mu",
+        );
+        // The button stays disabled for the duration; sendHrefs re-enables it.
+        sendHrefs(hrefs, button);
+      })
+      .catch(function (err) {
+        button.disabled = false;
+        log(label + ": could not read her works page - " + (err.message || err), "er");
+      });
+  }
+
+  /**
+   * Add the career button to the panel, on her works page only.
+   *
+   * Lives in the panel rather than on the page because the page already has a
+   * per-card tick, and a second floating control per performer would compete
+   * with it. It is panel-scoped for the same reason the size slider is.
+   */
+  function addCareerButton(body) {
+    if (!isActressWorksPage() || body.querySelector(".jd-career")) return;
+    var name = performerName();
+    var row = el("div", "jd-career");
+    var btn = el("button", "jd-btn", "All works");
+    btn.type = "button";
+    // Retitled with the filter, for the same reason the performer tiles are:
+    // the promise this button makes depends on which filter is set, and a
+    // tooltip that still says "all works" after switching to VR only is a
+    // promise the script breaks.
+    btn._retitle = function () {
+      btn.title =
+        "Send every work on " + (name || "this performer") + "'s pages, following " +
+        "pagination from page 1 - not just the page you are on. Applies the " +
+        filterScope() + " filter and your size preference. This starts sending " +
+        "immediately; there is no confirmation step.";
+    };
+    btn._retitle();
+    btn.addEventListener("click", function () {
+      downloadActressCareer(actressBasePath(), name, btn);
+    });
+    row.appendChild(btn);
+    body.appendChild(row);
+  }
+
   /**
    * The label the current filter puts in front of a count.
    *
@@ -1696,10 +1830,10 @@
   function requestBulkRefresh() {
     var bulk = document.querySelector(".jd-bulk");
     if (bulk && bulk._refresh) bulk._refresh();
-    // The performer tiles describe the filter too, and they were written once at
-    // decoration time - so without this they keep promising "all works" after
-    // the user switches to VR only.
-    document.querySelectorAll(".jd-allof").forEach(function (btn) {
+    // The performer tiles and the career button describe the filter too, and both
+    // were written once at build time - so without this they keep promising
+    // "all works" after the user switches to VR only.
+    document.querySelectorAll(".jd-allof, .jd-career .jd-btn").forEach(function (btn) {
       if (btn._retitle) btn._retitle();
     });
   }
@@ -1862,6 +1996,9 @@
     bulk.appendChild(selectAll);
     bulk.appendChild(deselectAll);
     body.appendChild(bulk);
+
+    // Her whole career, from whichever page of it the user happens to be on.
+    addCareerButton(body);
     // Disabled from the outset: a work page has no cards at all, and decorateAll()
     // - the only other caller of refreshBulkButtons() - never runs there. Without
     // this they sit enabled next to an empty grid and do nothing when clicked.
@@ -1921,23 +2058,31 @@
   }
 
   // -------------------------------------------------------------- downloading
-  function runSelection(button) {
-    if (!selected.size) {
-      log("Nothing ticked yet.", "wa");
-      return;
-    }
-    var hrefs = Array.from(selected);
+  /**
+   * Send a list of works to the client, one at a time.
+   *
+   * Shared by "Download selected" and the performer career button so both take
+   * exactly the same path: the same size window, the same VR-derived pick, the
+   * same site-vs-client error labelling, and the same one-login-per-batch
+   * behaviour the qBittorrent ban guard depends on. Two copies of this would
+   * drift, and the drift would only show up on whichever path was tested less.
+   *
+   * Sequential on purpose - it is gentler on the site, and one torrent client
+   * does not benefit from being hit in parallel.
+   */
+  function sendHrefs(hrefs, button) {
     var target = engine();
-    button.disabled = true;
+    if (button) button.disabled = true;
     log("Sending " + hrefs.length + " to " + target.label + "…", "mu");
 
     var queue = hrefs.slice();
     var failures = 0;
+    var sent = 0;
 
-    // Log one line that says which of the two systems failed. Reading the site
-    // and talking to the client are independent steps; a bare error message does
-    // not reveal which one broke, and the fixes are unrelated.
-    function describe(err, what) {
+    // Say which of the two systems failed. Reading the site and talking to the
+    // client are independent steps; a bare error message does not reveal which
+    // one broke, and the fixes are unrelated.
+    function describe(err) {
       var reason = err && err.message ? err.message : String(err);
       return err && err.fromSite
         ? "could not read this page from jav8.vip: " + reason
@@ -1946,8 +2091,12 @@
 
     function next() {
       if (!queue.length) {
-        button.disabled = false;
-        log(failures ? "Done with " + failures + " failure(s)." : "All done.", failures ? "wa" : "ok");
+        if (button) button.disabled = false;
+        log(
+          (sent ? "Sent " + sent + " of " + hrefs.length + ". " : "") +
+            (failures ? "Done with " + failures + " failure(s)." : "All done."),
+          failures ? "wa" : "ok",
+        );
         return;
       }
       var href = queue.shift();
@@ -1965,11 +2114,12 @@
           }
           return target.send(picked.magnet).then(
             function (result) {
+              sent++;
               log(label + " → " + result + "  (" + formatSize(picked.magnet.size) + ")", "ok");
             },
             function (err) {
               failures++;
-              log(label + ": " + describe(err, "client"), "er");
+              log(label + ": " + describe(err), "er");
             },
           );
         })
@@ -1980,6 +2130,14 @@
         .then(next);
     }
     next();
+  }
+
+  function runSelection(button) {
+    if (!selected.size) {
+      log("Nothing ticked yet.", "wa");
+      return;
+    }
+    sendHrefs(Array.from(selected), button);
   }
 
   // ------------------------------------------------------- detail page panel
