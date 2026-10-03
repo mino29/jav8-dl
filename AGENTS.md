@@ -128,6 +128,15 @@ Kept here because they are the kind that come back:
   `git checkout-index -f -- <path>`, which takes the byte-exact staged copy.
   Verify afterwards with
   `[Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes(...))`.
+- The failure mode that matters on a third-party site is not a crash, it is a
+  rate-limit: enough requests in a row earn a temporary IP block, which looks
+  like the site breaking rather than the script misbehaving. So: send strictly
+  sequentially, leave a real gap between items (not just "not parallel" - the
+  next request leaving the instant the last one lands is still a burst), ask
+  before any single action covers a large batch, and stop early on repeated auth
+  failures because the vendor bans the IP. Confirm only above a threshold -
+  confirming every time trains people to click through the one dialog that
+  matters.
 - A browser cache will silently defeat a harness that re-reads the script per
   request. It did: a fixed size preference appeared not to work in the browser
   while the pure logic computed the right answer, because the tab was running a

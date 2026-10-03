@@ -78,6 +78,9 @@ export function loadApi() {
     "AD_WORDS",
     "SID_COOKIE_RE",
     "MAX_LOGIN_FAILURES",
+    "CONFIRM_THRESHOLD",
+    "needsConfirmation",
+    "REQUEST_GAP_MS",
   ];
   const context = vm.createContext({});
   vm.runInContext(

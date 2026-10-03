@@ -74,6 +74,23 @@ On `/actress/<id>` itself the panel also shows **All works**, which does the sam
 thing but sends immediately — you are already on her page, so there is nothing to
 confirm.
 
+### Looking after the site
+
+Sending is deliberately gentle. The thing most likely to go wrong is not a crash —
+it is getting your IP rate-limited by jav8.vip for asking too much too fast.
+
+- Works are sent **one at a time**, never in parallel.
+- There is a **short pause** between each, roughly the pace of a person clicking
+  through a gallery.
+- Sending **more than 25 works at once asks first**, and Cancel sends nothing.
+  Under 25 it just goes, so the common case is not slowed by a dialog.
+- If logins start failing the batch **stops after three**. qBittorrent bans your IP
+  for an hour after five consecutive failures, so carrying on would lock you out
+  of your own client.
+
+If you queue a hundred works and change your mind, press **Clear** before
+sending.
+
 ## Settings
 
 Open **Settings** in the panel. Vendor defaults are shown as placeholders, so an
@@ -114,6 +131,14 @@ The panel log says what went wrong. The usual ones:
 
 A batch stops after three failed logins on purpose. qBittorrent bans your IP for
 an hour after five, so pushing on would lock you out of your own client.
+
+## If it still misbehaves
+
+- **Too many downloads queued at once?** Sending stops and asks when a single
+  action covers more than 25 works — see [Looking after the
+  site](#looking-after-the-site).
+- **jav8.vip starts ignoring you?** That is rate limiting. Wait an hour; the
+  script is already as gentle as it can be while still being useful.
 
 ## How it picks a magnet
 

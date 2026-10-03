@@ -515,6 +515,25 @@ check("attached status beats a stale message", api.statusOf(Object.assign(new Er
 check("no field falls back to the message", api.statusOf(Object.assign(new Error("HTTP 404 from x"), {})), 404);
 check("falsy field falls back", api.statusOf(Object.assign(new Error("HTTP 404 from x"), { status: 0 })), 404);
 
+group("needsConfirmation - a hundred-work career should not fire on one click");
+// The risk being guarded is not a crash but an IP rate-limit from the site, so
+// the threshold is about politeness, not about the download client coping.
+check("threshold is a sane number", api.CONFIRM_THRESHOLD > 0 && api.CONFIRM_THRESHOLD < 1000, true);
+check("a single work never asks", api.needsConfirmation(1), false);
+check("a normal selection never asks", api.needsConfirmation(24), false);
+check("exactly at the limit does not ask", api.needsConfirmation(api.CONFIRM_THRESHOLD), false);
+check("one over the limit asks", api.needsConfirmation(api.CONFIRM_THRESHOLD + 1), true);
+check("a full career asks", api.needsConfirmation(100), true);
+check("threshold is overridable for tests", api.needsConfirmation(5, 3), true);
+check("override respected below", api.needsConfirmation(2, 3), false);
+
+group("REQUEST_GAP_MS - pacing");
+check("is a positive gap", api.REQUEST_GAP_MS > 0, true);
+// Long enough to matter, short enough that a normal batch is not tedious.
+check("not instant", api.REQUEST_GAP_MS >= 200, true);
+check("not glacial", api.REQUEST_GAP_MS <= 1000, true);
+check("a 25-item batch stays under a minute", 25 * api.REQUEST_GAP_MS < 60000, true);
+
 group("MAX_LOGIN_FAILURES - a failed batch must not lock the user out");
 // qBittorrent bans an IP for an hour after a handful of consecutive failed
 // logins (web_ui_max_auth_fail_count defaults to 5). A selection of 17 that
