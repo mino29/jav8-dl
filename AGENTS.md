@@ -227,3 +227,11 @@ Kept here because they are the kind that come back:
   error and no update, which is indistinguishable from a broken `@updateURL`, so
   it is checked mechanically: `npm run check-bump`, and `npm run verify` for the
   whole pre-publish set (icon freshness, tests, version bump).
+- A check that fires when nothing is wrong is a check that gets skipped, and a
+  skipped check protects nothing. `check-bump` demanded a version bump for a
+  commit that only added a screenshot and docs, with the script byte-identical -
+  so it now skips when the file is unchanged. That fix needed its own negative
+  test, because "it passes" and "it is inert" look identical from the outside:
+  edit the script without bumping, confirm it still exits 1. Restore afterwards
+  with `git restore --source=HEAD --staged --worktree -- <path>` and confirm git
+  reports the file clean.

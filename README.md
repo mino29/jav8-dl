@@ -7,6 +7,11 @@ want, and it sends them to aria2 or qBittorrent. It picks the best magnet for
 each release by size, so you get the full-quality version instead of a 200 MB
 sample.
 
+![The JAV8 Downloader panel, paused part-way through a batch of twelve works](docs/panel.png)
+
+*Three works sent, nine left, batch paused. The site behind is blurred on purpose
+— the panel is the whole point.*
+
 <p align="center">
   <a href="https://github.com/mino29/jav8-dl/releases/latest">
     <img alt="Latest release" src="https://img.shields.io/github/v/release/mino29/jav8-dl?label=release&sort=semver">
@@ -15,14 +20,19 @@ sample.
 
 ## Install
 
-1. Install **Tampermonkey** or **Violentmonkey**.
-2. Open [`jav8-downloader.user.js`](https://raw.githubusercontent.com/mino29/jav8-dl/main/jav8-downloader.user.js).
-   Your manager offers to install it.
-3. Reload any page on jav8.vip.
+Three steps. The third is the one people miss.
 
-A userscript manager is required. aria2 and qBittorrent send no CORS headers,
-so a plain script or a browser extension cannot reach them; the manager's
-privileged request is what makes the connection work.
+1. **Install a userscript manager** — Tampermonkey or Violentmonkey. This one is
+   not optional: aria2 and qBittorrent send no CORS headers, so only a manager's
+   privileged request can reach them.
+2. **Install the script** — open
+   [`jav8-downloader.user.js`](https://raw.githubusercontent.com/mino29/jav8-dl/main/jav8-downloader.user.js)
+   and accept the offer. It updates itself from then on.
+3. **Tell it where your download client is** — press **Settings** in the panel and
+   fill in the address. aria2 needs one option turned on before it will answer
+   at all: see [below](#you-need-a-download-client-already-set-up).
+
+Then reload any jav8.vip page and tick something.
 
 ## You need a download client already set up
 
@@ -71,10 +81,15 @@ what you have changed.
 From a phone or a second machine, use your machine's LAN address as the Host
 instead of `localhost`.
 
-Press **Test connection** before downloading anything. The script also checks for
-itself at the start of every batch: if the client is not answering it says so
-once, names the likely reason, and sends nothing — so a client that is down costs
-you one request rather than one per work.
+Press **Test connection** before downloading anything — it checks without saving.
+**Defaults** clears every override. The script also checks for itself at the start
+of every batch: if the client is not answering it says so once, names the likely
+reason, and sends nothing, so a client that is down costs one request rather than
+one per work.
+
+Settings are saved in your browser only. There is no config file and nothing is
+sent anywhere. The script ships with `@connect *`, so the host can be anything
+your browser can reach.
 
 | Client | Official source | Setup guide |
 | --- | --- | --- |
@@ -203,23 +218,6 @@ it is getting your IP rate-limited by jav8.vip for asking too much too fast.
 
 If you queue a hundred works and change your mind, press **Clear** before
 sending.
-
-## Settings
-
-Open **Settings** in the panel. Vendor defaults are shown as placeholders, so an
-empty field means "use the default". Only what you type is saved, in your browser
-only. There is no config file and nothing is sent anywhere.
-
-| Client | Default host | Default port | Login |
-| --- | --- | --- | --- |
-| aria2 | `http://localhost` | 6800 | no password by default |
-| qBittorrent | `http://localhost` | 8080 | `admin` / `adminadmin` |
-
-Point the host at whatever your browser can reach and it should just work — the
-script ships with `@connect *`, so it can talk to any address you can reach.
-
-**Test connection** checks a client without saving. **Defaults** clears every
-override.
 
 ## Updating
 

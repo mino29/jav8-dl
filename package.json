@@ -11,6 +11,7 @@
     "icon": "python tools/embed_icon.py",
     "icon:check": "python tools/embed_icon.py --check",
     "check-bump": "node tools/check-bump.mjs",
+    "shot": "node tools/shot.mjs",
     "readme": "python tools/check_readme.py",
     "verify": "npm run icon:check && npm run readme && npm test && npm run check-bump -- --staged"
   },

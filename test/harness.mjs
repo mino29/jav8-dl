@@ -277,6 +277,75 @@ const server = createServer((req, res) => {
     return;
   }
 
+  // A screenshot route, so the README image can be regenerated rather than
+  // rotting. It puts the script into a realistic mid-batch state, then blurs the
+  // site behind the panel: the panel is the thing being documented, and blurring
+  // is what keeps a captured third-party page out of a public repository.
+  //
+  // Headless Chrome can screenshot this page - it serves the script as a plain
+  // <script src>, so an ordinary page load runs it - but it cannot seed storage
+  // first, which is why the seeding lives here and not in the capture command.
+  if (path === "/__harness__/shot") {
+    const html = readFileSync(join(fixtures, "listing.html"), "utf8");
+    const tag = `<script src="/__harness__/script.js"></script>`;
+    // Runs *before* the userscript, because a classic script tag executes in
+    // document order. It has to: headless capture cannot seed storage first, and
+    // a pause flag left over from an earlier run silently changes what the
+    // picture shows - which is how the first attempt at this came to depict a
+    // finished batch claiming "Selection is clear".
+    const seed = `<script>
+localStorage.clear();
+sessionStorage.clear();
+sessionStorage.setItem("gm-store", JSON.stringify({
+  "jav8-downloader-settings": {
+    active: "aria2",
+    filter: "all",
+    preferredSize: 5368709120,
+    downloaders: { aria2: { host: "http://127.0.0.1", port: ${port} } },
+  },
+}));
+</script>`;
+    // Runs after it, once the panel exists.
+    const pose = `<script>
+window.confirm = function () { return true; };
+setTimeout(function () {
+  var boxes = document.querySelectorAll(".jd-box input");
+  for (var i = 0; i < 12 && i < boxes.length; i++) boxes[i].click();
+  document.querySelector(".jd-foot .jd-btn").click();
+  // Pause partway through, so the capture shows a batch in progress rather than
+  // a finished one. Headless capture fast-forwards timers, so this is the only
+  // reliable way to stop mid-batch: with a plain time budget the whole batch
+  // runs instantly and the panel reads "Selection is clear".
+  setTimeout(function () {
+    document.querySelector(".jd-pause").click();
+  }, 1500);
+  setTimeout(function () {
+    // An overlay, not "blur everything except the panel": a filter on an
+    // ancestor cannot be undone by a descendant, so the panel has to sit *above*
+    // the blur rather than be excluded from it - which it does by z-index.
+    var s = document.createElement("style");
+    s.textContent =
+      "#shot-blur{position:fixed;inset:0;z-index:2147482999;" +
+      "backdrop-filter:blur(10px) saturate(.6);-webkit-backdrop-filter:blur(10px) saturate(.6);" +
+      "background:rgba(6,8,14,.74);pointer-events:none}" +
+      // The page is shorter than the capture window, which would otherwise leave
+      // the html background showing as a white band below the overlay.
+      "html{background:#06080e}body{min-height:100vh}";
+    document.head.appendChild(s);
+    var o = document.createElement("div");
+    o.id = "shot-blur";
+    document.body.appendChild(o);
+  }, 2600);
+}, 400);
+</script>`;
+    res.writeHead(200, {
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "no-store, max-age=0",
+    });
+    res.end(inject(html).replace(tag, seed + tag + pose));
+    return;
+  }
+
   const route = ROUTES.find(([re]) => re.test(path + (url.search || "")));
   if (!route) {
     res.writeHead(404, { "Content-Type": "text/plain" });
