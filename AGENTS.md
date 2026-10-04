@@ -131,7 +131,43 @@ Kept here because they are the kind that come back:
 - Choose the storage whose lifetime matches the requirement, not the one that is
   convenient. "Queues stop when the tab closes" is `sessionStorage` and nothing
   else - `GM_setValue` is per browser profile, so a queue would have followed the
-  user to every other tab and survived the one they meant to close.
+  user to every other tab and survived the one they meant to close. A later
+  request to aggregate selections across tabs does *not* retract that: the queue
+  stayed in `sessionStorage` while the selection moved to `localStorage`, because
+  only one tab ever drives its own queue. A shared queue would need a lease to
+  elect a driver, and a lease that expires wrongly sends a torrent twice - which
+  is a far worse failure than a tab's queue not being visible from a sibling.
+- A `storage` event handler must never write. The event fires in every tab
+  *except* the one that caused it, so a write inside the handler makes each tab
+  provoke the others to write again, for ever. Shared state needs one writer and
+  many readers, and the discipline is easier to state than to spot in review.
+- One storage key per field, not one JSON blob, when several tabs write. A
+  read-modify-write of a blob is two operations, so two tabs changing different
+  fields at the same moment lose one of the changes; separate keys make each
+  write atomic on its own.
+- Anything a user can change from another surface has to be re-read where it is
+  used, not captured where it is defined. `isPaused()` reads storage on every
+  call because the pause can come from another tab at any moment; a value read
+  once when the job started would be a value from the past, and a pause that
+  does not take effect is worse than no pause because it looks like it worked.
+- A pause has to be checked before the work, not inside it. Putting the pause gate
+  ahead of the pre-batch probe meant a paused queue issued *zero* requests, not
+  one - which is the difference between "idle" and "polling a server that is not
+  listening" once a minute.
+- Set difference for "what is new" must be against everything a job has ever
+  owned, not against what is left to do. Comparing against the tail looks
+  identical for a batch nobody interrupts, and re-queues work that was already
+  sent the moment it is unticked and re-ticked. The visible symptom is the same
+  torrent twice.
+- A tool round-trip can be longer than the work being tested. Three "failures"
+  here were the test firing *before* the action it was meant to interrupt, and
+  the log window showing only the last 14 lines hiding the line being looked for.
+  Assert on a durable total - "started with 20, finished having sent 22" - rather
+  than on a log line that may have scrolled away.
+- A control whose label states what it will do has to be right in every tab that
+  can see it, including tabs that only heard about the change over a storage
+  event. And find such a control by a class of its own: "the first ghost button
+  in the foot" is not a name worth depending on once a second one exists.
 - A read/write helper whose "delete" path is a write of `null` will store the
   string "null". Reading it back gives `null`, which looks like "no data", so the
   real symptom is a feature that silently never restores - a queue that appeared

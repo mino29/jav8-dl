@@ -103,8 +103,32 @@ The panel in the top right corner holds the controls:
 | **Select all / Clear** | Tick everything showing, or untick everything |
 | **All works** | On a performer's page: send her entire filmography |
 | **＋** | On any performer link: queue her entire filmography |
+| **Pause / Start** | Hold everything, or let it go again |
 | **Cancel all** | Stop every crawl and download in progress |
 | **Settings** | Client address, credentials, save path |
+
+### Several tabs at once
+
+Open as many jav8.vip tabs as you like. They share **one selection and one pause
+switch**:
+
+- Tick a cover in any tab and it is ticked in all of them, immediately.
+- **Clear** in any tab clears all of them.
+- **Pause** in any tab holds every tab's crawling and sending. Nothing is
+  requested from the site while paused — not even the check that the download
+  client is up.
+- Work you tick *while a batch is already running* joins that batch. You do not
+  have to press **Download selected** a second time.
+
+A batch still belongs to the tab that started it: closing that tab stops it, and
+other tabs keep their own selections.
+
+### Pausing
+
+**Pause** stops between items, so the next page fetch waits until you press
+**Start** — mid-crawl as well as mid-download. It is a switch, not a stop: nothing
+is lost, and pressing Start carries on from exactly where it was. **Cancel all**
+is the one that throws work away.
 
 ### Preferred size
 
@@ -137,9 +161,10 @@ still sending, picking up exactly where it left off rather than starting again.
 Your ticked works survive the same way, so clicking through to the next page does
 not quietly empty your selection.
 
-**Closing the tab ends everything.** The queue is kept per tab and dies with it,
-so nothing is left running once you close it, and a queue will not follow you
-into another tab.
+**Closing the tab ends that tab's queue.** Queues are kept per tab and die with
+it, so nothing is left running once you close it, and a queue will not follow you
+into another tab. (Your *ticks* and the *pause* switch are shared across tabs and
+do outlive it — see [Several tabs at once](#several-tabs-at-once).)
 
 A blue strip appears in the panel while anything is queued, showing what is
 happening and how many works are left. **Cancel all** in that strip stops
@@ -232,7 +257,10 @@ an hour after five, so pushing on would lock you out of your own client.
   action covers more than 25 works — see [Looking after the
   site](#looking-after-the-site).
 - **It is still going after I closed the page?** Queues are per tab. Closing the
-  tab stops everything; opening a new one starts clean.
+  tab stops them; opening a new one starts clean. Your ticks and the pause switch
+  are shared, so those come back — press **Clear** if you want them gone.
+- **Nothing happens when I press Download?** Check **Pause** in any tab. It is
+  shared, so a pause set in one applies everywhere, and it survives a reload.
 - **My selection is empty and I only wanted some of them?** Nothing deleted it.
   Every work unticks itself once it has been attempted, so an empty selection
   after a batch means all of them were dealt with. Works that failed are named in

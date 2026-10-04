@@ -83,6 +83,7 @@ export function loadApi() {
     "REQUEST_GAP_MS",
     "pendingWorkCount",
     "jobNeedsProbe",
+    "joinableHrefs",
   ];
   const context = vm.createContext({});
   vm.runInContext(

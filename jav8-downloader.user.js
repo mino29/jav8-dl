@@ -2,7 +2,7 @@
 // @name         JAV8 Downloader
 // @namespace    https://github.com/mino29/jav8-dl
 // @homepage     https://github.com/mino29/jav8-dl
-// @version      1.7.0
+// @version      1.8.0
 // @icon          data:image/png;base64,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
 // @description  Tick covers to queue them, filter by VR, pick the best magnet by size, and send to aria2 or qBittorrent. Settings live in the browser, not in a config file.
 // @author       mino29
@@ -804,6 +804,33 @@
     return job.kind === "collect" && job.mode === "send";
   }
 
+  /**
+   * Works in `selection` that a send job has not already been given.
+   *
+   * Pure, and extracted so it can be tested: this decides what a running batch
+   * picks up next, and getting it wrong either drops work the user ticked or
+   * re-sends work already sent.
+   *
+   * The comparison is against everything the job has ever been given, *not*
+   * against what is left to send. A work that was sent and then unticked, or
+   * unticked here and ticked in another tab, is still in `sent` - so if the test
+   * were "is it in the remaining tail", that work would go round again. The
+   * `sent` list is the memory of every item the job owns.
+   */
+  function joinableHrefs(selection, sent) {
+    var have = {};
+    (sent || []).forEach(function (href) {
+      have[href] = true;
+    });
+    var out = [];
+    (selection || []).forEach(function (href) {
+      if (have[href]) return;
+      have[href] = true;
+      out.push(href);
+    });
+    return out;
+  }
+
   // ==========================================================================
   // pure:end
   // ==========================================================================
@@ -1381,6 +1408,7 @@
 .jd-queue-text{flex:1;min-width:0;font-size:10.5px;color:#9ab;line-height:1.35}
 .jd-btn.danger{background:#7b341e;border-color:#c05621;color:#fff}
 .jd-btn.danger:hover{background:#9b4220}
+.jd-btn-warn{background:#8a6d1f;border-color:#c9a227;color:#fff}
 .jd-btn{background:#2f6feb;color:#fff;border:1px solid #2f6feb;border-radius:3px;
   padding:4px 8px;font-size:11px;cursor:pointer}
 .jd-btn:hover{background:#2559c4}
@@ -1442,15 +1470,28 @@
   var dragging = null;
 
   // ===================================================================== queue
-  // Work outlives the page it was started from, for as long as the tab is open.
+  // Two stores, on purpose, because the two things have different lifetimes.
   //
-  // sessionStorage is exactly the right lifetime here and not a compromise: it is
-  // scoped to one tab and dies with it, which is precisely the requirement that
-  // closing the tab terminates every queue. GM_setValue would have been wrong -
-  // it is per browser profile, so a queue would follow the user to every other
-  // tab and survive the one they meant to close.
+  // The *queue* is per tab, in sessionStorage, so closing the tab ends it. That
+  // is the requested behaviour and it is also what keeps this safe: only one tab
+  // ever drives its own queue, so two tabs can never both send the same magnet.
+  // A queue shared across tabs would need a lease to elect a driver, and a lease
+  // that expires wrongly sends a torrent twice.
+  //
+  // The *selection* and the *pause* flag are shared across tabs, in
+  // localStorage, because aggregating what you have ticked across open tabs is
+  // meaningless if each tab keeps its own copy. The cost is that they now outlive
+  // the tab; Clear and Cancel all both reach every tab, and the pause flag
+  // expires with the browser session rather than with a page.
+  //
+  // One key per field rather than one JSON blob. A read-modify-write of a single
+  // blob is two operations, so two tabs changing different fields at the same
+  // moment lose one of the changes; separate keys make every write atomic on its
+  // own.
   var QUEUE_KEY = "jav8-downloader-queue";
-  var SELECTION_KEY = "jav8-downloader-selection";
+  var SHARED_HREFS_KEY = "jav8-downloader-hrefs";
+  var SHARED_CODES_KEY = "jav8-downloader-codes";
+  var PAUSED_KEY = "jav8-downloader-paused";
 
   var jobQueue = {
     jobs: [],
@@ -1472,7 +1513,19 @@
   var targetReachable = false;
 
   /**
-   * Read or write one persisted slot.
+   * Work codes seen in *this* tab, and codes published by any tab.
+   *
+   * `sharedCodes` is what a resumed or cross-tab batch reads to label its log
+   * lines; `known` is per page, so on its own it describes only the cards
+   * currently on screen.
+   */
+  var sharedCodes = {};
+
+  /** How often a paused queue checks whether it has been told to carry on. */
+  var PAUSE_POLL_MS = 400;
+
+  /**
+   * Read or write one per-tab slot.
    *
    * Omitting `value` reads; passing anything else writes. Removal is separate
    * and explicit, because the obvious shortcut - writing null - silently stores
@@ -1496,6 +1549,68 @@
     }
   }
 
+  /**
+   * One slot shared by every tab on this site.
+   *
+   * localStorage, not GM_setValue, because GM_setValue is namespaced per script
+   * rather than per site and there is no reliable way to enumerate sibling tabs
+   * through it - the `storage` event is what makes this live, and only
+   * localStorage raises it.
+   *
+   * Every failure here is swallowed on purpose. Storage being unavailable costs
+   * cross-tab sync and nothing else: the page must still work, just on its own.
+   */
+  function readShared(key) {
+    try {
+      var raw = window.localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function setShared(key, value) {
+    try {
+      window.localStorage.setItem(key, JSON.stringify(value));
+    } catch (e) {
+      /* the feature degrades to this tab only */
+    }
+  }
+
+  function dropShared(key) {
+    try {
+      window.localStorage.removeItem(key);
+    } catch (e) {
+      /* nothing to do */
+    }
+  }
+
+  /**
+   * Adopt a change made in another tab.
+   *
+   * MUST NOT WRITE. The event fires in every tab *except* the one that caused
+   * it, so a write here would make each tab provoke the others to write again,
+   * forever. Reads and repaints only.
+   */
+  function onSharedChange(event) {
+    if (event.key === null) {
+      // storage was cleared wholesale; nothing of ours is left to believe in.
+      restoreSelection();
+      renderSelection();
+      joinRunningJob();
+      renderQueueStatus();
+      return;
+    }
+    if (event.key === SHARED_HREFS_KEY || event.key === SHARED_CODES_KEY) {
+      if (restoreSelection()) {
+        renderSelection();
+        joinRunningJob();
+      }
+      return;
+    }
+    if (event.key === PAUSED_KEY) renderQueueStatus();
+  }
+
   function clearStored(key) {
     try {
       window.sessionStorage.removeItem(key);
@@ -1516,16 +1631,99 @@
     queueStore(QUEUE_KEY, { jobs: jobQueue.jobs });
   }
 
-  /** Persist the ticked set so a page change does not silently drop it. */
+  /** Persist the ticked set so a page change - or another tab - cannot drop it. */
   function saveSelection() {
-    queueStore(SELECTION_KEY, Array.from(selected));
+    var hrefs = Array.from(selected);
+    setShared(SHARED_HREFS_KEY, hrefs);
+    // Codes travel with the selection so a batch started in one tab can still
+    // name its works after the cards they came from are gone in another.
+    var codes = {};
+    hrefs.forEach(function (href) {
+      var code = (known.get(href) || {}).code || sharedCodes[href];
+      if (code) codes[href] = code;
+    });
+    sharedCodes = codes;
+    setShared(SHARED_CODES_KEY, codes);
   }
 
+  /** Pull the authoritative shared selection into this tab's memory. */
   function restoreSelection() {
-    var stored = queueStore(SELECTION_KEY);
-    if (!Array.isArray(stored)) return;
-    stored.forEach(function (href) {
-      if (typeof href === "string") selected.add(href);
+    var hrefs = readShared(SHARED_HREFS_KEY);
+    sharedCodes = readShared(SHARED_CODES_KEY) || {};
+    if (!Array.isArray(hrefs)) return false;
+    var next = new Set();
+    hrefs.forEach(function (href) {
+      if (typeof href === "string") next.add(href);
+    });
+    var changed = next.size !== selected.size;
+    if (!changed) {
+      next.forEach(function (href) {
+        if (!selected.has(href)) changed = true;
+      });
+    }
+    selected = next;
+    return changed;
+  }
+
+  /**
+   * A change anyone can see: this tab, or another one.
+   *
+   * The single funnel for "the selection moved", so the count, the tick boxes and
+   * a running batch all learn about it the same way. Every path that mutates
+   * `selected` goes through here - a hand tick, a crawl, a work finishing, or a
+   * storage event from a sibling tab.
+   */
+  function selectionChanged() {
+    saveSelection();
+    renderSelection();
+    joinRunningJob();
+  }
+
+  /** Re-tick this page's cards to match `selected`, and refresh the counts. */
+  function renderSelection() {
+    updateCount();
+    requestBulkRefresh();
+    worksOnPage().forEach(function (card) {
+      var box = card.querySelector(".jd-box");
+      if (!box) return;
+      var input = box.querySelector("input");
+      var on = selected.has(card.getAttribute("href"));
+      if (input) input.checked = on;
+      box.classList.toggle("on", on);
+    });
+  }
+
+  /**
+   * Read the pause flag from storage every time it is asked for.
+   *
+   * Never cached in a variable. The whole point is that the user can pause from
+   * another tab, so a value captured when the job started would be a value from
+   * the past - and a pause that does not take effect is worse than no pause,
+   * because it looks like it worked.
+   */
+  function isPaused() {
+    return readShared(PAUSED_KEY) === 1;
+  }
+
+  function setPaused(on) {
+    setShared(PAUSED_KEY, on ? 1 : 0);
+    renderQueueStatus();
+  }
+
+  /**
+   * Sleep until work is allowed to continue.
+   *
+   * Checks the cancel epoch as well as the pause flag, because a tab that is
+   * paused and then cancelled must still stop: otherwise the queue sits in a
+   * wait loop for ever with nothing left to do.
+   */
+  function waitWhilePaused(epoch) {
+    if (!isPaused() || epoch !== jobQueue.epoch) return Promise.resolve();
+    renderQueueStatus();
+    return new Promise(function (resolve) {
+      setTimeout(resolve, PAUSE_POLL_MS);
+    }).then(function () {
+      return waitWhilePaused(epoch);
     });
   }
 
@@ -1540,8 +1738,8 @@
       return job.kind === "send" ? "sending" : "collecting";
     });
     var noun = jobQueue.jobs.length === 1 ? parts[0] : parts.length + " jobs";
-    return (jobQueue.busy ? noun : noun + " (waiting)") +
-      (pending ? " · " + pending + " works left" : "");
+    var state = isPaused() ? "paused" : jobQueue.busy ? noun : noun + " (waiting)";
+    return state + (pending ? " · " + pending + " works left" : "");
   }
 
   /**
@@ -1629,13 +1827,19 @@
     // which would first fetch a page from jav8.vip, so the saving is in *site*
     // requests as much as client ones. It also converts the failure from a wall
     // of identical messages into one that names the remedy.
-    var done = (jobNeedsProbe(job) ? probeClient(epoch) : Promise.resolve(true)).then(function (reachable) {
-      // A probe that failed, or that was overtaken by a cancel, stops the job
-      // here. Its work stays ticked, so fixing the client and pressing Download
-      // again is all it takes to retry.
-      if (reachable !== true || epoch !== jobQueue.epoch) return;
-      return job.kind === "collect" ? runCollectJob(job, epoch) : runSendJob(job, epoch);
-    });
+    var done = (jobNeedsProbe(job) ? probeClient(epoch) : Promise.resolve(true))
+      .then(function (reachable) {
+        // A probe that failed, or that was overtaken by a cancel, stops the job
+        // here. Its work stays ticked, so fixing the client and pressing Download
+        // again is all it takes to retry.
+        if (reachable !== true || epoch !== jobQueue.epoch) return;
+        // Paused before the job even starts, so nothing is probed and no page is
+        // fetched while the user has asked for quiet.
+        return waitWhilePaused(epoch).then(function () {
+          if (epoch !== jobQueue.epoch) return;
+          return job.kind === "collect" ? runCollectJob(job, epoch) : runSendJob(job, epoch);
+        });
+      });
     Promise.resolve(done).then(
       function () {
         if (epoch !== jobQueue.epoch) return;
@@ -1761,9 +1965,9 @@
       if (info.vr) box.classList.remove("bad");
       updateCount();
       requestBulkRefresh();
-      // Ticks survive a page change, so a hand-picked selection is not lost by
-      // clicking through to the next page.
-      saveSelection();
+      // Ticks survive a page change and reach every other tab, so a hand-picked
+      // selection is neither lost by clicking through nor invisible elsewhere.
+      selectionChanged();
     });
     box.classList.toggle("on", input.checked);
     card.appendChild(box);
@@ -1825,13 +2029,11 @@
 
   function clearSelection() {
     selected.clear();
-    document.querySelectorAll(".jd-box input").forEach(function (input) {
-      input.checked = false;
-    });
-    document.querySelectorAll(".jd-box.on").forEach(function (box) {
-      box.classList.remove("on");
-    });
-    updateCount();
+    sharedCodes = {};
+    // Drops the shared copy too, so Clear in one tab clears all of them - which
+    // is the whole reason the selection is shared in the first place.
+    dropShared(SHARED_CODES_KEY);
+    selectionChanged();
   }
 
   /**
@@ -1874,7 +2076,7 @@
     // "Selected 0" would be a straight contradiction on screen.
     updateCount();
     requestBulkRefresh();
-    saveSelection();
+    selectionChanged();
     return cards.length;
   }
 
@@ -1902,7 +2104,7 @@
  * the same matchesFilter() the listings use, and the size preference by
  * pickMagnet() later, rather than a second copy of either rule here.
  */
-  function crawlActress(href, name, button, onCollected) {
+  function crawlActress(href, name, button, onCollected, gate) {
     var label = name || href;
     if (button) button.disabled = true;
     log("Collecting works for " + label + "…", "mu");
@@ -1912,7 +2114,14 @@
     }
 
     function loadPage(pageHref) {
-      return getText(new URL(pageHref, location.origin).href)
+      // The gate runs before every page, not once at the start, so a crawl can be
+      // paused halfway rather than only between crawls. collectPages() already
+      // asks its loader for each page in turn, so this needs no change there.
+      var wait = gate ? gate() : null;
+      return Promise.resolve(wait)
+        .then(function () {
+          return getText(new URL(pageHref, location.origin).href);
+        })
         .then(parse)
         .catch(function () {
           // A page that will not load ends the crawl and keeps what was already
@@ -1922,7 +2131,11 @@
         });
     }
 
-    getText(new URL(href, location.origin).href)
+    var start = gate ? gate() : null;
+    Promise.resolve(start)
+      .then(function () {
+        return getText(new URL(href, location.origin).href);
+      })
       .then(parse)
       .then(function (firstDoc) {
         return collectPages(firstDoc, loadPage);
@@ -1950,7 +2163,7 @@
    * job needs to know when it is finished. Wrapping the callback in a promise
    * keeps one implementation of the traversal rather than two.
    */
-  function crawlActressAsync(href, name, button) {
+  function crawlActressAsync(href, name, button, gate) {
     return new Promise(function (resolve) {
       crawlActress(href, name, button, function (hrefs, result, btn, label) {
         resolve({ hrefs: hrefs, result: result, button: btn, label: label });
@@ -1961,7 +2174,10 @@
   /** Collect job: crawl a performer, then stage what matched the filter. */
   function runCollectJob(job, epoch) {
     log("Collecting works for " + job.label + "…", "mu");
-    return crawlActressAsync(job.base, job.label, null).then(function (outcome) {
+    var gate = function () {
+      return waitWhilePaused(epoch);
+    };
+    return crawlActressAsync(job.base, job.label, null, gate).then(function (outcome) {
       if (epoch !== jobQueue.epoch) return;
       var result = outcome.result;
       if (!result.works.length) {
@@ -1971,10 +2187,9 @@
       outcome.hrefs.forEach(function (href) {
         selected.add(href);
       });
-      // The crawl survives navigation, so the ticks it produced must too.
-      saveSelection();
-      updateCount();
-      requestBulkRefresh();
+      // The crawl survives navigation, so the ticks it produced must too - and so
+      // must every other tab's.
+      selectionChanged();
 
       var where = pagesPhrase(result.pages);
       warnIfTruncated(result, where, "The works found so far are queued.");
@@ -2018,50 +2233,94 @@
    * in flight when the page went away, which is the safe direction to err in.
    */
   function runSendJob(job, epoch) {
-    var hrefs = job.hrefs || [];
-    var cursor = job.cursor || 0;
     var labels = job.labels || {};
-    log("Sending " + (hrefs.length - cursor) + " of " + hrefs.length + " to " + engine().label + "…", "mu");
+    // New work joins this job rather than starting another, so that ticking a
+    // cover in another tab while a batch is in flight does not need a second
+    // press of Download - and does not start a second batch racing this one.
+    job.joinable = true;
+    log("Sending " + pendingIn(job) + " to " + engine().label + "…", "mu");
 
     function step() {
       if (epoch !== jobQueue.epoch) return Promise.resolve();
-      if (cursor >= hrefs.length) {
-        // Only claim the selection is clear if it actually is. A work the user
-        // ticked after this batch started, or one that failed and they re-ticked,
-        // is still pending and should not be reported as done.
-        log(
-          "Batch finished: sent " + (job.sent || 0) + ", " + (job.failures || 0) + " failed." +
-            (selected.size ? " " + selected.size + " still ticked." : " Selection is clear."),
-          (job.failures || 0) ? "wa" : "ok",
-        );
-        return Promise.resolve();
-      }
-      var href = hrefs[cursor];
-      // Labels are snapshotted into the job when it is queued, because the
-      // `known` map is per page: a resumed batch would otherwise log raw hrefs
-      // for every work, because the cards it came from are on a page the tab has
-      // since left.
-      var label = labels[href] || (known.get(href) || {}).code || href;
-      return sendOne(href, label).then(function (outcome) {
+      // Asked again on every item, never captured, because the pause can come
+      // from another tab at any moment.
+      return waitWhilePaused(epoch).then(function () {
         if (epoch !== jobQueue.epoch) return;
-        if (outcome && outcome.ok) job.sent = (job.sent || 0) + 1;
-        else job.failures = (job.failures || 0) + 1;
-        // Processed is processed: untick it either way, so the selection empties
-        // itself as the batch runs and the count doubles as a progress display.
-        // Skipped when cancelled - the work was never attempted, so it stays
-        // ticked and stays available to retry.
-        deselectWork(href);
-        cursor++;
-        job.cursor = cursor;
-        saveQueue();
-        renderQueueStatus();
-        if (cursor >= hrefs.length) return step();
-        return new Promise(function (resolve) {
-          setTimeout(resolve, REQUEST_GAP_MS);
-        }).then(step);
+        var hrefs = job.hrefs || [];
+        if ((job.cursor || 0) >= hrefs.length) {
+          // Closed to new work before finishing, or nothing can slip in behind
+          // the final untick and be silently dropped.
+          job.joinable = false;
+          // Only claim the selection is clear if it actually is. A work the user
+          // ticked after this batch started, or one that failed and they re-ticked,
+          // is still pending and should not be reported as done.
+          log(
+            "Batch finished: sent " + (job.sent || 0) + ", " + (job.failures || 0) + " failed." +
+              (selected.size ? " " + selected.size + " still ticked." : " Selection is clear."),
+            (job.failures || 0) ? "wa" : "ok",
+          );
+          return;
+        }
+        var href = hrefs[job.cursor];
+        // Labels are snapshotted into the job when it is queued, because the
+        // `known` map is per page: a resumed batch would otherwise log raw hrefs
+        // for every work, because the cards it came from are on a page the tab has
+        // since left.
+        var label = labels[href] || (known.get(href) || {}).code || sharedCodes[href] || href;
+        return sendOne(href, label).then(function (outcome) {
+          if (epoch !== jobQueue.epoch) return;
+          if (outcome && outcome.ok) job.sent = (job.sent || 0) + 1;
+          else job.failures = (job.failures || 0) + 1;
+          // Processed is processed: untick it either way, so the selection empties
+          // itself as the batch runs and the count doubles as a progress display.
+          // Skipped when cancelled - the work was never attempted, so it stays
+          // ticked and stays available to retry.
+          deselectWork(href);
+          job.cursor = (job.cursor || 0) + 1;
+          saveQueue();
+          renderQueueStatus();
+          return new Promise(function (resolve) {
+            setTimeout(resolve, REQUEST_GAP_MS);
+          }).then(step);
+        });
       });
     }
     return step();
+  }
+
+  /** Works a send job has yet to attempt. */
+  function pendingIn(job) {
+    return Math.max(0, (job.hrefs || []).length - (job.cursor || 0));
+  }
+
+  /**
+   * Offer newly ticked work to the batch that is already running.
+   *
+   * The set difference is against `job.hrefs`, not against what is left to send,
+   * and that is deliberate: a work that has already been sent is still in
+   * `job.hrefs`, so if it were unticked and re-ticked - or unticked here and
+   * ticked in another tab - it could not be queued a second time. Diffing
+   * against the cursor instead would let the same work back into a live batch and
+   * send it again.
+   */
+  function joinRunningJob() {
+    var job = jobQueue.jobs[0];
+    if (!job || job.kind !== "send" || !job.joinable) return 0;
+    // joinableHrefs() reasons about the whole history, which is what stops a
+    // finished work being queued twice; see there.
+    var joined = joinableHrefs(Array.from(selected), job.hrefs);
+    if (!joined.length) return 0;
+    job.hrefs = job.hrefs || [];
+    job.labels = job.labels || {};
+    joined.forEach(function (href) {
+      job.hrefs.push(href);
+      var code = (known.get(href) || {}).code || sharedCodes[href];
+      if (code) job.labels[href] = code;
+    });
+    saveQueue();
+    renderQueueStatus();
+    log("+" + joined.length + " more ticked work" + (joined.length === 1 ? "" : "s") + " joined the batch.", "mu");
+    return joined.length;
   }
 
   /** How many pages a crawl walked, phrased for a log line. */
@@ -2249,13 +2508,24 @@
  * know whether the panel happens to exist yet.
  */
   function renderQueueStatus() {
+    var paused = isPaused();
+    // The Pause button is a control whose label states what it will do, so it has
+    // to be right in every tab - including a tab that paused nothing itself and
+    // only heard about it over the storage event.
+    // A dedicated class rather than ".ghost": Settings is a ghost button too, and
+    // "the first ghost button in the foot" is not a name worth depending on.
+    var pauseBtn = document.querySelector(".jd-foot .jd-pause");
+    if (pauseBtn) {
+      pauseBtn.textContent = paused ? "Start" : "Pause";
+      pauseBtn.classList.toggle("jd-btn-warn", paused);
+    }
     var row = document.querySelector(".jd-queue");
     if (!row) return;
     var summary = queueSummary();
     row.style.display = summary ? "flex" : "none";
     if (summary) row.querySelector(".jd-queue-text").textContent = summary;
     var go = document.querySelector(".jd-foot .jd-btn");
-    if (go) go.textContent = jobQueue.busy ? "Sending…" : "Download selected";
+    if (go) go.textContent = jobQueue.busy ? (paused ? "Paused" : "Sending…") : "Download selected";
   }
 
   /** Ask the panel to redraw the page-wide buttons, if it has been built yet. */
@@ -2295,9 +2565,9 @@ function deselectWork(href) {
       box.classList.remove("on");
     });
     if (!removed) return false;
-    saveSelection();
-    updateCount();
-    requestBulkRefresh();
+    // Through the shared funnel, so a finished work disappears from the count in
+    // every tab and any tab that has a batch running sees the change.
+    selectionChanged();
     return true;
   }
 
@@ -2464,8 +2734,9 @@ function deselectWork(href) {
       if (!setPageSelection(true)) log("No works match the current filter.", "wa");
     });
     clearBtn.addEventListener("click", function () {
+      // Reaches every tab on its own; the extra refresh is only for this page's
+      // card list, which is this tab's business.
       clearSelection();
-      saveSelection();
       requestBulkRefresh();
     });
     bulk.appendChild(selectAll);
@@ -2492,7 +2763,6 @@ function deselectWork(href) {
     queueRow.appendChild(cancelAll);
     queueRow.style.display = "none";
     body.appendChild(queueRow);
-
     var logBox = el("div", "jd-log");
     body.appendChild(logBox);
 
@@ -2507,9 +2777,21 @@ function deselectWork(href) {
     go.addEventListener("click", function () {
       runSelection(go);
     });
+    // In the foot rather than the queue strip, because pause outlives any one
+    // job: it is a session-wide setting, so it has to be reachable when nothing
+    // is queued - including before you queue anything.
+    var pauseBtn = el("button", "jd-btn ghost jd-pause", "Pause");
+    pauseBtn.type = "button";
+    pauseBtn.title = "Hold every crawl and every download in every tab. Nothing is fetched while paused.";
+    pauseBtn.addEventListener("click", function () {
+      var next = !isPaused();
+      setPaused(next);
+      log(next ? "Paused. Nothing will be crawled or sent until you press Start." : "Started.", next ? "wa" : "ok");
+    });
     var cfg = el("button", "jd-btn ghost", "Settings");
     cfg.addEventListener("click", openSettings);
     foot.appendChild(go);
+    foot.appendChild(pauseBtn);
     foot.appendChild(cfg);
     panel.appendChild(foot);
 
@@ -2929,10 +3211,13 @@ function deselectWork(href) {
     if (!isTargetHost(location.hostname)) return;
     injectStyle();
 
-    // Restore before the panel is built, because the panel reads the queue to
-    // decide whether to show its status row.
+    // Restore before the panel is built, because the panel reads the queue and
+    // the pause flag to decide what to show.
     restoreSelection();
     loadQueue();
+    // Live sync from sibling tabs. Registered once, and its handler only ever
+    // reads - see onSharedChange().
+    window.addEventListener("storage", onSharedChange);
 
     buildPanel();
     renderQueueStatus();

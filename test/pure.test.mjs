@@ -575,6 +575,39 @@ group("jobNeedsProbe - check the client before spending requests on it");
   check("empty job does not probe", api.jobNeedsProbe({}), false);
 }
 
+group("joinableHrefs - what a running batch picks up from the shared selection");
+// Two ways to be wrong here, and they are opposite mistakes. Compare against the
+// remaining tail and a work that was already sent goes round again - which means
+// the same torrent twice. Compare against nothing and every tick restarts the
+// batch from the top.
+{
+  check("nothing new", api.joinableHrefs(["a", "b"], ["a", "b"]), []);
+  check("one new work joins", api.joinableHrefs(["a", "b", "c"], ["a", "b"]), ["c"]);
+  check("selection order is kept", api.joinableHrefs(["c", "a"], ["a"]), ["c"]);
+
+  // The regression this guards: "a" was sent and unticked, then re-ticked. It is
+  // not in the tail any more, so a tail-based test would queue it a second time.
+  check(
+    "a work already sent cannot rejoin",
+    api.joinableHrefs(["a", "c"], ["a", "b", "c"]),
+    [],
+  );
+  // The other direction: the job has been given more than it has sent.
+  check(
+    "works queued but not yet sent do not rejoin",
+    api.joinableHrefs(["a", "b", "c"], ["a", "b"]),
+    ["c"],
+  );
+
+  // Defensive: a job restored from storage, or a selection read from storage,
+  // must not be able to throw or produce nonsense.
+  check("no job history", api.joinableHrefs(["a"], undefined), ["a"]);
+  check("no selection", api.joinableHrefs(undefined, ["a"]), []);
+  check("neither", api.joinableHrefs(undefined, undefined), []);
+  check("duplicates in the selection join once", api.joinableHrefs(["a", "a"], []), ["a"]);
+  check("duplicates in the history are harmless", api.joinableHrefs(["a"], ["a", "a"]), []);
+}
+
 group("MAX_LOGIN_FAILURES - a failed batch must not lock the user out");
 // qBittorrent bans an IP for an hour after a handful of consecutive failed
 // logins (web_ui_max_auth_fail_count defaults to 5). A selection of 17 that
