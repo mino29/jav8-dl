@@ -224,6 +224,12 @@ sending.
 The script updates itself. Your manager checks the repository after each install
 and offers the new version whenever there is one.
 
+To install one exact version, swap `main` for a tag in the install URL:
+
+```
+https://raw.githubusercontent.com/mino29/jav8-dl/v1.8.0/jav8-downloader.user.js
+```
+
 One rule for developers: **bump `@version` in the metadata block**, or nobody will
 be offered an update and there will be no error to explain why.
 `npm run check-bump` fails if you forget.
