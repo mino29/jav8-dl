@@ -115,6 +115,38 @@ r.check("bare @ is classified suspect", api.classifyMagnet("ALDN-433.[4K]@R90s")
 r.check("bare @ with no domain is suspect", api.classifyMagnet("第一會所新片@SIS001@DDH-451"), "suspect");
 r.check("triangle is classified ad", api.classifyMagnet("MNGS-061【成人抖】月新地址▶夸克UC▷38988.xyz"), "ad");
 
+// --------------------------------------------------------------- cover hiding
+// The spec must describe the same selectors the code reads, and the same rule
+// source - otherwise the document describes a stricter or looser rule than the
+// one that runs.
+r.check("cover rule reads exactly the code and title", spec.coverHiding.appliesTo, ["cardCode", "cardTitle"]);
+r.check("cover rule is sourced from the magnet ad tier", spec.coverHiding.patternsFrom, "magnetTiers.ad");
+r.check("cover rule excludes the suspect pattern", spec.coverHiding.excludes, [spec.magnetTiers.suspect.pattern]);
+r.check("cover rule never opens a work page", spec.coverHiding.neverFetches, true);
+r.check("cover hiding is not toggleable", spec.coverHiding.toggleable, false);
+
+// The one that actually matters: the cover rule must not drift from the magnet
+// rule. If someone tightens one and not the other, the script ends up hiding
+// covers it would happily download, or showing covers it refuses to send.
+const coverSamples = [
+  ["MNGS-061", "【成人抖】月新地址▶夸克UC▷38988.xyz"],
+  ["IPZZ-961", "【1080P】無修正"],
+  ["SDJS-383", "第一人称 秘书的居家假日"],
+  ["ALDN-433.[4K]@R90s", ""],
+  ["MIMK-289", "1视频 夸克"],
+  ["", ""],
+];
+for (const [code, title] of coverSamples) {
+  r.check(
+    `cover rule matches magnet rule for ${code || "(blank)"}`,
+    api.isAdCover(code, title),
+    api.classifyMagnet(`${code} ${title}`) === "ad",
+  );
+}
+// And the suspect marker must not hide a cover, even though it stops a magnet
+// being chosen automatically.
+r.check("@ does not hide a cover", api.isAdCover("ALDN-433", "[4K]@R90s"), false);
+
 // ----------------------------------------------------------------- protocols
 r.check("aria2 rpc path", spec.protocols.aria2.path, "/jsonrpc");
 r.check("aria2 rpc method", spec.protocols.aria2.method, "aria2.addUri");

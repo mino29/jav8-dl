@@ -2,7 +2,7 @@
 // @name         JAV8 Downloader
 // @namespace    https://github.com/mino29/jav8-dl
 // @homepage     https://github.com/mino29/jav8-dl
-// @version      1.8.0
+// @version      1.9.0
 // @icon          data:image/png;base64,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
 // @description  Tick covers to queue them, filter by VR, pick the best magnet by size, and send to aria2 or qBittorrent. Settings live in the browser, not in a config file.
 // @author       mino29
@@ -385,6 +385,36 @@
     if (AD_STRONG.test(n) || AD_WORDS.test(n)) return "ad";
     if (AT_NAME.test(n)) return "suspect";
     return "clean";
+  }
+
+  /**
+   * Whether a cover is an advert, judged from the card itself.
+   *
+   * The cover rule, deliberately the same "certain ad" markers classifyMagnet()
+   * refuses to select automatically - and deliberately not the "@" marker, which
+   * is only "suspect". A cover rule stricter than the rule that decides what
+   * actually gets downloaded would hide releases the script is happy to send.
+   *
+   * Only the code and the title are read. Performer names are left out on purpose:
+   * a promoter's name appearing on a card says nothing about whether that
+   * release is an advert.
+   *
+   * Costs nothing, and that is the constraint rather than a convenience. The only
+   * other way to know is to open the work and read its magnet names, which means
+   * one request per cover on every listing you merely look at - on a third-party
+   * site, exactly the burst of requests that earns an IP block. So the rule has to
+   * be answerable from what the listing already shows.
+   *
+   * Which makes it an inference: the patterns were measured on magnet names and
+   * are being applied here to card text. So the failure direction is chosen. A
+   * cover with no marker stays visible, meaning a promo phrased in words we do
+   * not recognise is shown rather than hidden - a visible advert costs one click
+   * to ignore, whereas a real release hidden by a false positive cannot be
+   * brought back from the panel at all.
+   */
+  function isAdCover(code, title) {
+    var text = String(code || "") + " " + String(title || "");
+    return AD_STRONG.test(text) || AD_WORDS.test(text);
   }
 
   /**
@@ -1934,6 +1964,15 @@
     var href = card.getAttribute("href");
     known.set(href, info);
 
+    // An advert gets no tick box. applyFilter() hides it either way, so this is
+    // about the control rather than the visibility: a checkbox on something the
+    // user cannot see is a control that does nothing, and if the hiding ever
+    // fails the box is what would still let an advert into a batch.
+    if (isAdCover(info.code, info.title)) {
+      card.dataset.jdAd = "1";
+      return;
+    }
+
     var box = el("label", "jd-box");
     box.title = "Queue this release";
     var input = el("input");
@@ -1981,11 +2020,16 @@
   /**
    * Does this card survive the current VR filter?
    *
-   * One predicate for both hiding cards and for the page-wide buttons, so
-   * "select all" cannot quietly disagree with what the filter is showing. When
-   * those were separate, selecting all with a filter applied ticked the hidden
-   * cards too - the count then claimed more than the user could see, and
-   * switching the filter back revealed ticks they had never asked for.
+   * One predicate for hiding cards and for the page-wide buttons, so "select all"
+   * cannot quietly disagree with what the filter is showing. When those were
+   * separate, selecting all with a filter applied ticked the hidden cards too -
+   * the count then claimed more than the user could see, and switching the
+   * filter back revealed ticks they had never asked for.
+   *
+   * Adverts are excluded here, ahead of the VR filter, and are not a setting.
+   * They were already never selected for sending - pickMagnet() refuses them -
+   * so leaving them visible only ever produced covers that could be ticked and
+   * then fail. One rule, applied in one place, for both jobs.
    */
   function matchesFilter(card) {
     var info = known.get(card.getAttribute("href"));
@@ -1996,6 +2040,7 @@
       info = workInfoFromCard(card);
       if (card.getAttribute("href")) known.set(card.getAttribute("href"), info);
     }
+    if (isAdCover(info.code, info.title)) return false;
     return (
       settings.filter === "all" ||
       (settings.filter === "vr" && info.vr) ||
@@ -2003,28 +2048,54 @@
     );
   }
 
+  /**
+   * Hidden-card tallies from the last applyFilter().
+   *
+   * Remembered because most callers of updateCount() have just been asked to
+   * redraw the count after something *else* - a tick, a cleared selection - and
+   * they know nothing about the filter. Passing nothing used to mean "no hidden
+   * cards", so ticking one box made "12 hidden by filter" disappear until the
+   * next filter change. The number was on screen a moment ago and it was still
+   * true.
+   */
+  var lastHidden = 0;
+  var lastAds = 0;
+
   function applyFilter() {
     var hidden = 0;
+    var ads = 0;
     worksOnPage().forEach(function (card) {
       var info = known.get(card.getAttribute("href"));
       if (!info) return;
       var show = matchesFilter(card);
       card.style.display = show ? "" : "none";
-      if (!show) hidden++;
+      if (show) return;
+      hidden++;
+      // Counted apart from the rest, because "12 hidden by filter" is a claim
+      // about the VR filter and adverts are hidden whether it is on All, VR only
+      // or non-VR only. Blaming the filter for them would be a description of
+      // the wrong cause.
+      if (isAdCover(info.code, info.title)) ads++;
     });
-    updateCount(hidden);
+    lastHidden = hidden;
+    lastAds = ads;
+    updateCount(hidden, ads);
     // The buttons carry the filtered count in their label, so they are part of
     // what the filter changes - not just what decorates it.
     requestBulkRefresh();
   }
 
-  function updateCount(hidden) {
+  function updateCount(hidden, ads) {
     var node = document.querySelector(".jd-count");
     if (!node) return;
+    var total = hidden === undefined ? lastHidden : hidden;
+    var adverts = ads === undefined ? lastAds : ads;
+    var byFilter = total - adverts;
     node.textContent = "";
     node.appendChild(document.createTextNode("Selected "));
     node.appendChild(el("b", null, String(selected.size)));
-    if (hidden) node.appendChild(document.createTextNode(" · " + hidden + " hidden by filter"));
+    if (byFilter) node.appendChild(document.createTextNode(" · " + byFilter + " hidden by filter"));
+    if (adverts) node.appendChild(document.createTextNode(" · " + adverts + " advert" + (adverts === 1 ? "" : "s") + " hidden"));
   }
 
   function clearSelection() {

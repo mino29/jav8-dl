@@ -285,6 +285,50 @@ const server = createServer((req, res) => {
   // Headless Chrome can screenshot this page - it serves the script as a plain
   // <script src>, so an ordinary page load runs it - but it cannot seed storage
   // first, which is why the seeding lives here and not in the capture command.
+  // A listing with adverts on it. The captured fixtures contain none, because the
+  // pages they were taken from happened to have none - and a fixture is never
+  // hand-edited to make a test pass. So the advert cards are added here, at
+  // request time, rather than written into test/fixtures.
+  //
+  // It runs before the userscript so the script decorates these cards through the
+  // same path as every other card. Injecting them afterwards would leave them
+  // undecorated, and "the ad was hidden" would prove only that an undecorated card
+  // is invisible.
+  if (path === "/__harness__/ads") {
+    const html = readFileSync(join(fixtures, "listing.html"), "utf8");
+    const tag = `<script src="/__harness__/script.js"></script>`;
+    const ads = `<script>
+document.addEventListener("DOMContentLoaded", function () {
+  // Three shapes, because the rule reads two fields and must not care which one
+  // carried the marker: a promo word in the title, the triangle glyph in the
+  // title, and the marker in the code with an innocent-looking title.
+  var promos = [
+    ["ABF-001", "1视频 夸克网盘高速下载"],
+    ["ABF-002", "【高清】未成年美少女 ▶"],
+    ["ABF-003▶", "【1080P】looks like a real release"],
+  ];
+  var source = document.querySelector("a.work");
+  if (!source) return;
+  promos.forEach(function (pair, i) {
+    var card = source.cloneNode(true);
+    card.removeAttribute("data-jd-done");
+    card.setAttribute("href", "/v/90000" + (i + 1));
+    card.querySelector(".work-id").textContent = pair[0];
+    var title = card.querySelector(".work-title");
+    title.textContent = pair[1];
+    title.setAttribute("title", pair[1]);
+    source.parentNode.insertBefore(card, source);
+  });
+});
+</script>`;
+    res.writeHead(200, {
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "no-store, max-age=0",
+    });
+    res.end(inject(html).replace(tag, ads + tag));
+    return;
+  }
+
   if (path === "/__harness__/shot") {
     const html = readFileSync(join(fixtures, "listing.html"), "utf8");
     const tag = `<script src="/__harness__/script.js"></script>`;

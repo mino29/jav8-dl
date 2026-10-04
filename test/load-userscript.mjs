@@ -84,6 +84,7 @@ export function loadApi() {
     "pendingWorkCount",
     "jobNeedsProbe",
     "joinableHrefs",
+    "isAdCover",
   ];
   const context = vm.createContext({});
   vm.runInContext(

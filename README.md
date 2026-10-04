@@ -54,14 +54,14 @@ rpc-listen-all=false
 rpc-secret=choose-a-token
 ```
 
-- `rpc-listen-all=false` binds loopback only, which is right when the browser is
-  on the same machine. Set it to `true` to reach aria2 from a phone or a second
-  machine — and in qBittorrent that is *Expose to local network* in
+- 🔒 `rpc-listen-all=false` binds loopback only, which is right when the browser
+  is on the same machine. Set it to `true` to reach aria2 from a phone or a
+  second machine — and in qBittorrent that is *Expose to local network* in
   Preferences → Web UI.
-- `rpc-secret` is optional, but without one anything that can reach the port can
-  queue downloads on your machine. Paste the same token into the script's
+- 🔑 `rpc-secret` is optional, but without one anything that can reach the port
+  can queue downloads on your machine. Paste the same token into the script's
   **RPC secret** field.
-- Comments in `aria2.conf` start with `#`; the lines above have none.
+- 📝 Comments in `aria2.conf` start with `#`; the lines above have none.
 
 ### Then tell the script where it is
 
@@ -108,6 +108,16 @@ A failure is still named in the log, and re-ticking it is one click if you want
 to retry. Works you stop with **Cancel all** stay ticked, since they were never
 attempted.
 
+In short:
+
+- ✅ **Tick** the covers you want, press **Download selected**, and walk away
+- 📏 **Size** slider picks the release closest to the size you asked for
+- 🙈 **Adverts are hidden** automatically — you never see or send one
+- 🔁 **Queues keep going** when you change page, refresh, or open another tab
+- ⏸️ **Pause** freezes everything without losing your place
+- 🛑 **Cancel all** stops the lot, for when you change your mind
+- 🧹 **Clear** empties the selection everywhere, in one click
+
 The panel in the top right corner holds the controls:
 
 | Control | What it does |
@@ -127,12 +137,12 @@ The panel in the top right corner holds the controls:
 Open as many jav8.vip tabs as you like. They share **one selection and one pause
 switch**:
 
-- Tick a cover in any tab and it is ticked in all of them, immediately.
-- **Clear** in any tab clears all of them.
-- **Pause** in any tab holds every tab's crawling and sending. Nothing is
+- ✅ Tick a cover in any tab and it is ticked in all of them, immediately.
+- 🧹 **Clear** in any tab clears all of them.
+- ⏸️ **Pause** in any tab holds every tab's crawling and sending. Nothing is
   requested from the site while paused — not even the check that the download
   client is up.
-- Work you tick *while a batch is already running* joins that batch. You do not
+- ➕ Work you tick *while a batch is already running* joins that batch. You do not
   have to press **Download selected** a second time.
 
 A batch still belongs to the tab that started it: closing that tab stops it, and
@@ -160,6 +170,28 @@ The floor still does its original job of skipping 200 MB samples, and the
 ceiling still excludes absurd multi-hundred-GB labels. If nothing fits the
 window at all, the script still sends the largest real release and says so,
 rather than quietly doing nothing.
+
+### Adverts are hidden
+
+Covers for adverts are hidden from every listing, always. There is no setting to
+show them, because they were never going to be downloaded anyway — the script
+refuses to send an advert magnet even if you find one another way.
+
+The rule reads the card's own title and code for the same promo markers the
+magnet rules use, and it costs **no extra requests**: it never opens a work's page
+to check, because one request per cover on every page you merely look at is
+exactly the kind of burst that gets your IP rate-limited.
+
+What that buys you, and what it costs:
+
+- 👁️ A cover with no marker is **left alone**. An advert phrased in words the
+  script does not recognise stays visible — one click to ignore.
+- 🛡️ A real release is never hidden on a guess. If the script is wrong the only
+  way it can be is a false positive, and it is built to fail that direction.
+
+Advert covers are excluded from **Select all** and from **＋** crawls too, so they
+cannot slip into a batch by being ticked in bulk. The count under the size slider
+says how many were hidden, so nothing disappears without telling you.
 
 ### Filters
 
@@ -203,18 +235,18 @@ confirm.
 Sending is deliberately gentle. The thing most likely to go wrong is not a crash —
 it is getting your IP rate-limited by jav8.vip for asking too much too fast.
 
-- Works are sent **one at a time**, never in parallel.
-- There is a **short pause** between each, roughly the pace of a person clicking
-  through a gallery.
-- Sending **more than 25 works at once asks first**, and Cancel sends nothing.
+- 1️⃣ Works are sent **one at a time**, never in parallel.
+- ⏱️ There is a **short pause** between each, roughly the pace of a person
+  clicking through a gallery.
+- ❓ Sending **more than 25 works at once asks first**, and Cancel sends nothing.
   Under 25 it just goes, so the common case is not slowed by a dialog.
-- **Only one batch runs at a time**, even when several are queued.
-- **Every batch checks the client is there first**, so a client that is down costs
-  one request rather than one per work — and, just as importantly, costs zero
-  requests to jav8.vip, since nothing is fetched until the client answers.
-- If logins start failing the batch **stops after three**. qBittorrent bans your IP
-  for an hour after five consecutive failures, so carrying on would lock you out
-  of your own client.
+- 🚦 **Only one batch runs at a time**, even when several are queued.
+- 🔌 **Every batch checks the client is there first**, so a client that is down
+  costs one request rather than one per work — and, just as importantly, costs
+  zero requests to jav8.vip, since nothing is fetched until the client answers.
+- 🛑 If logins start failing the batch **stops after three**. qBittorrent bans
+  your IP for an hour after five consecutive failures, so carrying on would lock
+  you out of your own client.
 
 If you queue a hundred works and change your mind, press **Clear** before
 sending.
@@ -257,33 +289,37 @@ an hour after five, so pushing on would lock you out of your own client.
 
 ## If it still misbehaves
 
-- **Too many downloads queued at once?** Sending stops and asks when a single
+- ❓ **Too many downloads queued at once?** Sending stops and asks when a single
   action covers more than 25 works — see [Looking after the
   site](#looking-after-the-site).
-- **It is still going after I closed the page?** Queues are per tab. Closing the
-  tab stops them; opening a new one starts clean. Your ticks and the pause switch
-  are shared, so those come back — press **Clear** if you want them gone.
-- **Nothing happens when I press Download?** Check **Pause** in any tab. It is
+- 🚪 **It is still going after I closed the page?** Queues are per tab. Closing
+  the tab stops them; opening a new one starts clean. Your ticks and the pause
+  switch are shared, so those come back — press **Clear** if you want them gone.
+- ⏸️ **Nothing happens when I press Download?** Check **Pause** in any tab. It is
   shared, so a pause set in one applies everywhere, and it survives a reload.
-- **My selection is empty and I only wanted some of them?** Nothing deleted it.
-  Every work unticks itself once it has been attempted, so an empty selection
+- 🧹 **My selection is empty and I only wanted some of them?** Nothing deleted
+  it. Every work unticks itself once it has been attempted, so an empty selection
   after a batch means all of them were dealt with. Works that failed are named in
   the log — tick those again to retry them.
-- **jav8.vip starts ignoring you?** That is rate limiting. Wait an hour; the
+- 🙈 **An advert is still showing?** The cover rule only hides what it can
+  recognise, on purpose, so an unfamiliar promo stays visible. It will never be
+  sent: adverts are refused at the magnet too.
+- 🐌 **jav8.vip starts ignoring you?** That is rate limiting. Wait an hour; the
   script is already as gentle as it can be while still being useful.
 
 ## How it picks a magnet
 
 Short version:
 
-- Ignore adverts. Many magnet entries are ads; they are dimmed in the panel and
+- 🙈 Ignore adverts. Many magnet entries are ads; they are dimmed in the panel and
   never chosen automatically.
-- Ignore anything outside your size window.
-- Of what is left, take the one **closest to your preferred size**.
+- 📏 Ignore anything outside your size window.
+- 🎯 Of what is left, take the one **closest to your preferred size**.
 
 Adverts are recognised by markers like `▷` or words like `夸克`, plus a
-deprioritised tier for names containing `@`. Nothing in this section is a guess:
-it was measured against real pages, and the rules live in
+deprioritised tier for names containing `@`. The same markers hide advert *covers*
+from listings — see [Adverts are hidden](#adverts-are-hidden). Nothing in this
+section is a guess: it was measured against real pages, and the rules live in
 [`spec/site.json`](spec/site.json).
 
 ## Development
@@ -291,6 +327,7 @@ it was measured against real pages, and the rules live in
 ```bash
 npm test          # logic and spec checks, no browser, no network
 npm run harness   # serve captured pages at 127.0.0.1:8980 for a browser
+npm run shot      # regenerate docs/panel.png from the real script
 npm run verify    # icon freshness + tests + version bump, before committing
 ```
 
@@ -302,5 +339,6 @@ Fixtures under `test/fixtures/` are captured from the live site with
 
 ## Credits
 
-Split out of `jav-scraper`, where the site knowledge was first worked out. That
-project still exists and is unrelated to this one.
+Written with AI, under the repo owner's supervision — see the note at the top.
+The site knowledge in [`spec/site.json`](spec/site.json) was measured against real
+pages rather than guessed, and each rule there says how it was checked.

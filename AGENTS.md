@@ -212,6 +212,31 @@ Kept here because they are the kind that come back:
   as a wrong rule. When a setting exists, write down what it changes and test
   that moving it changes the answer; a test on the default value alone passes
   happily either way.
+- Do not put emoji in a Markdown heading. `github-slugger` keeps emoji in the
+  anchor - `## 🔌 You need a client` becomes `#-you-need-a-client`, not
+  `#you-need-a-client` - so every `#section` link in the file breaks at once, and
+  so does anything bookmarked. Emoji in a list item is safe; the user asked for
+  bullets and a heading is a different request with a real cost.
+- A rule inferred from a measurement of the wrong surface is still an inference,
+  so choose its failure direction on purpose. The advert patterns were measured
+  on magnet names and are applied to card titles, which means a false positive is
+  possible. It is built so that only a false positive is possible: an unrecognised
+  promo stays visible, because a visible advert costs a click and a hidden real
+  release cannot be brought back from the panel at all.
+- "Costs no requests" is a requirement, not a selling point, for anything decided
+  per card. The alternative - opening each work to read its magnet names - is one
+  request per cover on every listing merely looked at, which is the burst that
+  earns an IP block. If a per-item rule cannot be answered from what the page
+  already shows, the feature is the wrong shape.
+- Count a new hiding reason separately from the existing one. "12 hidden by
+  filter" was becoming partly a claim about adverts, which the VR filter does not
+  explain; a count that names the wrong cause is worse than no count.
+- Test a per-card rule against a page that has such cards. The captured fixtures
+  contained no adverts, because the pages they came from had none - and a fixture
+  is never hand-edited to make a test pass. The harness now adds advert cards at
+  request time instead, before the userscript tag, so they are decorated through
+  the same path as every other card. Injecting them afterwards would have proved
+  only that an undecorated card is invisible.
 - Derived state shown next to a control must update with it. The work page
   highlighted the magnet it "would send" once at load, so it kept asserting a
   specific release after the slider moved elsewhere. If a control decides

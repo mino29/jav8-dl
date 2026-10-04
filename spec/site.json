@@ -7,10 +7,8 @@
     "in the script. test/parity.test.mjs asserts the inlined copies match this",
     "file, so they cannot drift apart silently.",
     "",
-    "The jav-scraper project (Python) implements the same site knowledge",
-    "separately, in user_modules/scraper.py and user_modules/downloaders.py.",
-    "Language differs so no code is literally shared, but the facts below are",
-    "the shared contract - see README.md for how each was measured."
+    "Every claim below is measured against captured pages or a stock client",
+    "install, and the note beside it says which - see README.md for the method."
   ],
 
   "site": {
@@ -132,6 +130,33 @@
     }
   },
 
+  "coverHiding": {
+    "$comment": [
+      "Adverts are hidden from listings, always, with no setting to turn it off.",
+      "See isAdCover() in the userscript.",
+      "",
+      "The rule is magnetTiers.ad applied to a cover's code and title - the same",
+      "two patterns, never the bare @, which magnetTiers calls suspect. A cover",
+      "rule stricter than the magnet rule would hide releases the script is quite",
+      "willing to download.",
+      "",
+      "It reads the listing only, and never opens a work's page to decide. That",
+      "is a hard constraint, not an optimisation: one request per cover on every",
+      "listing merely looked at is the burst that gets an IP rate-limited.",
+      "",
+      "So the rule is an inference from card text, applied to covers rather than",
+      "to the magnet names the patterns were measured on. It is therefore",
+      "one-directional on purpose: an unrecognised promo stays visible and costs",
+      "a click to ignore, while a false positive would hide a real release with",
+      "no way to bring it back from the panel."
+    ],
+    "appliesTo": ["cardCode", "cardTitle"],
+    "patternsFrom": "magnetTiers.ad",
+    "excludes": ["@"],
+    "neverFetches": true,
+    "toggleable": false
+  },
+
   "selection": {
     "$comment": [
       "Order of preference, and why the largest wins inside the window.",
@@ -201,8 +226,8 @@
       "settings form. These are publicly documented product defaults, not",
       "credentials. Only what a user types is persisted.",
       "",
-      "These same defaults exist in jav-scraper as",
-      "user_modules/downloaders.py::VENDOR_DEFAULTS."
+      "aria2's port and RPC options come from its own manual; qBittorrent's from",
+      "its Web UI preferences and its /api/v2/app/version response."
     ],
     "aria2": {
       "host": "http://localhost",
