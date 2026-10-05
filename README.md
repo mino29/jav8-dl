@@ -173,25 +173,26 @@ rather than quietly doing nothing.
 
 ### Adverts are hidden
 
-Covers for adverts are hidden from every listing, always. There is no setting to
-show them, because they were never going to be downloaded anyway — the script
-refuses to send an advert magnet even if you find one another way.
+jav8.vip splices its own advert cards into every listing — they look like covers
+until you click one. They are hidden, always, with no setting to show them.
 
-The rule reads the card's own title and code for the same promo markers the
-magnet rules use, and it costs **no extra requests**: it never opens a work's page
-to check, because one request per cover on every page you merely look at is
-exactly the kind of burst that gets your IP rate-limited.
+The rule is the simplest one available: **a card that links off this site is an
+advert**. That is close to definitional, since sending you somewhere else is the
+whole point of one, and it needs no list of known ad domains — a new one is
+caught the same day.
 
-What that buys you, and what it costs:
+- 🔗 Compared against the site's own host, so a cover of a real release is never
+  touched. Verified against a live listing: 34 real works, none hidden.
+- 🙈 They are not works, so they never get a tick box and cannot be selected by
+  **Select all**, added to your selection, or picked up by a **＋** crawl.
+- 🔢 The count under the size slider says how many were hidden, so nothing
+  disappears without telling you.
+- 🆓 Costs **no requests**. It reads the href the markup already has; it never
+  opens a work's page to check, because one request per cover on every page you
+  merely look at is exactly the kind of burst that gets your IP rate-limited.
 
-- 👁️ A cover with no marker is **left alone**. An advert phrased in words the
-  script does not recognise stays visible — one click to ignore.
-- 🛡️ A real release is never hidden on a guess. If the script is wrong the only
-  way it can be is a false positive, and it is built to fail that direction.
-
-Advert covers are excluded from **Select all** and from **＋** crawls too, so they
-cannot slip into a batch by being ticked in bulk. The count under the size slider
-says how many were hidden, so nothing disappears without telling you.
+Adverts are still refused at the magnet even if you reach one another way, so a
+promo release on the site itself is never sent.
 
 ### Filters
 

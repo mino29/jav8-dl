@@ -608,38 +608,57 @@ group("joinableHrefs - what a running batch picks up from the shared selection")
   check("duplicates in the history are harmless", api.joinableHrefs(["a"], ["a", "a"]), []);
 }
 
-group("isAdCover - adverts hidden from listings, with no way to un-hide them");
-// One-directional on purpose. A promo we do not recognise stays visible, because a
-// visible advert costs a click and a hidden real release cannot be brought back.
+group("isAdCard - the site's injected advert cards, judged by where they link");
+// An advert is a work card that links off this site. Every href below is taken
+// from the site's own adworker() template or from a real listing card.
 {
-  check("an ordinary release is not an advert", api.isAdCover("IPZZ-961", "【1080P】無修正中文"), false);
-  check("the triangle marker is an advert", api.isAdCover("MNGS-061", "【成人抖】月新地址▶夸克UC▷38988.xyz"), true);
-  check("a promo word alone is an advert", api.isAdCover("MIMK-289", "1视频 夸克"), true);
-  check("the marker can come from the code", api.isAdCover("ABF-001▶", "an innocent title"), true);
-  check("the marker can come from the title", api.isAdCover("ABF-001", "an innocent title ▶"), true);
+  // The two links in the live adworker() link list, both of which shipped as
+  // visible cards before this rule existed.
+  check("an http ad link is an ad", api.isAdCard("http://tdsd95.com/", "jav8.vip"), true);
+  check("the second ad link is an ad", api.isAdCard("http://tdsd96.com/", "jav8.vip"), true);
+  check("an https ad link is an ad", api.isAdCard("https://tdsd95.com/deep/path", "jav8.vip"), true);
+  check("protocol-relative off-site is an ad", api.isAdCard("//tdsd95.com/", "jav8.vip"), true);
 
-  // The bare @ is "suspect" for magnets: deprioritised, never auto-excluded.
-  // Letting it hide a cover would make the cover rule stricter than the rule that
-  // decides what actually gets downloaded.
-  check("@ alone does not hide a cover", api.isAdCover("ALDN-433", "[4K]@R90s"), false);
-  check("@ in the code does not hide a cover", api.isAdCover("SIS001@DDH-451", ""), false);
+  // Real works, from the captured listing. None may be caught.
+  const works = ["/v/137558", "/v/80751", "/v/68989", "/v/554315", "/v/557564", "/v/295892"];
+  check("no false positives on real work hrefs", works.filter((h) => api.isAdCard(h, "jav8.vip")), []);
 
-  // Real releases, none of which may be caught.
-  const real = [
-    ["FEX-004", "【高清】未成年美少女"],
-    ["SNOS-290", "SMART GIRL"],
-    ["IPX-177", "妹の秘密"],
-    ["MIDE-912", " Idioms "],
-    ["SSIS-456", "4K"],
-  ];
-  check("no false positives on real releases", real.filter(([c, t]) => api.isAdCover(c, t)), []);
+  // Absolute but ours is still ours. The rule is "off this site", not "absolute" -
+  // a same-host absolute link is a real work.
+  check("a same-host absolute link is not an ad", api.isAdCard("https://jav8.vip/v/123", "jav8.vip"), false);
+  check("a www same-host link is not an ad", api.isAdCard("https://www.jav8.vip/v/123", "www.jav8.vip"), false);
+  // location.host carries a port, so the comparison must drop it on both sides.
+  // The harness runs on 127.0.0.1:8980, where a naive comparison would call every
+  // real work an advert - the rule would then work in the browser and be inert in
+  // every test, which is the worst possible place for it to be wrong.
+  check("a port does not make a same-host link an ad", api.isAdCard("http://jav8.vip:8080/v/1", "jav8.vip"), false);
+  check("a port on the page side is ignored", api.isAdCard("/v/1", "jav8.vip:8980"), false);
+  check("still an ad when only the ad has a port", api.isAdCard("http://tdsd95.com:80/", "jav8.vip"), true);
+  check("a port on the harness host is ignored", api.isAdCard("/v/1", "127.0.0.1:8980"), false);
+  // Host comparison must not be case-sensitive, or HTTPS casing hides an ad.
+  check("host comparison ignores case", api.isAdCard("http://TDSd95.COM/", "JAV8.vip"), true);
+  check("same host different case is not an ad", api.isAdCard("http://JAV8.vip/v/1", "jav8.vip"), false);
 
-  // Defensive: a card with nothing in it must not throw or be called an advert.
-  check("blank card is not an advert", api.isAdCover("", ""), false);
-  check("missing title is not an advert", api.isAdCover("ABF-001", undefined), false);
-  check("missing code is not an advert", api.isAdCover(null, "1视频"), true);
-  // Non-strings must not be coerced into a crash by .test().
-  check("numeric code is handled", api.isAdCover(961, "IPZZ"), false);
+  // Neither of these can be an advert, and both would otherwise fall through to
+  // the host test with no host to compare.
+  check("a fragment link is not an ad", api.isAdCard("#top", "jav8.vip"), false);
+  check("a query-only link is not an ad", api.isAdCard("?page=2", "jav8.vip"), false);
+
+  // Defensive: a card with no href must not be called an advert, or a malformed
+  // card would silently disappear from a listing.
+  check("no href is not an ad", api.isAdCard("", "jav8.vip"), false);
+  check("undefined href is not an ad", api.isAdCard(undefined, "jav8.vip"), false);
+  check("null href is not an ad", api.isAdCard(null, "jav8.vip"), false);
+  // A non-string href (an element property is always a string, but a test or a
+  // future refactor might not be) must not throw.
+  check("numeric href is handled", api.isAdCard(12345, "jav8.vip"), false);
+
+  // The regex the rule is built on, so a change to it is visible.
+  check("absolute href pattern matches a scheme URL", api.ABSOLUTE_HREF.test("http://a.test/"), true);
+  check("absolute href pattern matches a protocol-relative URL", api.ABSOLUTE_HREF.test("//a.test/"), true);
+  check("absolute href pattern rejects a relative path", api.ABSOLUTE_HREF.test("/v/1"), false);
+  // Group 1 includes the port; domainOf() is what drops it, so assert both.
+  check("absolute href group 1 includes the port", api.ABSOLUTE_HREF.exec("http://a.test:8080/x")[1], "a.test:8080");
 }
 
 group("MAX_LOGIN_FAILURES - a failed batch must not lock the user out");

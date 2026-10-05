@@ -115,37 +115,47 @@ r.check("bare @ is classified suspect", api.classifyMagnet("ALDN-433.[4K]@R90s")
 r.check("bare @ with no domain is suspect", api.classifyMagnet("第一會所新片@SIS001@DDH-451"), "suspect");
 r.check("triangle is classified ad", api.classifyMagnet("MNGS-061【成人抖】月新地址▶夸克UC▷38988.xyz"), "ad");
 
-// --------------------------------------------------------------- cover hiding
-// The spec must describe the same selectors the code reads, and the same rule
-// source - otherwise the document describes a stricter or looser rule than the
-// one that runs.
-r.check("cover rule reads exactly the code and title", spec.coverHiding.appliesTo, ["cardCode", "cardTitle"]);
-r.check("cover rule is sourced from the magnet ad tier", spec.coverHiding.patternsFrom, "magnetTiers.ad");
-r.check("cover rule excludes the suspect pattern", spec.coverHiding.excludes, [spec.magnetTiers.suspect.pattern]);
-r.check("cover rule never opens a work page", spec.coverHiding.neverFetches, true);
-r.check("cover hiding is not toggleable", spec.coverHiding.toggleable, false);
+// ------------------------------------------------------------------ ad cards
+// The facts the script relies on, restated from the live page. These are the
+// assertions that would have caught the previous rule: it assumed ad cards were
+// works with a promo title, and every one of these says otherwise.
+r.check("ad cards are documented as injected", spec.adCards.injector, "inline adworker(), prmt() template, two cards per listing");
+r.check("ad cards are detected by host", spec.adCards.detectedBy, "href host !== page host");
+r.check("ad cards have no .work-title", spec.adCards.hasWorkTitleElement, false);
+r.check("ad cards are not works", spec.adCards.isAWork, false);
+r.check("ad cards ignore the VR filter", spec.adCards.subjectToVrFilter, false);
+r.check("ad hiding never fetches", spec.adCards.neverFetches, true);
+r.check("ad hiding is not toggleable", spec.adCards.toggleable, false);
+// Fixtures cannot contain these: fetch_fixtures.py strips the injector. Asserted
+// so nobody trusts a fixture to cover this rule.
+r.check("fixtures cannot contain ad cards", spec.adCards.inFixtures, false);
 
-// The one that actually matters: the cover rule must not drift from the magnet
-// rule. If someone tightens one and not the other, the script ends up hiding
-// covers it would happily download, or showing covers it refuses to send.
-const coverSamples = [
-  ["MNGS-061", "【成人抖】月新地址▶夸克UC▷38988.xyz"],
-  ["IPZZ-961", "【1080P】無修正"],
-  ["SDJS-383", "第一人称 秘书的居家假日"],
-  ["ALDN-433.[4K]@R90s", ""],
-  ["MIMK-289", "1视频 夸克"],
-  ["", ""],
-];
-for (const [code, title] of coverSamples) {
-  r.check(
-    `cover rule matches magnet rule for ${code || "(blank)"}`,
-    api.isAdCover(code, title),
-    api.classifyMagnet(`${code} ${title}`) === "ad",
-  );
-}
-// And the suspect marker must not hide a cover, even though it stops a magnet
-// being chosen automatically.
-r.check("@ does not hide a cover", api.isAdCover("ALDN-433", "[4K]@R90s"), false);
+// The markup in the spec is the site's own template. Its href is fed to the rule
+// the spec documents, so a change to either side alone fails here.
+const specHref = /href="([^"]+)"/.exec(spec.adCards.markup)[1];
+r.check(
+  "the documented ad markup is detected as an ad card",
+  api.isAdCard(specHref, "jav8.vip"),
+  true,
+);
+
+// And the properties the rule depends on, against the real host.
+r.check("an off-site work card is an ad", api.isAdCard("http://tdsd95.com/", "jav8.vip"), true);
+r.check("an off-site https ad is an ad", api.isAdCard("https://tdsd96.com/x", "jav8.vip"), true);
+r.check("protocol-relative off-site is an ad", api.isAdCard("//evil.example/", "jav8.vip"), true);
+// A same-host absolute URL is not an advert, even though it is absolute: the rule
+// is "off this site", not "absolute".
+r.check("a same-host absolute link is not an ad", api.isAdCard("https://jav8.vip/v/123", "jav8.vip"), false);
+r.check("a real work card is not an ad", api.isAdCard("/v/557564", "jav8.vip"), false);
+r.check("host comparison ignores case", api.isAdCard("http://TDSd95.com/", "JAV8.vip"), true);
+// The spec must agree that they are not selectable, because that is what actually
+// keeps an advert out of a batch: the work selector demands a relative /v/ href,
+// which an advert by definition does not have.
+const workHref = /href\^="([^"]+)"/.exec(spec.selectors.card);
+r.check("the work selector requires a relative /v/ href", workHref && workHref[1], "/v/");
+const startsWith = (value, prefix) => value.startsWith(prefix);
+r.check("a real work href matches the work selector", startsWith("/v/557564", workHref[1]), true);
+r.check("an ad href does not match the work selector", startsWith(specHref, workHref[1]), false);
 
 // ----------------------------------------------------------------- protocols
 r.check("aria2 rpc path", spec.protocols.aria2.path, "/jsonrpc");

@@ -285,39 +285,58 @@ const server = createServer((req, res) => {
   // Headless Chrome can screenshot this page - it serves the script as a plain
   // <script src>, so an ordinary page load runs it - but it cannot seed storage
   // first, which is why the seeding lives here and not in the capture command.
-  // A listing with adverts on it. The captured fixtures contain none, because the
-  // pages they were taken from happened to have none - and a fixture is never
-  // hand-edited to make a test pass. So the advert cards are added here, at
-  // request time, rather than written into test/fixtures.
+  // A listing carrying adverts, in the site's real shape.
   //
-  // It runs before the userscript so the script decorates these cards through the
-  // same path as every other card. Injecting them afterwards would leave them
-  // undecorated, and "the ad was hidden" would prove only that an undecorated card
-  // is invisible.
+  // This route exists because the previous one was wrong in the way that mattered.
+  // It injected cards with a relative /v/ href and a .work-title containing promo
+  // wording - the shape the rule was written against - so the test passed while
+  // the feature did nothing on the real site. Fixtures cannot catch this:
+  // tools/fetch_fixtures.py strips the adworker script on purpose, so no captured
+  // page has ever contained an advert.
+  //
+  // Transcribed from the live page's own adworker().prmt() template:
+  //   <a class="work" href="http://tdsd95.com/" target="_blank">
+  //     <img class="work-cover" src="https://img.j-cdn.com/apps/img/k/N.jpg">
+  //     <div class="work-intro">
+  //       <p class="work-id highlight">91Porn</p>
+  //       <div class="work-meta">promo copy</div>
+  //     </div>
+  //   </a>
+  // Note what is absent: a relative href, and any .work-title element at all.
+  //
+  // It runs before the userscript so these are decorated through the same path as
+  // every other card. Injecting them afterwards would only prove that an
+  // undecorated card is hidden.
   if (path === "/__harness__/ads") {
     const html = readFileSync(join(fixtures, "listing.html"), "utf8");
     const tag = `<script src="/__harness__/script.js"></script>`;
     const ads = `<script>
 document.addEventListener("DOMContentLoaded", function () {
-  // Three shapes, because the rule reads two fields and must not care which one
-  // carried the marker: a promo word in the title, the triangle glyph in the
-  // title, and the marker in the code with an innocent-looking title.
   var promos = [
-    ["ABF-001", "1视频 夸克网盘高速下载"],
-    ["ABF-002", "【高清】未成年美少女 ▶"],
-    ["ABF-003▶", "【1080P】looks like a real release"],
+    ["91Porn", "http://tdsd95.com/", "promo copy one"],
+    ["AI-se", "http://tdsd96.com/", "promo copy two"],
   ];
-  var source = document.querySelector("a.work");
-  if (!source) return;
-  promos.forEach(function (pair, i) {
-    var card = source.cloneNode(true);
-    card.removeAttribute("data-jd-done");
-    card.setAttribute("href", "/v/90000" + (i + 1));
-    card.querySelector(".work-id").textContent = pair[0];
-    var title = card.querySelector(".work-title");
-    title.textContent = pair[1];
-    title.setAttribute("title", pair[1]);
-    source.parentNode.insertBefore(card, source);
+  var works = document.querySelector(".works");
+  if (!works) return;
+  var real = works.querySelector('a[href^="/v/"]');
+  if (!real) return;
+  promos.forEach(function (p, i) {
+    var card = document.createElement("a");
+    card.className = "work";
+    card.href = p[1];
+    card.target = "_blank";
+    // Built as a string rather than with createElement for the inner parts, so
+    // this stays a transcription of the site's template rather than a tidy
+    // reimplementation that could drift from it.
+    card.innerHTML =
+      '<img class="work-cover" src="https://img.j-cdn.com/apps/img/k/' + (i + 1) + '.jpg">' +
+      '<div class="work-intro">' +
+      '<p class="work-id highlight">' + p[0] + "</p>" +
+      '<div class="work-meta">' + p[2] + "</div>" +
+      "</div>";
+    // Inserted among the real works, as the site does, so it is not merely
+    // appended and therefore not distinguishable by position.
+    real.after(card);
   });
 });
 </script>`;

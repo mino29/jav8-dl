@@ -130,31 +130,39 @@
     }
   },
 
-  "coverHiding": {
+  "adCards": {
     "$comment": [
-      "Adverts are hidden from listings, always, with no setting to turn it off.",
-      "See isAdCover() in the userscript.",
+      "The site injects its own advert cards into every listing. They are built at",
+      "runtime by an inline adworker() script, so no captured fixture has ever",
+      "contained one - tools/fetch_fixtures.py strips that script on purpose.",
+      "Measured from the live page rather than from a fixture; see adworker().",
       "",
-      "The rule is magnetTiers.ad applied to a cover's code and title - the same",
-      "two patterns, never the bare @, which magnetTiers calls suspect. A cover",
-      "rule stricter than the magnet rule would hide releases the script is quite",
-      "willing to download.",
+      "An advert is a real-looking work card that links OFF this site. That is the",
+      "rule, and it is close to definitional: the point of an advert is to send",
+      "you somewhere else. It is compared against the page's own host, so an",
+      "advert from a domain nobody has seen yet is still caught.",
       "",
-      "It reads the listing only, and never opens a work's page to decide. That",
-      "is a hard constraint, not an optimisation: one request per cover on every",
-      "listing merely looked at is the burst that gets an IP rate-limited.",
+      "The previous rule looked for promo wording in the card's title and could",
+      "never have fired, for two reasons that are both facts about this markup:",
+      "the cards are linked with an absolute href, so the /v/ card selector never",
+      "matched them; and they have no .work-title element at all.",
       "",
-      "So the rule is an inference from card text, applied to covers rather than",
-      "to the magnet names the patterns were measured on. It is therefore",
-      "one-directional on purpose: an unrecognised promo stays visible and costs",
-      "a click to ignore, while a false positive would hide a real release with",
-      "no way to bring it back from the panel."
+      "These are not works, so they are hidden outside the VR filter and counted",
+      "separately from it. They cannot be selected: they carry no /v/ href, so",
+      "they are absent from worksOnPage() and therefore from select-all, from the",
+      "selection and from a + crawl.",
+      "",
+      "Costs no requests - it reads the href the markup already has."
     ],
-    "appliesTo": ["cardCode", "cardTitle"],
-    "patternsFrom": "magnetTiers.ad",
-    "excludes": ["@"],
+    "injector": "inline adworker(), prmt() template, two cards per listing",
+    "markup": "<a class=\"work\" href=\"http://tdsd95.com/\" target=\"_blank\"><img class=\"work-cover\" src=\"https://img.j-cdn.com/apps/img/k/N.jpg\"><div class=\"work-intro\"><p class=\"work-id highlight\">91Porn</p><div class=\"work-meta\">promo</div></div></a>",
+    "detectedBy": "href host !== page host",
+    "hasWorkTitleElement": false,
+    "isAWork": false,
+    "subjectToVrFilter": false,
     "neverFetches": true,
-    "toggleable": false
+    "toggleable": false,
+    "inFixtures": false
   },
 
   "selection": {

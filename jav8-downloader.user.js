@@ -2,7 +2,7 @@
 // @name         JAV8 Downloader
 // @namespace    https://github.com/mino29/jav8-dl
 // @homepage     https://github.com/mino29/jav8-dl
-// @version      1.9.0
+// @version      1.9.1
 // @icon          data:image/png;base64,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
 // @description  Tick covers to queue them, filter by VR, pick the best magnet by size, and send to aria2 or qBittorrent. Settings live in the browser, not in a config file.
 // @author       mino29
@@ -387,34 +387,55 @@
     return "clean";
   }
 
+  /** Matches a URL that names a host: scheme://host, or protocol-relative. */
+  var ABSOLUTE_HREF = /^(?:[a-z][a-z0-9+.-]*:)?\/\/([^/?#]+)/i;
+
   /**
-   * Whether a cover is an advert, judged from the card itself.
+   * Whether a listing card is one of the adverts the site injects.
    *
-   * The cover rule, deliberately the same "certain ad" markers classifyMagnet()
-   * refuses to select automatically - and deliberately not the "@" marker, which
-   * is only "suspect". A cover rule stricter than the rule that decides what
-   * actually gets downloaded would hide releases the script is happy to send.
+   * Measured from the page's own inline `adworker` script, which builds them with
+   * `prmt()` and emits:
    *
-   * Only the code and the title are read. Performer names are left out on purpose:
-   * a promoter's name appearing on a card says nothing about whether that
-   * release is an advert.
+   *   <a class="work" href="http://tdsd95.com/" target="_blank">
+   *     <img class="work-cover" src="https://img.j-cdn.com/apps/img/k/N.jpg">
+   *     <p class="work-id highlight">91Porn</p>
+   *     <div class="work-meta">promo copy</div>
    *
-   * Costs nothing, and that is the constraint rather than a convenience. The only
-   * other way to know is to open the work and read its magnet names, which means
-   * one request per cover on every listing you merely look at - on a third-party
-   * site, exactly the burst of requests that earns an IP block. So the rule has to
-   * be answerable from what the listing already shows.
+   * So an advert is a real-looking work card that **links off this site**, and
+   * that is the one thing an advert cannot avoid being: its whole job is to send
+   * you somewhere else. Compared against the page's own host rather than against
+   * a list of known ad domains, so one from a domain nobody has seen yet is still
+   * caught, and a site-relative link that is genuinely ours is not.
    *
-   * Which makes it an inference: the patterns were measured on magnet names and
-   * are being applied here to card text. So the failure direction is chosen. A
-   * cover with no marker stays visible, meaning a promo phrased in words we do
-   * not recognise is shown rather than hidden - a visible advert costs one click
-   * to ignore, whereas a real release hidden by a false positive cannot be
-   * brought back from the panel at all.
+   * The rule this replaces looked for promo wording in the card's title, and it
+   * could never have worked. Both reasons come from that same markup: the cards
+   * are linked with an absolute href, so `a.work[href^="/v/"]` never matched them
+   * and the script never saw them at all; and they carry no `.work-title`
+   * element, so there was no title to read even where it did match.
+   *
+   * Pure: it takes the host rather than reading location, so it can be tested
+   * against the real markup with no browser.
    */
-  function isAdCover(code, title) {
-    var text = String(code || "") + " " + String(title || "");
-    return AD_STRONG.test(text) || AD_WORDS.test(text);
+  function isAdCard(href, pageHost) {
+    var h = String(href || "");
+    // A plain root-relative path is a work on this site, and so is a fragment or
+    // a query-only link. Neither can be an advert.
+    if (h.charAt(0) === "/" && h.charAt(1) !== "/") return false;
+    if (h.charAt(0) === "#" || h.charAt(0) === "?") return false;
+    var host = ABSOLUTE_HREF.exec(h);
+    if (!host) return false;
+    // Compare hosts with their ports dropped. location.host includes one, so
+    // leaving it on the right-hand side would make every comparison on a
+    // non-default port - the harness included - fail open and call real works
+    // adverts. A link to the same site on another port is still the same site.
+    return domainOf(host[1]) !== domainOf(pageHost);
+  }
+
+  /** Host portion of a URL or of location.host, lower-cased, port dropped. */
+  function domainOf(host) {
+    var h = String(host || "").toLowerCase();
+    var colon = h.lastIndexOf(":");
+    return colon === -1 ? h : h.slice(0, colon);
   }
 
   /**
@@ -1964,15 +1985,6 @@
     var href = card.getAttribute("href");
     known.set(href, info);
 
-    // An advert gets no tick box. applyFilter() hides it either way, so this is
-    // about the control rather than the visibility: a checkbox on something the
-    // user cannot see is a control that does nothing, and if the hiding ever
-    // fails the box is what would still let an advert into a batch.
-    if (isAdCover(info.code, info.title)) {
-      card.dataset.jdAd = "1";
-      return;
-    }
-
     var box = el("label", "jd-box");
     box.title = "Queue this release";
     var input = el("input");
@@ -2040,12 +2052,39 @@
       info = workInfoFromCard(card);
       if (card.getAttribute("href")) known.set(card.getAttribute("href"), info);
     }
-    if (isAdCover(info.code, info.title)) return false;
     return (
       settings.filter === "all" ||
       (settings.filter === "vr" && info.vr) ||
       (settings.filter === "non-vr" && !info.vr)
     );
+  }
+
+  /**
+   * Hide the advert cards the site injects into its own listings.
+   *
+   * Separate from matchesFilter() on purpose. Those cards are not works at all -
+   * they carry an off-site href and no .work-title - so they are not in
+   * worksOnPage() and the filter never sees them. They are also not subject to
+   * the VR filter: an advert is not a VR release that happens to be unwanted, and
+   * counting them as "hidden by filter" would name the wrong cause.
+   *
+   * Runs over every `a.work`, not just the /v/ ones, because that broader set is
+   * exactly where the adverts live. Costs nothing: it reads the href the markup
+   * already has and never fetches anything.
+   *
+   * Returns how many it hid, so the panel can say so.
+   */
+  function hideAdCards() {
+    var cards = document.querySelectorAll("a.work");
+    var hidden = 0;
+    for (var i = 0; i < cards.length; i++) {
+      var card = cards[i];
+      if (!isAdCard(card.getAttribute("href"), location.host)) continue;
+      card.style.display = "none";
+      card.dataset.jdAd = "1";
+      hidden++;
+    }
+    return hidden;
   }
 
   /**
@@ -2062,20 +2101,22 @@
   var lastAds = 0;
 
   function applyFilter() {
+    // Adverts first, and counted separately: they are hidden whatever the VR
+    // filter is set to, so folding them into "hidden by filter" would be a
+    // description of the wrong cause. hideAdCards() is also what applies the
+    // hiding - this loop must not clear it again by setting display on cards it
+    // does not own.
+    var ads = hideAdCards();
     var hidden = 0;
-    var ads = 0;
     worksOnPage().forEach(function (card) {
       var info = known.get(card.getAttribute("href"));
       if (!info) return;
-      var show = matchesFilter(card);
-      card.style.display = show ? "" : "none";
-      if (show) return;
-      hidden++;
-      // Counted apart from the rest, because "12 hidden by filter" is a claim
-      // about the VR filter and adverts are hidden whether it is on All, VR only
-      // or non-VR only. Blaming the filter for them would be a description of
-      // the wrong cause.
-      if (isAdCover(info.code, info.title)) ads++;
+      if (matchesFilter(card)) {
+        card.style.display = "";
+      } else {
+        card.style.display = "none";
+        hidden++;
+      }
     });
     lastHidden = hidden;
     lastAds = ads;
@@ -2088,9 +2129,12 @@
   function updateCount(hidden, ads) {
     var node = document.querySelector(".jd-count");
     if (!node) return;
-    var total = hidden === undefined ? lastHidden : hidden;
+    // The two tallies are disjoint now: `hidden` counts works the VR filter
+    // removed, `ads` counts the injected advert cards. They were briefly folded
+    // together with a subtraction, which is only right while the caller mixes
+    // them - and it silently reported a filter count of -3 the moment it did not.
+    var byFilter = hidden === undefined ? lastHidden : hidden;
     var adverts = ads === undefined ? lastAds : ads;
-    var byFilter = total - adverts;
     node.textContent = "";
     node.appendChild(document.createTextNode("Selected "));
     node.appendChild(el("b", null, String(selected.size)));
@@ -3293,6 +3337,11 @@ function deselectWork(href) {
     buildPanel();
     renderQueueStatus();
 
+    // Hide the site's own advert cards here rather than only inside
+    // decorateAll(), because decorateAll() gives up on a route with no works and
+    // these are not works - a listing of nothing but adverts would keep them.
+    hideAdCards();
+
     // Anything left over from the previous page in this tab picks up where it
     // stopped. The job carries its own cursor, so this does not resend work that
     // already went out.
@@ -3326,6 +3375,17 @@ function deselectWork(href) {
         decorateAll();
       }, 1200);
     }
+
+    // The advert injector runs inline during parsing, so the cards normally exist
+    // before any of the above. This second pass covers the routes where the
+    // listing arrives later than that, and is worth its cost: one
+    // querySelectorAll and an href comparison, with no requests.
+    setTimeout(function () {
+      if (!isDetailPage()) {
+        hideAdCards();
+        requestBulkRefresh();
+      }
+    }, 1200);
   }
 
   if (document.readyState === "loading") {

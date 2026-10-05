@@ -217,26 +217,31 @@ Kept here because they are the kind that come back:
   `#you-need-a-client` - so every `#section` link in the file breaks at once, and
   so does anything bookmarked. Emoji in a list item is safe; the user asked for
   bullets and a heading is a different request with a real cost.
-- A rule inferred from a measurement of the wrong surface is still an inference,
-  so choose its failure direction on purpose. The advert patterns were measured
-  on magnet names and are applied to card titles, which means a false positive is
-  possible. It is built so that only a false positive is possible: an unrecognised
-  promo stays visible, because a visible advert costs a click and a hidden real
-  release cannot be brought back from the panel at all.
-- "Costs no requests" is a requirement, not a selling point, for anything decided
-  per card. The alternative - opening each work to read its magnet names - is one
-  request per cover on every listing merely looked at, which is the burst that
-  earns an IP block. If a per-item rule cannot be answered from what the page
-  already shows, the feature is the wrong shape.
-- Count a new hiding reason separately from the existing one. "12 hidden by
-  filter" was becoming partly a claim about adverts, which the VR filter does not
-  explain; a count that names the wrong cause is worse than no count.
-- Test a per-card rule against a page that has such cards. The captured fixtures
-  contained no adverts, because the pages they came from had none - and a fixture
-  is never hand-edited to make a test pass. The harness now adds advert cards at
-  request time instead, before the userscript tag, so they are decorated through
-  the same path as every other card. Injecting them afterwards would have proved
-  only that an undecorated card is invisible.
+- Look at the thing before you write a rule about it. The advert-hiding
+  rule shipped in 1.9.0 matched promo wording in a cover's title. Reading the
+  page's own inline `adworker()` afterwards showed the cards it was meant to catch
+  are linked with an *absolute off-site href* and have no `.work-title` element at
+  all - so they never matched the card selector and there was no title to read.
+  The rule could not have fired on any page, ever.
+- A test that reproduces your own assumption proves nothing. The harness test for
+  1.9.0 injected ad cards shaped like real works - relative `/v/` href, promo text
+  in a `.work-title` - because that is what the rule expected, so it passed while
+  the feature was inert. Transcribe the markup from the real source instead, and
+  when a rule is about markup the site generates at runtime, say where the shape
+  came from. Fixtures cannot help: fetch_fixtures.py strips `adworker` on purpose,
+  so no captured page has ever contained an advert.
+- Strip a port before comparing hosts. `location.host` includes one, so comparing
+  it against a host parsed out of an href fails open on every non-default port -
+  the harness on 127.0.0.1:8980 included - and calls real works adverts. The rule
+  would have been right in the browser and wrong in every test, which is the worst
+  possible place for a discrepancy to live.
+- Do not fold two hiding reasons into one count. "12 hidden by filter" was
+  becoming partly a claim about adverts, which the VR filter does not explain; a
+  count that names the wrong cause is worse than no count.
+- A counter that subtracts one tally from another is carrying a hidden invariant.
+  "hidden by filter" was computed as `hidden - ads` while the caller still mixed
+  them, and reported -3 the moment it stopped. Make the tallies disjoint at the
+  source instead of reconciling them at the display.
 - Derived state shown next to a control must update with it. The work page
   highlighted the magnet it "would send" once at load, so it kept asserting a
   specific release after the slider moved elsewhere. If a control decides
