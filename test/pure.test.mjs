@@ -661,6 +661,126 @@ group("isAdCard - the site's injected advert cards, judged by where they link");
   check("absolute href group 1 includes the port", api.ABSOLUTE_HREF.exec("http://a.test:8080/x")[1], "a.test:8080");
 }
 
+group("magnetTags - the release tags a filename declares");
+// Measured across 783 magnets from 80 work pages. Two spellings of the same fact
+// exist and barely overlap, so both must match: -U and 无码 for uncensored,
+// -C and 中文字幕 for Chinese subtitles. There is no -CN here and no 無修正.
+{
+  // Uncensored, three ways.
+  check("-U is uncensored", api.magnetTags("ABF-001-U").uncensored, true);
+  check("-UC is uncensored", api.magnetTags("ABF-001-UC").uncensored, true);
+  check("-uncensored spelled out is uncensored", api.magnetTags("ABF-001-uncensored-HD").uncensored, true);
+  check("无码 in brackets is uncensored", api.magnetTags("【无码破解】ABF-001").uncensored, true);
+  check("无码 alone is uncensored", api.magnetTags("【无码】ABF-001").uncensored, true);
+
+  // Chinese subtitles, two ways.
+  check("-C is Chinese subs", api.magnetTags("ABF-001-C").chinese, true);
+  check("-UC is Chinese subs", api.magnetTags("ABF-001-UC").chinese, true);
+  check("-中文字幕 is Chinese subs", api.magnetTags("ABF-001-中文字幕").chinese, true);
+  check("字幕 is Chinese subs", api.magnetTags("ABF-001字幕").chinese, true);
+
+  // -UC is the intersection of the two, which is exactly how it is used on the
+  // site: 38 of the sampled releases carry it and nothing else carries both.
+  const uc = api.magnetTags("ABF-001-UC");
+  check("-UC is both categories", uc.uncensored && uc.chinese, true);
+
+  check("-AI is AI", api.magnetTags("ABF-001-AI").ai, true);
+  check("4K in brackets is 4K", api.magnetTags("【4K】ABF-001").uhd, true);
+  // No catalogue dash: 4K still has to be found, or a plain filename is missed.
+  check("4K without a catalogue code is 4K", api.magnetTags("ipzz703.4K.mp4").uhd, true);
+
+  // A plain censored catalogue release claims nothing.
+  const plain = api.magnetTags("ABF-001");
+  check("a plain release has no tags", [plain.uncensored, plain.chinese, plain.ai, plain.uhd], [false, false, false, false]);
+
+  // What counting changed, rather than what was expected.
+  //
+  // -CN does not occur on this site - 0 of 783 magnets - so it is deliberately
+  // NOT a rule. Inventing one would mean supporting a convention nothing here
+  // uses, on the strength of a memory of some other site.
+  check("-CN is not treated as a flag", api.magnetTags("ABF-001-CN").chinese, false);
+  check("-CN alone leaves the tail untagged", api.magnetTags("ABF-001-CN").uncensored, false);
+  // 無修正 IS matched, but as the traditional-script spelling of 无码 rather than
+  // as a separate convention: same words, different encoding of the same fact.
+  check("無修正 is accepted as uncensored", api.magnetTags("【無修正】ABF-001").uncensored, true);
+  // 有码 marks nothing: no release in the sample carries it, and a censored
+  // release is simply an untagged one.
+  check("有码 marks nothing", api.magnetTags("【有码】ABF-001").uncensored, false);
+
+  // Bounded, or AI matches inside ordinary words.
+  check("AI inside a word is not the AI tag", api.magnetTags("ABF-001-HAIRCUT").ai, false);
+  check("2K is not the 4K tag", api.magnetTags("【2K】ABF-001").uhd, false);
+
+  // The @ promo axis is an advert signal, not a quality tag: it must not leak in.
+  check("an @ promo span adds no quality tag", api.magnetTags("ABF-001@R90s").uhd, false);
+
+  // Defensive.
+  check("an empty name has no tags", api.magnetTags("").uhd, false);
+  check("undefined is handled", api.magnetTags(undefined).uncensored, false);
+  check("a name with no code still parses the tail", api.magnetTags("release-U").uncensored, true);
+}
+
+group("applyTagPrefs - narrow to what was asked for, or say why not");
+// A preference that cannot be met must relax rather than empty the pool, or a
+// batch silently does nothing for that work with no explanation.
+{
+  const m = (name, size) => ({ uri: "magnet:?x=" + name, name, size: size || GB });
+
+  // Nothing asked for changes nothing - the guarantee that 4-arg callers and every
+  // pre-existing user keep exactly the behaviour they had.
+  const plain = [m("A"), m("B"), m("C")];
+  check("no preferences leave the pool alone", api.applyTagPrefs(plain, {}).pool.length, 3);
+  check("no preferences relax nothing", api.applyTagPrefs(plain, {}).relaxed, []);
+  check("undefined preferences leave the pool alone", api.applyTagPrefs(plain, undefined).pool.length, 3);
+
+  // A requirement the work can meet narrows.
+  const mixed = [m("A"), m("B-U"), m("C")];
+  const un = api.applyTagPrefs(mixed, { uncensored: true });
+  check("a met requirement narrows the pool", un.pool.length, 1);
+  check("the survivor is the tagged one", un.pool[0].name, "B-U");
+  check("a met requirement relaxes nothing", un.relaxed, []);
+
+  // A requirement the work cannot meet relaxes, and keeps everything.
+  const noneUn = api.applyTagPrefs([m("A"), m("B")], { uncensored: true });
+  check("an unmet requirement keeps the whole pool", noneUn.pool.length, 2);
+  check("an unmet requirement is reported", noneUn.relaxed, ["uncensored"]);
+
+  // The AI veto removes rather than demands.
+  const withAI = [m("A"), m("B-AI")];
+  const noAI = api.applyTagPrefs(withAI, { skipAI: true });
+  check("the AI veto drops AI releases", noAI.pool.length, 1);
+  check("the AI veto keeps the real one", noAI.pool[0].name, "A");
+  check("a satisfied veto relaxes nothing", noAI.relaxed, []);
+
+  const allAI = api.applyTagPrefs([m("A-AI"), m("B-AI")], { skipAI: true });
+  check("an all-AI work is still sent", allAI.pool.length, 2);
+  check("an all-AI work reports the veto", allAI.relaxed, ["skipAI"]);
+
+  // Precedence: a requirement the user named beats a veto left on by default.
+  // Only the uncensored release here is AI, and losing the uncensored one would
+  // be the user silently not getting what they asked for.
+  const conflict = [m("A"), m("B-U-AI")];
+  const resolved = api.applyTagPrefs(conflict, { uncensored: true, skipAI: true });
+  check("the requirement wins over the veto", resolved.pool.length, 1);
+  check("and it is the uncensored release", resolved.pool[0].name, "B-U-AI");
+  check("and the veto is what relaxed", resolved.relaxed, ["skipAI"]);
+
+  // Several requirements, both reportable.
+  const two = api.applyTagPrefs([m("A-U")], { uncensored: true, chinese: true });
+  check("both requirements are reported when unmet", two.relaxed, ["chinese"]);
+
+  // 4K behaves like the other requirements.
+  const hd = api.applyTagPrefs([m("A"), m("B-4K")], { uhd: true });
+  check("a 4K requirement narrows", hd.pool.length, 1);
+  check("to the 4K one", hd.pool[0].name, "B-4K");
+
+  // Defensive.
+  check("an empty pool is fine", api.applyTagPrefs([], { uncensored: true }).pool.length, 0);
+  check("a magnet with no uri is dropped", api.applyTagPrefs([{ name: "A" }, m("B-U")], {}).pool.length, 1);
+  check("null magnets are dropped", api.applyTagPrefs([null, undefined, m("A")], {}).pool.length, 1);
+  check("undefined pool is fine", api.applyTagPrefs(undefined, {}).pool.length, 0);
+}
+
 group("MAX_LOGIN_FAILURES - a failed batch must not lock the user out");
 // qBittorrent bans an IP for an hour after a handful of consecutive failed
 // logins (web_ui_max_auth_fail_count defaults to 5). A selection of 17 that

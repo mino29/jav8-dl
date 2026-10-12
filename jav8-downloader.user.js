@@ -2,9 +2,9 @@
 // @name         JAV8 Downloader
 // @namespace    https://github.com/mino29/jav8-dl
 // @homepage     https://github.com/mino29/jav8-dl
-// @version      1.9.1
+// @version      1.10.0
 // @icon          data:image/png;base64,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
-// @description  Tick covers to queue them, filter by VR, pick the best magnet by size, and send to aria2 or qBittorrent. Settings live in the browser, not in a config file.
+// @description  Tick covers to queue them, filter by VR, prefer uncensored / subtitled / 4K releases, and send to aria2 or qBittorrent. Settings live in the browser, not in a config file.
 // @author       mino29
 // @match        *://jav8.vip/*
 // @match        *://*.jav8.vip/*
@@ -39,6 +39,24 @@
  *   26, so it is deliberately not used.
  * - `第一人称` (first person) appears on ordinary flat releases and is NOT a
  *   VR signal. Do not add it.
+ *
+ * Release-tag note, counted across 783 magnets from 80 work pages rather than
+ * inferred from how these tags usually look:
+ *
+ * - There is no `-CN` on this site (0 of 783) and no `無修正` (0). It writes
+ *   `-C` and simplified `无码`. A rule for either absent flag could only ever
+ *   fire on a page nobody has seen, which is not a feature.
+ * - `-U` *or* `-UC` is how uncensored is written, and the two spellings barely
+ *   overlap - `-U` with `无码` on 5 of 736 releases, `-C` with `中文字幕` on
+ *   none. They are conventions of different uploaders, so matching one spelling
+ *   matches about half of what it appears to.
+ * - Only ~14% of releases carry any tag, which is why a tag preference relaxes
+ *   instead of blocking: a rule that skipped untagged works would skip six
+ *   releases in seven.
+ * - The sample matters more than its size. A first pass over /updated and
+ *   /latest found *none* of these flags in 149 magnets, because those listings
+ *   are dominated by one streamer's uploads. Actress filmographies are where
+ *   catalogue releases live.
  *
  * qBittorrent note, measured against a live v5.2.3 WebUI rather than assumed:
  *
@@ -184,6 +202,19 @@
     active: "aria2",
     filter: "all", // all | vr | non-vr
     preferredSize: 5 * GB,
+    // Release-tag preferences. See magnetTags() for the measured vocabulary.
+    //
+    // skipAI is on by default because it is a veto - it removes AI-generated
+    // releases - and every other setting here is a requirement the user must ask
+    // for. Only 14% of the 783 sampled releases carry any tag at all, so an
+    // opt-in requirement that cannot be met relaxes rather than blocking, and
+    // that is the common case rather than an edge case.
+    tags: {
+      uncensored: false,
+      chinese: false,
+      uhd: false,
+      skipAI: true,
+    },
   };
 
   // minSize/maxSize are what pickMagnet() compares against, but they are derived
@@ -387,6 +418,116 @@
     return "clean";
   }
 
+  /**
+   * The release tags a magnet name declares.
+   *
+   * Measured, not guessed. From 783 magnets across 80 work pages drawn from
+   * twelve performers' filmographies, the flags that recur are these, and they
+   * arrive in two near-disjoint conventions:
+   *
+   *   uncensored   -U (32 pages)  -UC  -uncensored   and  the word 无码
+   *   chinese subs -C  (21 pages)  -UC  and  the word 中文字幕
+   *   AI           -AI (16 pages)
+   *   4K           4K  (26 magnets, usually bracketed)
+   *
+   * Two corrections to the obvious guess, both from counting rather than
+   * expecting. There is no -CN here at all (0 of 783) and no 無修正 either (0):
+   * this site writes -C and simplified 无码. And the two spellings of the same
+   * fact barely overlap - only 5 magnets carry both -U and 无码, and *no* magnet
+   * carries both -C and 中文字幕. They are alternative conventions used by
+   * different uploaders, so matching only one spelling matches roughly half of
+   * the releases it claims to cover.
+   *
+   * Two places are read, because the site uses both:
+   *   - everything inside 【】 or [], for 无码 / 4K / HD720p
+   *   - the segment after the catalogue code, for -U / -C / -UC / -AI
+   *
+   * @-promo spans are stripped first: those are the "suspect" advert axis that
+   * classifyMagnet() already handles, and a promo payload is not a quality tag.
+   *
+   * Pure and DOM-free so it can be tested against the forms that were measured.
+   */
+  function magnetTags(name) {
+    var tags = { uncensored: false, chinese: false, ai: false, uhd: false };
+    var body = String(name || "").replace(/@\S*/g, " ");
+    var brackets = (body.match(/[\u3010\[\uFF08(]([^\]\u3011\uFF09)]*)[\]\u3011\uFF09)]/g) || []).join(" ");
+    var code = /\b([A-Z]{2,6})-(\d{2,4})\b/.exec(body);
+    var tail = code ? body.slice(code.index + code[0].length) : body;
+    var flags = brackets + " " + tail;
+
+    // Both -U and -UC mean uncensored; -UC additionally means Chinese subs. One
+    // pattern each, because `UC?` cannot express "U or UC" and "C or UC" at once.
+    tags.uncensored =
+      /(^|[\s\-_])UC?($|[\s\-_])/.test(tail) ||
+      /uncensored/i.test(flags) ||
+      /\u65e0\u7801|\u7121\u4fee\u6b63|\u65e0\u4fee\u6b63/.test(flags);
+    tags.chinese =
+      /(^|[\s\-_])(C|UC)($|[\s\-_])/.test(tail) ||
+      /\u5B57\u5E55|\u4E2D\u5B57/.test(flags);
+    // Bounded, or AI matches inside words like "hair".
+    tags.ai = /(^|[\s\-_])AI($|[\s\-_])/.test(tail) || /(^|[\s])AI($|[\s])/.test(brackets);
+    tags.uhd = /4K/i.test(flags);
+    return tags;
+  }
+
+  /**
+   * Narrow a pool to the tag categories the user asked for.
+   *
+   * Explicit requirements first, then the AI veto, and that order is the whole
+   * design: a requirement is something the user switched on and named, while the
+   * AI veto is on by default and may never have been considered. When they
+   * conflict - the only uncensored release is AI, say - the requirement is
+   * honoured and the veto is the thing that gives way.
+   *
+   * Every category relaxes rather than emptying the pool. A work with no
+   * uncensored release is still worth having, and silently dropping it would
+   * leave the user staring at a batch that did nothing with no explanation. The
+   * relaxed list is returned so the caller can say which way it fell back.
+   *
+   * Pure. `relaxed` is the list of preferences that could not be met.
+   */
+  function applyTagPrefs(pool, prefs) {
+    var want = prefs || {};
+    var relaxed = [];
+    var items = (pool || [])
+      .filter(function (m) {
+        return m && m.uri;
+      })
+      .map(function (m) {
+        return { magnet: m, tags: magnetTags(m.name) };
+      });
+
+    function require_(key) {
+      if (!want[key]) return;
+      var kept = items.filter(function (it) {
+        return it.tags[key];
+      });
+      // Only narrow when something survives: a requirement the work cannot meet
+      // must not turn into "send nothing for this work".
+      if (kept.length) items = kept;
+      else relaxed.push(key);
+    }
+
+    require_("uncensored");
+    require_("chinese");
+    require_("uhd");
+
+    if (want.skipAI) {
+      var notAI = items.filter(function (it) {
+        return !it.tags.ai;
+      });
+      if (notAI.length) items = notAI;
+      else relaxed.push("skipAI");
+    }
+
+    return {
+      pool: items.map(function (it) {
+        return it.magnet;
+      }),
+      relaxed: relaxed,
+    };
+  }
+
   /** Matches a URL that names a host: scheme://host, or protocol-relative. */
   var ABSOLUTE_HREF = /^(?:[a-z][a-z0-9+.-]*:)?\/\/([^/?#]+)/i;
 
@@ -460,7 +601,7 @@
    * keeps excluding the absurd multi-hundred-GB labels. Both still apply as a
    * hard filter; only the tie-break within them changed.
    */
-  function pickMagnet(magnets, minBytes, maxBytes, preferredBytes) {
+  function pickMagnet(magnets, minBytes, maxBytes, preferredBytes, prefs) {
     var pool = (magnets || []).filter(function (m) {
       return m && m.uri && m.size !== null && m.size !== undefined && m.size > 0;
     });
@@ -474,15 +615,29 @@
     });
     if (!candidates.length) return { magnet: null, reason: "ads-only" };
 
+    // Tag preferences narrow the pool before the size window is applied, so a
+    // preferred size picks among the releases that actually match what the user
+    // asked for rather than among all of them. Order matters: tags decide *which*
+    // releases are eligible, size then decides which of those to take.
+    var tagged = applyTagPrefs(candidates, prefs);
+    candidates = tagged.pool;
+    // Unreachable in practice - applyTagPrefs() only narrows to a non-empty set -
+    // but returning a reason beats throwing on an invariant nobody can see.
+    if (!candidates.length) return { magnet: null, reason: "ads-only", relaxed: tagged.relaxed };
+
     var inWindow = candidates.filter(function (m) {
       return m.size >= minBytes && m.size <= maxBytes;
     });
     if (inWindow.length) {
-      return { magnet: closestToPreferred(inWindow, preferredBytes), reason: "in-window" };
+      return {
+        magnet: closestToPreferred(inWindow, preferredBytes),
+        reason: "in-window",
+        relaxed: tagged.relaxed,
+      };
     }
     // Nothing the user asked for is available, so fall back to the biggest real
     // release - and say so, rather than sending nothing.
-    return { magnet: largest(candidates), reason: "outside-window" };
+    return { magnet: largest(candidates), reason: "outside-window", relaxed: tagged.relaxed };
   }
 
   /**
@@ -986,6 +1141,7 @@
       active: settings.active,
       filter: settings.filter,
       preferredSize: settings.preferredSize,
+      tags: settings.tags || DEFAULTS.tags,
       downloaders: storedSettings.downloaders || {},
     });
   }
@@ -995,6 +1151,10 @@
     settings = deepMerge(DEFAULTS, {});
     applyPreferredSize();
     writeStore({});
+    // The panel is still open behind the dialog, so its controls would otherwise
+    // keep showing values that no longer exist.
+    requestTagRefresh();
+    requestMagnetRefresh();
   }
 
   // ------------------------------------------------------------------- http
@@ -1438,6 +1598,9 @@
 .jd-sizerow{align-items:flex-start}
 .jd-sizewrap{flex:1;min-width:0}
 .jd-slider{display:block;width:100%;margin:2px 0 1px;accent-color:#2f6feb;cursor:pointer}
+.jd-tags{display:flex;gap:4px;margin:6px 0 0}
+.jd-tags .jd-tag{flex:1;padding:3px 0;font-size:10.5px;line-height:1.3}
+.jd-tags .jd-tag.on{background:#2b6cb0;border-color:#63b3ed;color:#fff}
 .jd-sizeout{display:block;font-size:10px;color:#7f8c99;text-align:center;
   font-variant-numeric:tabular-nums}
 .jd-bulk{display:flex;gap:6px;margin:8px 0 0}
@@ -2644,6 +2807,17 @@
   }
 
   /** Ask the panel to redraw the page-wide buttons, if it has been built yet. */
+  /**
+   * Repaint the tag toggles from settings.
+   *
+   * Its own funnel rather than riding on requestBulkRefresh(), because that one
+   * fires on every tick and these are not selection state.
+   */
+  function requestTagRefresh() {
+    var row = document.querySelector(".jd-tags");
+    if (row && row._paint) row._paint();
+  }
+
   function requestBulkRefresh() {
     var bulk = document.querySelector(".jd-bulk");
     if (bulk && bulk._refresh) bulk._refresh();
@@ -2792,6 +2966,47 @@ function deselectWork(href) {
       persist();
     });
     paintSize();
+
+    // Release-tag preferences. One row of toggles, each a requirement the user
+    // switches on; the AI veto is on by default and reads differently on purpose,
+    // because it removes releases rather than demanding them.
+    var tagRow = el("div", "jd-tags");
+    var TAG_BUTTONS = [
+      { key: "uncensored", label: "\u7121\u78bc", title: "Only send uncensored releases when the work offers one." },
+      { key: "chinese", label: "\u4e2d\u5b57", title: "Only send releases with Chinese subtitles when the work offers one." },
+      { key: "uhd", label: "4K", title: "Only send 4K releases when the work offers one." },
+      { key: "skipAI", label: "no AI", title: "Skip AI-generated releases. On by default; ignored if every release is AI." },
+    ];
+    function paintTags() {
+      tagRow._buttons.forEach(function (b) {
+        // b._tagKey, not b.key: the button has to carry its own settings key, or
+        // this reads settings.tags[undefined] and every button looks off forever.
+        b.classList.toggle("on", !!settings.tags[b._tagKey]);
+      });
+    }
+    TAG_BUTTONS.forEach(function (spec) {
+      var btn = el("button", "jd-btn ghost jd-tag", spec.label);
+      btn.type = "button";
+      btn.title = spec.title;
+      btn._tagKey = spec.key;
+      btn.addEventListener("click", function () {
+        settings.tags[spec.key] = !settings.tags[spec.key];
+        paintTags();
+        persist();
+        // The highlighted magnet on a work page is chosen by the same rule, so it
+        // has to move with the toggle or the panel asserts a release the next
+        // send would not choose.
+        requestMagnetRefresh();
+      });
+      tagRow.appendChild(btn);
+      tagRow._buttons = (tagRow._buttons || []).concat([btn]);
+    });
+    tagRow.title =
+      "Release tags, matched from the magnet filename. Each one narrows the choices; " +
+      "none of them will skip a work outright if the work offers nothing matching.";
+    tagRow._paint = paintTags;
+    paintTags();
+    body.appendChild(tagRow);
 
     var count = el("div", "jd-count");
     body.appendChild(count);
@@ -2959,17 +3174,48 @@ function deselectWork(href) {
    * there is a single definition of what "sending a work" means. Returns a
    * promise that always resolves - a failed item must not stop the batch.
    */
+  /**
+   * How to name a relaxed tag preference in a log line.
+   *
+   * Keys would be unreadable in the one place the user is actually looking.
+   */
+  var TAG_LABEL = {
+    uncensored: "uncensored",
+    chinese: "Chinese subtitles",
+    uhd: "4K",
+    skipAI: "skip-AI",
+  };
+
+  /**
+   * The preferences this work could not satisfy, as a readable noun list.
+   *
+   * Just the names, because the log and the work-page note frame them
+   * differently and a shared clause collided with the note's own prefix. The four
+   * labels are a mixture of adjectives and nouns, which is why neither "no X
+   * release" nor "X release" frames all of them; "matches X" does.
+   */
+  function relaxedNames(relaxed) {
+    if (!relaxed || !relaxed.length) return "";
+    return relaxed
+      .map(function (key) {
+        return TAG_LABEL[key] || key;
+      })
+      .join(" or ");
+  }
+
   function sendOne(href, label) {
     var target = engine();
     return fetchMagnets(href)
       .then(function (detail) {
-        var picked = pickMagnet(detail.magnets, settings.minSize, settings.maxSize, settings.preferredSize);
+        var picked = pickMagnet(detail.magnets, settings.minSize, settings.maxSize, settings.preferredSize, settings.tags);
         if (!picked.magnet) {
           return { ok: false, reason: picked.reason === "ads-only" ? "only advert magnets" : "no magnets on this page" };
         }
         if (picked.reason === "outside-window") {
           log(label + ": " + formatSize(picked.magnet.size) + " is outside your size window", "wa");
         }
+        var relaxed = relaxedNames(picked.relaxed);
+        if (relaxed) log(label + ": nothing here matches " + relaxed + ", so sent the best available", "wa");
         return target.send(picked.magnet).then(
           function (result) {
             return { ok: true, text: result, size: picked.magnet.size };
@@ -3079,7 +3325,7 @@ function deselectWork(href) {
         }
         box.appendChild(head);
 
-        var picked = pickMagnet(detail.magnets, settings.minSize, settings.maxSize, settings.preferredSize);
+        var picked = pickMagnet(detail.magnets, settings.minSize, settings.maxSize, settings.preferredSize, settings.tags);
 
         // Marks this panel as populated so a repeat visit does not duplicate it.
         var rows = el("div", "jd-magnet-rows");
@@ -3127,35 +3373,44 @@ function deselectWork(href) {
          * chosen" while the control that decides it had moved underneath.
          */
         rows._repick = function () {
-          var now = pickMagnet(detail.magnets, settings.minSize, settings.maxSize, settings.preferredSize);
+          var now = pickMagnet(detail.magnets, settings.minSize, settings.maxSize, settings.preferredSize, settings.tags);
           Array.prototype.forEach.call(rows.children, function (row) {
             row.classList.toggle("pick", !!(now.magnet && row.dataset.jdUri === now.magnet.uri));
           });
           var note = box.querySelector(".jd-window-note");
           if (note) {
-            note.textContent = now.reason === "outside-window"
-              ? "No magnet fell inside " + formatSize(settings.minSize) + "–" +
-                formatSize(settings.maxSize) + "; the largest real one was used."
-              : "";
-            note.style.display = now.reason === "outside-window" ? "" : "none";
+            // Both reasons can apply at once, and then both have to be said.
+            var parts = [];
+            if (now.reason === "outside-window") {
+              parts.push(
+                "No magnet fell inside " + formatSize(settings.minSize) + "–" +
+                  formatSize(settings.maxSize) + "; the largest real one was used.",
+              );
+            }
+            var tagNames = relaxedNames(now.relaxed);
+            if (tagNames) {
+              parts.push("Nothing here matches " + tagNames + ", so that preference was set aside.");
+            }
+            note.textContent = parts.join(" ");
+            note.style.display = parts.length ? "" : "none";
           }
         };
         rows._repick();
         // The panel may not exist yet when this page was decorated first.
         requestMagnetRefresh();
 
-        if (picked.reason === "outside-window") {
-          var note = el(
-            "div",
-            "jd-wa jd-window-note",
-            "No magnet fell inside " +
-              formatSize(settings.minSize) +
-              "–" +
-              formatSize(settings.maxSize) +
-              "; the largest real one was used.",
-          );
+        // Always present, hidden when empty. Created only on demand it could not
+        // be written into later, and a relaxed tag preference - the common case -
+        // went unexplained.
+        if (picked.reason !== "ads-only") {
+          var note = el("div", "jd-wa jd-window-note");
+          note.style.display = "none";
           box.appendChild(note);
-        } else if (picked.reason === "ads-only") {
+          // Written once here so it is correct before any toggle is touched;
+          // _repick() keeps it in step from then on.
+          rows._repick();
+        }
+        if (picked.reason === "ads-only") {
           box.appendChild(el("div", "jd-er", "Every entry here looks like an advert."));
         }
       })

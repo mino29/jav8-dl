@@ -130,6 +130,82 @@
     }
   },
 
+  "magnetTags": {
+    "$comment": [
+      "Release tags read from the magnet filename, and the preferences built on",
+      "them. See magnetTags() and applyTagPrefs() in the userscript.",
+      "",
+      "Measured, not guessed: 783 magnets across 80 work pages, drawn from twelve",
+      "performers' filmographies after a first sample from /updated and /latest",
+      "turned out to contain none of these flags at all - 0 of 149. Which studios",
+      "a sample happens to hit matters more than how many pages it covers.",
+      "",
+      "Each fact has two near-disjoint spellings and only one of them is commonly",
+      "used: -U and 无码 co-occur on 5 of 736 releases, and -C and 中文字幕 on none",
+      "of them. They are alternative conventions from different uploaders, so",
+      "matching one spelling matches about half of what it claims to cover.",
+      "",
+      "-CN does not occur on this site (0 of 783) and is deliberately not a rule.",
+      "無修正 likewise does not occur, but is accepted anyway as the",
+      "traditional-script spelling of the same words as 无码.",
+      "",
+      "Only 14% of releases carry any tag. A requirement that cannot be met",
+      "therefore relaxes rather than blocking, and that is the common case, not",
+      "an edge case - see applyTagPrefs()."
+    ],
+    "sample": {
+      "magnets": 783,
+      "workPages": 80,
+      "performers": 12,
+      "source": "actress filmographies; /updated and /latest carry none of these flags"
+    },
+    "categories": {
+      "uncensored": {
+        "forms": ["-U", "-UC", "-uncensored", "无码", "无码破解", "無修正"],
+        "magnets": 102,
+        "note": "-UC is also chinese; it is the intersection of the two categories."
+      },
+      "chinese": {
+        "forms": ["-C", "-UC", "-中文字幕", "字幕"],
+        "magnets": 83
+      },
+      "ai": {
+        "forms": ["-AI"],
+        "magnets": 16
+      },
+      "uhd": {
+        "forms": ["4K"],
+        "magnets": 29,
+        "note": "Also matched without a catalogue code, e.g. ipzz703.4K.mp4."
+      }
+    },
+    "notPresent": {
+      "-CN": 0,
+      "2K": 0,
+      "8K": 0,
+      "HEVC": 0,
+      "AAC": 0,
+      "有码": 0,
+      "無修正": 0
+    },
+    "defaults": {
+      "uncensored": false,
+      "chinese": false,
+      "uhd": false,
+      "skipAI": true
+    },
+    "precedence": "explicit requirements narrow first; the AI veto relaxes last",
+    "taggedShare": 0.14,
+    "worthIt": {
+      "worksWithSeveralMagnets": 69,
+      "ofWhichOfferUncensoredChoice": 0.75,
+      "ofWhichOfferChineseChoice": 0.65,
+      "ofWhichOfferUhdChoice": 0.29,
+      "ofWhichOfferAiToAvoid": 0.23,
+      "note": "Why the preferences exist: they choose between magnets of the SAME work."
+    }
+  },
+
   "adCards": {
     "$comment": [
       "The site injects its own advert cards into every listing. They are built at",

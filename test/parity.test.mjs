@@ -115,6 +115,46 @@ r.check("bare @ is classified suspect", api.classifyMagnet("ALDN-433.[4K]@R90s")
 r.check("bare @ with no domain is suspect", api.classifyMagnet("第一會所新片@SIS001@DDH-451"), "suspect");
 r.check("triangle is classified ad", api.classifyMagnet("MNGS-061【成人抖】月新地址▶夸克UC▷38988.xyz"), "ad");
 
+// --------------------------------------------------------------- magnet tags
+// The spec quotes a measurement; these check the measurement is coherent and that
+// the rules it records are the ones the code implements.
+r.check("uncensored forms are recorded", spec.magnetTags.categories.uncensored.forms, [
+  "-U", "-UC", "-uncensored", "无码", "无码破解", "無修正",
+]);
+r.check("chinese forms are recorded", spec.magnetTags.categories.chinese.forms, [
+  "-C", "-UC", "-中文字幕", "字幕",
+]);
+r.check("ai form is recorded", spec.magnetTags.categories.ai.forms, ["-AI"]);
+r.check("uhd form is recorded", spec.magnetTags.categories.uhd.forms, ["4K"]);
+
+// Defaults must match the script's DEFAULTS, or the panel shows one thing and
+// the picker uses another.
+r.check("tag defaults match the script", api.DEFAULTS.tags, {
+  uncensored: false,
+  chinese: false,
+  uhd: false,
+  skipAI: true,
+});
+r.check("spec records the same defaults", spec.magnetTags.defaults, api.DEFAULTS.tags);
+
+// The absent flags are recorded as absent, so nobody re-adds them by memory.
+r.check("-CN recorded as absent", spec.magnetTags.notPresent["-CN"], 0);
+r.check("有码 recorded as absent", spec.magnetTags.notPresent["有码"], 0);
+
+// The sample has to be arithmetically possible.
+const s = spec.magnetTags.sample;
+r.check("sample is internally consistent", s.workPages <= s.magnets, true);
+const absent = Object.values(spec.magnetTags.notPresent).reduce((a, b) => a + b, 0);
+r.check("absent flags are all zero", absent, 0);
+
+// Worth-it figures must stay in range, since they are what justifies the UI.
+const worth = spec.magnetTags.worthIt;
+r.check("works with several magnets is plausible", worth.worksWithSeveralMagnets <= s.workPages, true);
+for (const key of ["ofWhichOfferUncensoredChoice", "ofWhichOfferChineseChoice",
+                   "ofWhichOfferUhdChoice", "ofWhichOfferAiToAvoid"]) {
+  r.check(`${key} is a real ratio`, worth[key] >= 0 && worth[key] <= 1, true);
+}
+
 // ------------------------------------------------------------------ ad cards
 // The facts the script relies on, restated from the live page. These are the
 // assertions that would have caught the previous rule: it assumed ad cards were

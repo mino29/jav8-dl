@@ -86,6 +86,8 @@ export function loadApi() {
     "joinableHrefs",
     "isAdCard",
     "ABSOLUTE_HREF",
+    "magnetTags",
+    "applyTagPrefs",
   ];
   const context = vm.createContext({});
   vm.runInContext(

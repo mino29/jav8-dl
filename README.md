@@ -171,6 +171,37 @@ ceiling still excludes absurd multi-hundred-GB labels. If nothing fits the
 window at all, the script still sends the largest real release and says so,
 rather than quietly doing nothing.
 
+### Release tags
+
+The same release appears on a work page several times over, differing in what the
+filename declares. Four of those declarations are worth choosing between, and
+each is a toggle in the panel:
+
+- 🔓 **無碼** — prefer the uncensored release.
+- 🈶 **中字** — prefer the release with Chinese subtitles.
+- 🖼️ **4K** — prefer the 4K release.
+- 🤖 **no AI** — skip AI-generated releases. **On by default**; the other three
+  are off.
+
+They are *preferences*, not filters. A work that offers a matching release uses
+it; a work that does not is still sent, and the panel says which preference it
+set aside. Nothing is ever skipped for lacking a tag, because only about one
+release in seven carries one at all — a rule that dropped the other six would
+throw away most of your queue to honour a label.
+
+The toggles are worth having because they choose **between magnets of the same
+work**: of the works offering more than one release, three quarters offer a
+genuine uncensored choice and two thirds a subtitled one.
+
+Two notes on how this was worked out, because they are both easy to get wrong:
+
+- 📐 The tags were **measured, not assumed** — counted across 783 releases from
+  80 work pages. The obvious guesses were wrong: there is no `-CN` on this site
+  at all, and no `無修正` either.
+- 🀄 The same fact is written two different ways and the two barely overlap:
+  uncensored is `-U` *or* `无码`, subtitles are `-C` *or* `-中文字幕`. Matching
+  either spelling alone finds about half of what it claims to.
+
 ### Adverts are hidden
 
 jav8.vip splices its own advert cards into every listing — they look like covers
@@ -314,6 +345,9 @@ Short version:
 
 - 🙈 Ignore adverts. Many magnet entries are ads; they are dimmed in the panel and
   never chosen automatically.
+- 🏷️ Keep only the releases matching your [release tags](#release-tags). This
+  decides *which* releases are eligible; the size then decides which of those to
+  take. A tag nothing here matches is set aside rather than blocking the work.
 - 📏 Ignore anything outside your size window.
 - 🎯 Of what is left, take the one **closest to your preferred size**.
 
