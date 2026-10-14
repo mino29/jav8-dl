@@ -125,7 +125,7 @@ const SHIM = `
  * It merges into the existing store rather than replacing it, so a snapshot left
  * by an earlier load survives unless `fresh` says to clear - see ?cached=1.
  */
-function seedFor(port, fresh) {
+function seedFor(port, fresh, library) {
   return `<script>
 ${fresh ? "localStorage.clear();\nsessionStorage.clear();" : ""}
 (function () {
@@ -136,7 +136,7 @@ ${fresh ? "localStorage.clear();\nsessionStorage.clear();" : ""}
     filter: "all",
     preferredSize: 5368709120,
     downloaders: { aria2: { host: "http://127.0.0.1", port: ${port} } },
-    mediaServer: { enabled: true, host: "http://127.0.0.1", port: ${port}, apiKey: "stub-api-key", link: "play" },
+    mediaServer: { enabled: true, host: "http://127.0.0.1", port: ${port}, apiKey: "stub-api-key", link: "play", library: ${JSON.stringify(library || "")} },
   };
   sessionStorage.setItem("gm-store", JSON.stringify(store));
 })();
@@ -170,7 +170,7 @@ function inject(html) {
  * career than the test thought it was walking. That is the same class of bug as
  * matching on the pathname alone, arriving from the other direction.
  */
-const HARNESS_PARAMS = new Set(["media", "cached", "held", "badkey"]);
+const HARNESS_PARAMS = new Set(["media", "cached", "held", "badkey", "pages", "lib"]);
 
 function routeKey(url) {
   const q = new URLSearchParams(url.search);
@@ -214,10 +214,15 @@ const ROUTES = [
  */
 const stubHits = { aria2: [], qbittorrent: [], mediaServer: [] };
 
+const STUB_FOLDERS = [
+  { Name: "JAV", ItemId: "stub-jav-lib" },
+  { Name: "Movies", ItemId: "stub-movies-lib" },
+];
+
 /**
  * A stand-in Jellyfin library.
  *
- * Every code here is one that is really on the captured listing page, so the
+ * Every JAV code here is one that is really on the captured listing page, so the
  * play buttons have genuine cards to land on. A stub holding codes of its own
  * invention would pass every assertion while matching nothing on the page - the
  * same trap as the advert rule that was tested against cards shaped the way the
@@ -232,22 +237,64 @@ const stubHits = { aria2: [], qbittorrent: [], mediaServer: [] };
  *   skmj-039       held with no size at all, which is a different upgrade rule
  *   ipzz-961       the work the detail fixture is about, held small so that the
  *                  upgrade path has something to find
+ *
+ * `lib` is which stub library an item is in, so ParentId narrowing can be
+ * checked by its effect rather than only by the query string.
  */
-const STUB_LIBRARY = {
-  Items: [
-    { Id: "lib-fex", Name: "FEX-004", Path: "/media/jav/FEX-004.mp4", MediaSources: [{ Size: 5368709120 }] },
-    { Id: "lib-crpd", Name: "crpd 299", Path: "/media/jav/crpd 299.mp4", MediaSources: [{ Size: 3221225472 }] },
-    { Id: "lib-ddb", Name: "ddb068", Path: "/media/jav/ddb068.mp4", MediaSources: [{ Size: 2147483648 }] },
-    { Id: "lib-mida", Name: "MIDA-817", Path: "/media/jav/h_259mida00817.mp4", MediaSources: [{ Size: 4294967296 }] },
-    { Id: "lib-skmj", Name: "SKMJ-039", Path: "/media/jav/SKMJ-039.mkv", MediaSources: [] },
-    { Id: "lib-ipzz", Name: "IPZZ-961", Path: "/media/jav/IPZZ-961 1.28GB.mp4", MediaSources: [{ Size: 1374389535 }] },
-    // On the actress fixture's career, so the crawl's skip is observable.
-    { Id: "lib-sone", Name: "SONE-991", Path: "/media/jav/SONE-991.mp4", MediaSources: [{ Size: 6442450944 }] },
-    // Not on the listing page, so nothing should be decorated from it.
-    { Id: "lib-elsewhere", Name: "ZZZ-999", Path: "/media/jav/ZZZ-999.mp4", MediaSources: [{ Size: 1073741824 }] },
-  ],
-  TotalRecordCount: 8,
-};
+const STUB_ITEMS = [
+  { Id: "lib-fex", Name: "FEX-004", Path: "/media/jav/FEX-004.mp4", Size: 5368709120, lib: "stub-jav-lib" },
+  { Id: "lib-crpd", Name: "crpd 299", Path: "/media/jav/crpd 299.mp4", Size: 3221225472, lib: "stub-jav-lib" },
+  { Id: "lib-ddb", Name: "ddb068", Path: "/media/jav/ddb068.mp4", Size: 2147483648, lib: "stub-jav-lib" },
+  { Id: "lib-mida", Name: "MIDA-817", Path: "/media/jav/h_259mida00817.mp4", Size: 4294967296, lib: "stub-jav-lib" },
+  { Id: "lib-skmj", Name: "SKMJ-039", Path: "/media/jav/SKMJ-039.mkv", Size: 0, lib: "stub-jav-lib" },
+  { Id: "lib-ipzz", Name: "IPZZ-961", Path: "/media/jav/IPZZ-961 1.28GB.mp4", Size: 1374389535, lib: "stub-jav-lib" },
+  // On the actress fixture's career, so the crawl's skip is observable.
+  { Id: "lib-sone", Name: "SONE-991", Path: "/media/jav/SONE-991.mp4", Size: 6442450944, lib: "stub-jav-lib" },
+  // In another library, so narrowing has something to exclude. This one IS on
+  // the listing page, so a missing play button is the visible difference.
+  { Id: "lib-wo", Name: "WO-027", Path: "/media/movies/WO-027.mp4", Size: 4370000000, lib: "stub-movies-lib" },
+  // Not on the listing page, so nothing should be decorated from it.
+  { Id: "lib-elsewhere", Name: "ZZZ-999", Path: "/media/jav/ZZZ-999.mp4", Size: 1073741824, lib: "stub-jav-lib" },
+];
+
+/** Filler items, for exercising the page loop. Names carry no catalogue code. */
+function fillerItems(from, count) {
+  const out = [];
+  for (let i = 0; i < count; i++) {
+    out.push({
+      Id: "filler-" + (from + i),
+      Name: "Filler " + (from + i),
+      Path: "/media/tv/Filler/Season 1/Filler S01E" + (from + i) + " filler-9000.mkv",
+      Size: 0,
+      lib: "stub-tv-lib",
+    });
+  }
+  return out;
+}
+
+function stubLibrary(url) {
+  const parentId = url.searchParams.get("ParentId") || "";
+  const pool = STUB_ITEMS.filter((it) => !parentId || it.lib === parentId).map((it) =>
+    heldOverride && it.Id === "lib-ipzz" ? { ...it, Size: heldOverride } : it,
+  );
+  // ?pages=2 is set from the page URL, not this request: the script builds the
+  // Items URL itself. The real items are put on the *second* page, so a play
+  // button proves the loop read past the first one - which is exactly what the
+  // truncation bug did not do.
+  const items = pageSplit ? fillerItems(1, 5000).concat(pool) : pool;
+  const startIndex = Number(url.searchParams.get("StartIndex")) || 0;
+  const limit = Number(url.searchParams.get("Limit")) || 5000;
+  const slice = items.slice(startIndex, startIndex + limit);
+  return {
+    Items: slice.map((it) => ({
+      Id: it.Id,
+      Name: it.Name,
+      Path: it.Path,
+      MediaSources: it.Size ? [{ Size: it.Size }] : [],
+    })),
+    TotalRecordCount: items.length,
+  };
+}
 
 /**
  * The size the stub reports for IPZZ-961, when a page asked for one.
@@ -272,15 +319,16 @@ let heldOverride = 0;
  */
 let rejectItems = false;
 
-/** The stub library with IPZZ-961 reported at a different size. */
-function withHeld(bytes) {
-  return {
-    Items: STUB_LIBRARY.Items.map((item) =>
-      item.Id === "lib-ipzz" ? { ...item, MediaSources: [{ Size: bytes }] } : item,
-    ),
-    TotalRecordCount: STUB_LIBRARY.TotalRecordCount,
-  };
-}
+/**
+ * Serve the library in two pages, with the real items on the second.
+ *
+ * Set from the page's URL as ?pages=2, for the same reason as heldOverride. This
+ * is the regression guard for the bug that shipped: the reader asked for
+ * Limit=5000 and stopped, so anything past the first page was invisible and would
+ * have been downloaded again. If the loop stops early here, no play button
+ * appears at all.
+ */
+let pageSplit = false;
 
 function handleStub(req, res, url) {
   const path = url.pathname;
@@ -289,7 +337,14 @@ function handleStub(req, res, url) {
   req.on("end", () => {
     if (path === "/__harness__/stub-hits") {
       res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(JSON.stringify(stubHits));
+      res.end(
+        JSON.stringify({
+          ...stubHits,
+          // The page-URL-driven switches, so a test can see what the stub
+          // actually believed rather than what it was asked for.
+          overrides: { heldOverride, pageSplit, rejectItems },
+        }),
+      );
       return;
     }
     if (path === "/__harness__/stub-reset") {
@@ -301,12 +356,24 @@ function handleStub(req, res, url) {
       return;
     }
 
-    // The media server. Only /Items is used by the script, and it is read-only,
-    // so there is nothing here that could queue anything anywhere.
+    // The media server. Read-only: the integration only ever lists a library, so
+    // there is nothing here that could queue anything anywhere.
+    if (path === "/Library/VirtualFolders") {
+      stubHits.mediaServer.push({
+        path,
+        token: req.headers["x-emby-token"] || null,
+      });
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify(STUB_FOLDERS));
+      return;
+    }
+
     if (path === "/Items") {
       stubHits.mediaServer.push({
         path,
         query: url.search,
+        startIndex: Number(url.searchParams.get("StartIndex")) || 0,
+        parentId: url.searchParams.get("ParentId") || null,
         token: req.headers["x-emby-token"] || null,
         accept: req.headers.accept || null,
       });
@@ -316,7 +383,7 @@ function handleStub(req, res, url) {
         return;
       }
       res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(JSON.stringify(heldOverride ? withHeld(heldOverride) : STUB_LIBRARY));
+      res.end(JSON.stringify(stubLibrary(url)));
       return;
     }
 
@@ -406,7 +473,13 @@ const server = createServer((req, res) => {
     res.end(JSON.stringify({ ok: true }));
     return;
   }
-  if (path.startsWith("/__harness__/stub-") || path === "/jsonrpc" || path.startsWith("/api/v2/") || path === "/Items") {
+  if (
+    path.startsWith("/__harness__/stub-") ||
+    path === "/jsonrpc" ||
+    path.startsWith("/api/v2/") ||
+    path === "/Items" ||
+    path === "/Library/VirtualFolders"
+  ) {
     handleStub(req, res, url);
     return;
   }
@@ -567,15 +640,27 @@ setTimeout(function () {
     // re-read the library and the cache could never be observed being used.
     const seeded =
       url.searchParams.get("media") === "1"
-        ? inject(html).replace(SHIM, () => seedFor(port, url.searchParams.get("cached") !== "1") + SHIM)
+        ? inject(html).replace(SHIM, () =>
+            seedFor(port, url.searchParams.get("cached") !== "1", url.searchParams.get("lib")) + SHIM,
+          )
         : inject(html);
-    // The size the stub reports for the work this fixture is about, so the
-    // "nothing on this page beats what you have" branch can be reached in a
-    // browser. See heldOverride. Assigned on every fixture request, not only
-    // when present, so an override cannot leak into the next page and make an
-    // unrelated check pass or fail for the wrong reason.
-    heldOverride = Number(url.searchParams.get("held")) || 0;
-    rejectItems = url.searchParams.get("badkey") === "1";
+    // The page-URL switches. Reset on every *document* request, and only on
+    // those, which is the distinction that matters twice over:
+    //
+    //   - resetting on every request means the userscript's own re-fetch of the
+    //     detail page (`fetchMagnets("/v/557564")`, with no harness parameters on
+    //     it) wipes the override a moment after it was set, so ?held= looked
+    //     broken on exactly the pages it exists for;
+    //   - never resetting means an override leaks into the next navigation and an
+    //     unrelated check passes or fails for the wrong reason.
+    //
+    // A document navigation is the only request that carries an HTML Accept
+    // header, so that is the signal.
+    if ((req.headers.accept || "").includes("text/html")) {
+      heldOverride = Number(url.searchParams.get("held")) || 0;
+      pageSplit = url.searchParams.get("pages") === "2";
+      rejectItems = url.searchParams.get("badkey") === "1";
+    }
     res.writeHead(200, {
       "Content-Type": "text/html; charset=utf-8",
       "Cache-Control": "no-store, max-age=0",

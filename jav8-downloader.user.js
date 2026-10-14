@@ -2,7 +2,7 @@
 // @name         JAV8 Downloader
 // @namespace    https://github.com/mino29/jav8-dl
 // @homepage     https://github.com/mino29/jav8-dl
-// @version      1.11.0
+// @version      1.11.1
 // @icon          data:image/png;base64,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
 // @description  Tick covers to queue them, filter by VR, prefer uncensored / subtitled / 4K releases, send to aria2 or qBittorrent, and play or skip whatever your Jellyfin or Emby library already holds. Settings live in the browser, not in a config file.
 // @author       mino29
@@ -266,6 +266,11 @@
       apiKey: "",
       // Where a "play" button sends you. See MEDIA_LINK and the README.
       link: "play",
+      // Optional: the name of one library to read. Blank reads everything.
+      // Measured, not a guess: on a real 15,288-item server the JAV library is
+      // 582 of them, and reading all 15,288 is four requests and a multi-megabyte
+      // index to match against 582 useful rows.
+      library: "",
     },
   };
 
@@ -565,6 +570,70 @@
     var root = String(base || "").replace(/\/+$/, "");
     var path = MEDIA_LINK[mode] || MEDIA_LINK.play;
     return root + path + encodeURIComponent(String(id || ""));
+  }
+
+  /**
+   * Resolve a library name, or a raw id, to the id the API wants.
+   *
+   * Matching on the name rather than making the user paste a 32-hex id is the
+   * whole point: the id is not shown anywhere in the Jellyfin UI. The id is
+   * still accepted, so someone who has it can skip the lookup.
+   *
+   * Case-insensitive and trimmed, because a library called "JAV" and one typed
+   * as "jav " are the same library to a human and would not be to a server.
+   */
+  function findLibrary(folders, wanted) {
+    var want = String(wanted || "").trim().toLowerCase();
+    if (!want) return null;
+    var list = folders || [];
+    var i;
+    for (i = 0; i < list.length; i++) {
+      if (String((list[i] && list[i].ItemId) || "").trim().toLowerCase() === want) {
+        return list[i].ItemId;
+      }
+    }
+    for (i = 0; i < list.length; i++) {
+      if (String((list[i] && list[i].Name) || "").trim().toLowerCase() === want) {
+        return list[i].ItemId;
+      }
+    }
+    return null;
+  }
+
+  /** The library names a server has, for a "did you mean" message. */
+  function libraryNames(folders) {
+    return (folders || [])
+      .map(function (f) {
+        return f && f.Name ? String(f.Name).trim() : "";
+      })
+      .filter(function (name) {
+        return !!name;
+      });
+  }
+
+  /**
+   * Should the library reader ask for another page?
+   *
+   * Pure, and separate from the fetching, so that the rule which actually had the
+   * bug is the rule that gets tested. The first version asked for `Limit=5000`
+   * and treated that as the whole library; against a real 15,288-item server it
+   * returned the first 5,000 and stopped, so owned works past the cut would have
+   * been downloaded a second time.
+   *
+   * A short page is the end signal, and it is checked *first* on purpose. A
+   * server may report a total it will not actually hand over - a permission, a
+   * filter, a deleted item - and "collected >= total" alone would then ask for a
+   * page that is always empty, for ever.
+   *
+   * `maxPages` is a stop, not a target: reaching it means the answer is
+   * incomplete and the caller says so.
+   */
+  function morePages(state) {
+    if (!state || !state.lastPage) return false;
+    if (state.lastPage < state.pageSize) return false;
+    if (state.collected >= state.total) return false;
+    if (state.maxPages && state.pages >= state.maxPages) return false;
+    return true;
   }
 
   /**
@@ -1428,13 +1497,23 @@
   /**
    * How many items to ask for in one page.
    *
-   * A JAV library is hundreds of entries, not thousands, so this is a ceiling
-   * that should never be reached rather than a real page size. If it is reached,
-   * syncLibrary() says so instead of silently reporting a partial library - a
-   * missing entry means a work gets downloaded twice, which is exactly the thing
-   * this feature exists to prevent.
+   * 5000 is Jellyfin's own comfortable page size. This is a *page*, not a
+   * ceiling: an earlier version treated it as a ceiling and silently returned
+   * only the first 5000 items of a 15,288-item server, which meant owned works
+   * beyond the cut were not recognised and got downloaded a second time - the
+   * exact failure this feature exists to prevent. The library is read in pages
+   * until it is exhausted; see collectLibrary().
    */
   var SERVER_LIMIT = 5000;
+
+  /**
+   * How many pages to read before giving up and saying so.
+   *
+   * A hundred thousand items. High enough never to fire on a real library, low
+   * enough that a server answering the same page for ever cannot turn a browse
+   * into an infinite loop of requests.
+   */
+  var SERVER_MAX_PAGES = 20;
 
   var library = { at: 0, base: "", index: {} };
 
@@ -1525,12 +1604,16 @@
   /**
    * Ask the server for the whole library, once.
    *
-   * One request for the whole library, not one per card: a listing holds 34
-   * covers and a career crawl walks hundreds of pages, so per-card lookups would
-   * be thousands of requests against a home server and would turn a browsing aid
-   * into the heaviest thing the script does.
+   * One *sync* for the whole library, not one request per card: a listing holds
+   * 34 covers and a career crawl walks hundreds of pages, so per-card lookups
+   * would be thousands of requests against a home server and would turn a
+   * browsing aid into the heaviest thing the script does.
+   *
+   * Reading one named library is the difference between one small request and
+   * four large ones on a server that also holds films and television. It is
+   * optional, and the whole library is read when it is not set.
    */
-  function syncLibrary(force) {
+  function syncLibrary() {
     var cfg = settings.mediaServer || DEFAULTS.mediaServer;
     if (!cfg.enabled) return Promise.resolve(false);
     var apiKey = String(cfg.apiKey || "").trim();
@@ -1539,54 +1622,22 @@
       return Promise.resolve(false);
     }
     var base = mediaServerBase();
-    var url =
-      endpoint(cfg.host, cfg.port, "/Items") +
-      "?Recursive=true&IncludeItemTypes=Movie,Episode,Video" +
-      "&Fields=Path,MediaSources&Limit=" + SERVER_LIMIT;
     log("Reading your media library from " + base + "…", "mu");
-    return request("GET", url, {
-      headers: { "X-Emby-Token": apiKey, Accept: "application/json" },
-      timeout: 30000,
-    }).then(
-      function (res) {
-        var parsed;
-        try {
-          parsed = JSON.parse(res.responseText);
-        } catch (e) {
-          parsed = null;
-        }
-        if (!parsed || !Array.isArray(parsed.Items)) {
-          log("Jellyfin / Emby: " + base + " did not answer with a library list. Check the host and port.", "er");
-          return false;
-        }
-        var items = parsed.Items.map(function (it) {
-          var sources = it.MediaSources || [];
-          var first = sources.length ? sources[0] : null;
-          return {
-            id: it.Id,
-            name: it.Name,
-            path: it.Path,
-            // Not every item carries a size - a freshly scanned file may not, and
-            // some clients omit MediaSources entirely. 0 means "held, size
-            // unknown", which pickMagnet() treats differently from a real size.
-            size: first && first.Size ? Number(first.Size) : 0,
-          };
-        });
-        library = { at: Date.now(), base: base, index: libraryIndexOf(items) };
-        writeLibrary();
-        var recognised = Object.keys(library.index).length;
-        log("Library read: " + items.length + " items, " + recognised + " titles recognised.", "ok");
-        if (parsed.TotalRecordCount && parsed.TotalRecordCount > items.length) {
+    return resolveLibraryId(cfg, apiKey, base)
+      .then(function (parentId) {
+        return collectLibrary(cfg, apiKey, parentId).then(function (items) {
+          library = { at: Date.now(), base: base, index: libraryIndexOf(items) };
+          writeLibrary();
+          var recognised = Object.keys(library.index).length;
           log(
-            "The library holds " + parsed.TotalRecordCount + " items but only " + items.length +
-              " were returned, so some titles were not seen.",
-            "wa",
+            "Library read: " + items.length + " items, " + recognised + " titles recognised.",
+            "ok",
           );
-        }
-        libraryRepaint();
-        return true;
-      },
-      function (err) {
+          libraryRepaint();
+          return true;
+        });
+      })
+      .catch(function (err) {
         if (statusOf(err) === 401) {
           log("Jellyfin / Emby rejected the API key. Create one in the server dashboard under API Keys.", "er");
         } else if (!statusOf(err)) {
@@ -1604,8 +1655,138 @@
           log("Jellyfin / Emby: " + base + " answered " + statusOf(err) + ", so the library could not be read.", "er");
         }
         return false;
+      });
+  }
+
+  /**
+   * Turn the configured library name into the id the Items API wants.
+   *
+   * Resolves to null - meaning "read everything" - when no library is named, and
+   * also when the name does not match, because reading too much is a far smaller
+   * problem than reading nothing and telling the user their library is empty.
+   * The names the server does have are listed, so the fix is one word away.
+   */
+  function resolveLibraryId(cfg, apiKey, base) {
+    var wanted = String(cfg.library || "").trim();
+    if (!wanted) return Promise.resolve(null);
+    return request("GET", endpoint(cfg.host, cfg.port, "/Library/VirtualFolders"), {
+      headers: { "X-Emby-Token": apiKey, Accept: "application/json" },
+      timeout: 20000,
+    }).then(
+      function (res) {
+        var folders;
+        try {
+          folders = JSON.parse(res.responseText);
+        } catch (e) {
+          folders = null;
+        }
+        var id = findLibrary(folders, wanted);
+        if (!id) {
+          var names = libraryNames(folders);
+          log(
+            "Jellyfin / Emby: no library called \"" + wanted + "\"" +
+              (names.length ? ". This server has: " + names.join(", ") + "." : ".") +
+              " Reading every library instead.",
+            "wa",
+          );
+          return null;
+        }
+        log("Reading only the \"" + wanted + "\" library.", "mu");
+        return id;
+      },
+      function (err) {
+        // A rejected key is not a "cannot list libraries" problem, and the outer
+        // handler names the remedy for it. Swallowing it here would report the
+        // wrong thing twice.
+        if (statusOf(err) === 401) throw err;
+        // A non-admin key cannot list libraries. Falling back to the whole
+        // library is the useful answer; failing the sync would not be.
+        log("Jellyfin / Emby: could not list libraries, so reading every one.", "wa");
+        return null;
       },
     );
+  }
+
+  /** One page of items, mapped to the plain records libraryIndexOf() takes. */
+  function fetchItemPage(cfg, apiKey, parentId, startIndex) {
+    var url =
+      endpoint(cfg.host, cfg.port, "/Items") +
+      "?Recursive=true&IncludeItemTypes=Movie,Episode,Video" +
+      "&Fields=Path,MediaSources&Limit=" + SERVER_LIMIT +
+      "&StartIndex=" + startIndex +
+      (parentId ? "&ParentId=" + encodeURIComponent(parentId) : "");
+    return request("GET", url, {
+      headers: { "X-Emby-Token": apiKey, Accept: "application/json" },
+      timeout: 30000,
+    }).then(function (res) {
+      var parsed;
+      try {
+        parsed = JSON.parse(res.responseText);
+      } catch (e) {
+        parsed = null;
+      }
+      if (!parsed || !Array.isArray(parsed.Items)) {
+        throw new Error("that address did not answer with a Jellyfin item list (check the host and port)");
+      }
+      var items = parsed.Items.map(function (it) {
+        var sources = it.MediaSources || [];
+        var first = sources.length ? sources[0] : null;
+        return {
+          id: it.Id,
+          name: it.Name,
+          path: it.Path,
+          // Not every item carries a size - a freshly scanned file may not, and
+          // measured on a real server, no television episode does. 0 means
+          // "held, size unknown", which pickMagnet() treats differently from a
+          // real size.
+          size: first && first.Size ? Number(first.Size) : 0,
+        };
+      });
+      return { items: items, total: Number(parsed.TotalRecordCount) || items.length };
+    });
+  }
+
+  /**
+   * Read every page of the library, in order, one request at a time.
+   *
+   * Sequential on purpose: this is someone's home server, and firing four
+   * overlapping requests at it to save two seconds is not a trade worth making.
+   *
+   * Stops on the first page that comes back short, which is the only reliable
+   * end signal - TotalRecordCount and the page size can disagree with what the
+   * server will actually hand over.
+   */
+  function collectLibrary(cfg, apiKey, parentId) {
+    var all = [];
+    var pages = 0;
+
+    function step() {
+      return fetchItemPage(cfg, apiKey, parentId, all.length).then(function (page) {
+        all = all.concat(page.items);
+        pages++;
+        var state = {
+          collected: all.length,
+          lastPage: page.items.length,
+          total: page.total,
+          pageSize: SERVER_LIMIT,
+          pages: pages,
+          maxPages: SERVER_MAX_PAGES,
+        };
+        if (!morePages(state)) {
+          if (state.pages >= state.maxPages && state.collected < state.total) {
+            log(
+              "Jellyfin / Emby: stopped after " + state.collected + " items of " + state.total +
+                ", so some titles were not seen.",
+              "wa",
+            );
+          }
+          return all;
+        }
+        return step();
+      });
+    }
+
+    return step();
   }
 
   /** Re-read if the snapshot is stale. Called once, from init(). */
@@ -1615,7 +1796,7 @@
       dropLibrary();
       libraryRepaint();
     }
-    if (Date.now() - library.at > SERVER_TTL_MS) syncLibrary(false);
+    if (Date.now() - library.at > SERVER_TTL_MS) syncLibrary();
   }
 
   // ------------------------------------------------------------------- http
@@ -4264,6 +4445,7 @@ function deselectWork(href) {
       { key: "host", label: "Host", placeholder: "http://localhost" },
       { key: "port", label: "Port", type: "number", placeholder: "8096" },
       { key: "apiKey", label: "API key", secret: true, placeholder: "(from the dashboard)" },
+      { key: "library", label: "Library", placeholder: "all libraries" },
       {
         key: "link",
         label: "Open link",
@@ -4275,6 +4457,16 @@ function deselectWork(href) {
         ],
       },
     ]);
+
+    mediaSection.appendChild(
+      el(
+        "p",
+        "hint",
+        "Name one library (for example JAV) to read only that one. Leave it blank " +
+          "to read everything, which works but asks for a lot more: on a server " +
+          "holding films and television too, one library was 582 items out of 15,288.",
+      ),
+    );
 
     var status = el("div", "jd-count jd-libstatus");
     status._paint = function () {
@@ -4290,7 +4482,7 @@ function deselectWork(href) {
       // rather than the one that was saved last time.
       collect();
       syncBtn.disabled = true;
-      syncLibrary(true).then(function () {
+      syncLibrary().then(function () {
         syncBtn.disabled = false;
       });
     });
@@ -4378,7 +4570,7 @@ function deselectWork(href) {
       if (!libraryMatchesServer()) {
         dropLibrary();
         libraryRepaint();
-        if (settings.mediaServer.enabled) syncLibrary(true);
+        if (settings.mediaServer.enabled) syncLibrary();
       } else {
         libraryRepaint();
       }

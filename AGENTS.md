@@ -278,6 +278,14 @@ Kept here because they are the kind that come back:
   than the test believed - and still reported a plausible count. This is the same
   bug as matching on the pathname alone, arriving from the other direction, and
   the fix is to strip the harness's own parameters before comparing.
+- A stub switch carried on the page URL must be reset on *document* requests and
+  no others, and the two failure modes are opposites. Resetting on every request
+  means the userscript's own re-fetch of the page it is on - `fetchMagnets()` asks
+  for `/v/557564` with no parameters on it - wipes the switch a moment after it
+  was set, so `?held=` looks broken on exactly the pages it exists for. Never
+  resetting means the switch leaks into the next navigation and an unrelated check
+  passes or fails for the wrong reason. An HTML `Accept` header is the signal that
+  distinguishes a navigation from an in-page fetch.
 - Matching a work against a media library is not a string comparison, and the
   spellings that matter are not the ones you would guess. The site writes
   `fex-004`; a filename may write `FEX004`, `fex 004`, or DMM's

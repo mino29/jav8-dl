@@ -190,6 +190,25 @@ r.check("the integration is off by default", api.DEFAULTS.mediaServer.enabled, f
 r.check("no API key ships", api.DEFAULTS.mediaServer.apiKey, "");
 r.check("the default host is a documentation address", api.DEFAULTS.mediaServer.host, "http://localhost");
 r.check("the default port is Jellyfin's", api.DEFAULTS.mediaServer.port, 8096);
+r.check("no library is named by default", api.DEFAULTS.mediaServer.library, "");
+// The page size and the cap are what the reader loop depends on, and getting the
+// page size wrong is the bug that shipped: a "ceiling" of 5000 silently truncated
+// a 15,288-item library.
+r.check("the page size matches the spec", spec.mediaServer.pagination.pageSize, 5000);
+r.check("the page cap matches the spec", spec.mediaServer.pagination.maxPages, 20);
+r.check("the cap is not reachable on a real library", spec.mediaServer.pagination.maxPages * 5000 > spec.mediaServer.protocol.measuredOnRealServer.totalItems, true);
+r.check("the spec records the real server", spec.mediaServer.protocol.measuredOnRealServer.version, "10.10.7");
+r.check("the named library really is the small one", spec.mediaServer.protocol.measuredOnRealServer.byLibrary.JAV < spec.mediaServer.protocol.measuredOnRealServer.totalItems, true);
+r.check("every measured library is accounted for", Object.values(spec.mediaServer.protocol.measuredOnRealServer.byLibrary).reduce((a, b) => a + b, 0), spec.mediaServer.protocol.measuredOnRealServer.totalItems);
+// The page rule itself, driven the way the reader drives it.
+r.check("one full page is not the end", api.morePages({ collected: 5000, lastPage: 5000, total: 15288, pageSize: spec.mediaServer.pagination.pageSize, pages: 1, maxPages: spec.mediaServer.pagination.maxPages }), true);
+r.check("the cap ends it", api.morePages({ collected: 100000, lastPage: 5000, total: 999999, pageSize: spec.mediaServer.pagination.pageSize, pages: spec.mediaServer.pagination.maxPages, maxPages: spec.mediaServer.pagination.maxPages }), false);
+// A library name is resolved through the folders endpoint.
+r.check("the libraries path matches the spec", spec.mediaServer.protocol.librariesPath, "/Library/VirtualFolders");
+r.check("a library name resolves through findLibrary", api.findLibrary([{ Name: "JAV", ItemId: "abc" }], "jav"), "abc");
+// The matching was checked against a real library, and the spec says so.
+r.check("the spec records the real-library check", spec.codeMatching.verifiedOnRealLibrary.dangerousCollisions, 0);
+r.check("and no self-resolution failures", spec.codeMatching.verifiedOnRealLibrary.selfResolutionFailures, 0);
 // The three link routes, each pinned to the spec's path.
 r.check("link mode paths match the spec", api.MEDIA_LINK, spec.mediaServer.linkModes);
 r.check("the default link mode exists", Object.keys(api.MEDIA_LINK).includes(api.DEFAULTS.mediaServer.link), true);

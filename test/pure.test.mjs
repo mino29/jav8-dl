@@ -1183,6 +1183,68 @@ group("UPGRADE_MIN_RATIO - the documented step");
 check("the ratio is 1.25", api.UPGRADE_MIN_RATIO, 1.25);
 check("a quarter larger is enough", 100 * api.UPGRADE_MIN_RATIO, 125);
 
+group("findLibrary - a library name is what a user has, an id is what the API wants");
+// Measured against a real server: the JAV library is 582 items of 15,288, and
+// reading one library rather than all of them is the difference between one
+// small request and four large ones.
+{
+  const folders = [
+    { Name: "Movies", ItemId: "f137a2dd21bbc1b99aa5c0f6bf02a805" },
+    { Name: "JAV", ItemId: "dab8313c032081c0dbf785d2302d6d87" },
+    { Name: "MMD", ItemId: "72e86350d2aa7aaf92f7aecdc7de2e8a" },
+  ];
+  check("a name resolves", api.findLibrary(folders, "JAV"), "dab8313c032081c0dbf785d2302d6d87");
+  check("case does not matter", api.findLibrary(folders, "jav"), "dab8313c032081c0dbf785d2302d6d87");
+  check("surrounding space is trimmed", api.findLibrary(folders, "  JAV  "), "dab8313c032081c0dbf785d2302d6d87");
+  // A raw id is accepted, so someone who has one does not have to look up a name.
+  check("an id resolves directly", api.findLibrary(folders, "72e86350d2aa7aaf92f7aecdc7de2e8a"), "72e86350d2aa7aaf92f7aecdc7de2e8a");
+  check("a partial name is not a match", api.findLibrary(folders, "JA"), null);
+  check("an unknown name is null", api.findLibrary(folders, "Films"), null);
+  // Blank means "read everything", which is the default and must not be mistaken
+  // for a library named "".
+  check("blank is null, not a match", api.findLibrary(folders, ""), null);
+  check("whitespace is null", api.findLibrary(folders, "   "), null);
+  check("undefined is null", api.findLibrary(folders, undefined), null);
+  check("no folders is null", api.findLibrary([], "JAV"), null);
+  check("null folders is null", api.findLibrary(null, "JAV"), null);
+  // A folder with no name must not match a blank request.
+  check("an unnamed folder does not match blank", api.findLibrary([{ ItemId: "x" }], ""), null);
+
+  check("the names are listed for a did-you-mean", api.libraryNames(folders), ["Movies", "JAV", "MMD"]);
+  check("unnamed folders are left out", api.libraryNames([{ Name: "A" }, { ItemId: "x" }, { Name: "  " }]), ["A"]);
+  check("no folders lists nothing", api.libraryNames(null), []);
+}
+
+group("morePages - the library is read in pages, not capped at one");
+// A real server held 15,288 items; the first version asked for 5,000 and stopped,
+// so owned works past the cut would have been downloaded a second time. These
+// assertions are that bug's regression guard.
+{
+  const st = (o) => Object.assign({ pageSize: 5000, maxPages: 20, pages: 1 }, o);
+
+  // The bug: one full page and more to come must NOT be the end.
+  check("a full page with more to come continues", api.morePages(st({ collected: 5000, lastPage: 5000, total: 15288 })), true);
+  check("and so does the second", api.morePages(st({ collected: 10000, lastPage: 5000, total: 15288, pages: 2 })), true);
+
+  // A short page is the end, whatever the total claims.
+  check("a short page stops", api.morePages(st({ collected: 582, lastPage: 582, total: 582 })), false);
+  check("a short page stops even if the total disagrees", api.morePages(st({ collected: 582, lastPage: 582, total: 15288 })), false);
+
+  // Everything collected is the end even on an exactly-full final page.
+  check("a full final page stops", api.morePages(st({ collected: 15288, lastPage: 5000, total: 15288, pages: 4 })), false);
+  check("overshooting the total stops", api.morePages(st({ collected: 16000, lastPage: 5000, total: 15288, pages: 4 })), false);
+
+  // The cap stops a server that answers the same full page for ever.
+  check("the page cap stops it", api.morePages(st({ collected: 100000, lastPage: 5000, total: 999999, pages: 20 })), false);
+  check("one under the cap continues", api.morePages(st({ collected: 95000, lastPage: 5000, total: 999999, pages: 19 })), true);
+
+  // An empty page is the end - the case that would otherwise loop for ever.
+  check("an empty page stops", api.morePages(st({ collected: 5000, lastPage: 0, total: 15288 })), false);
+  // Defensive: nothing to go on means stop, not spin.
+  check("no state stops", api.morePages(null), false);
+  check("no lastPage stops", api.morePages(st({ collected: 0 })), false);
+}
+
 group("DEFAULTS.mediaServer - off, and pointing nowhere in particular");
 // The integration must be inert out of the box: a script that starts talking to
 // a server the user never mentioned is not one anybody should install. And the
@@ -1194,6 +1256,7 @@ group("DEFAULTS.mediaServer - off, and pointing nowhere in particular");
   check("Jellyfin's own port", d.port, 8096);
   check("a documentation host", d.host, "http://localhost");
   check("a link mode that exists", Object.keys(api.MEDIA_LINK).includes(d.link), true);
+  check("no library named by default", d.library, "");
 }
 
 // --------------------------------------------------------------------- report

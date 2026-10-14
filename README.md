@@ -218,6 +218,14 @@ address, and paste an **API key** from the server's own dashboard (*Dashboard �
 API Keys → +*). Then press **Read library now**, or just reload a page. The panel
 says how many titles it recognised and when it last looked.
 
+**Name the library that holds your JAV**, in the **Library** box — for example
+`JAV`. It is optional, but it is the difference between one small request and
+four large ones: measured on a real server holding films and television too, the
+JAV library was 582 items out of 15,288. Leave it blank and everything is read,
+which works but is slower and makes the script look at a great many titles that
+could never match. If the name is not one the server has, the log lists the ones
+it does.
+
 Once it is on:
 
 - ▶️ **A play button appears on the cover** of every work you already have, in the
@@ -238,9 +246,11 @@ Worth knowing:
   `fex-004`; a file called `FEX-004`, `fex 004`, `fex004` or `h_259fex00004` is
   recognised as the same work. Numbers that begin a code, like `259LUXU-1900`,
   are handled too.
-- 📚 **One request, cached for six hours.** The script asks your server for the
-  whole library once and keeps the answer, so browsing costs one request per six
-  hours rather than one per cover. **Read library now** refreshes it on demand.
+- 📚 **One read, cached for six hours.** The script asks your server for the
+  library once and keeps the answer, so browsing costs one read per six hours
+  rather than one per cover. **Read library now** refreshes it on demand. The
+  read is paged, so a library larger than one page is read completely rather
+  than silently cut short.
 - 🔒 **Read-only, and it never sends anything to your server.** The key is stored
   in your browser like the other settings, and the only thing the script ever asks
   for is a list.
@@ -401,6 +411,13 @@ an hour after five, so pushing on would lock you out of your own client.
 - 🎬 **A work I have is still offered as a download?** Only works whose *catalogue
   number* appears in your library are recognised. If your files are named without
   the code — a title only, or an arbitrary name — there is nothing to match on.
+- 📚 **"no library called X. This server has: ..."** — the **Library** name is
+  misspelled, or that library does not exist. The script reads everything instead
+  rather than failing, so you lose nothing but the speed. Copy a name from the
+  message.
+- 📚 **"could not list libraries, so reading every one"** — the API key is not an
+  admin key, so the server will not list libraries for it. Everything still
+  works; naming one is simply not available to that key.
 
 ## How it picks a magnet
 
@@ -441,8 +458,16 @@ npm run verify    # icon freshness + tests + version bump, before committing
 The harness stubs both download clients *and* a small Jellyfin library, so the
 optional integration can be exercised in a browser without a server. Open
 `http://127.0.0.1:8980/updated?media=1` for a listing with the integration already
-switched on and seeded; `?cached=1` keeps the previous library snapshot instead of
-re-reading it, and `?held=<bytes>` says the fixture's work is held at a given size.
+switched on and seeded. Extra parameters, all of them harness-only:
+
+| Parameter | What it changes |
+| --- | --- |
+| `?cached=1` | Keep the previous library snapshot instead of re-reading it |
+| `?lib=JAV` | Seed the Library setting, to exercise `ParentId` narrowing |
+| `?held=<bytes>` | Say the fixture's work is held at a given size |
+| `?pages=2` | Serve 5000 filler items first and the real ones on page two |
+| `?badkey=1` | Make the library request answer 401 |
+
 The stub is read-only by nature — the integration only ever lists a library — so
 none of it can queue anything anywhere.
 

@@ -271,6 +271,12 @@
     "extractorPattern": "(\\d{0,4})([A-Za-z]{2,7})[ _-]?(\\d{2,5})",
     "minimumLetters": 2,
     "minimumDigits": 2,
+    "verifiedOnRealLibrary": {
+      "items": 5000,
+      "note": "Checked against a real Jellyfin rather than only invented filenames. Of 34 catalogue codes taken from the captured listing fixture, 5 were genuinely held and every one matched the right work; the other 29 matched nothing. No key that the site can produce was claimed by more than one file, and every one of the 1869 code-like paths resolved to itself.",
+      "dangerousCollisions": 0,
+      "selfResolutionFailures": 0
+    },
     "keysPerMatch": {
       "withLeadingDigits": 2,
       "withoutLeadingDigits": 1,
@@ -316,22 +322,55 @@
     ],
     "protocol": {
       "itemsPath": "/Items",
-      "query": "Recursive=true&IncludeItemTypes=Movie,Episode,Video&Fields=Path,MediaSources&Limit=5000",
+      "query": "Recursive=true&IncludeItemTypes=Movie,Episode,Video&Fields=Path,MediaSources&Limit=5000&StartIndex=<n>[&ParentId=<libraryId>]",
       "authHeader": "X-Emby-Token",
       "authHeaderNote": "Accepted by both Emby and Jellyfin. An API key comes from the server dashboard's API Keys page; no password is stored.",
       "responseFields": ["Id", "Name", "Path", "MediaSources[].Size"],
       "sizeMayBeAbsent": true,
-      "sizeAbsentMeans": "held, size unknown - pickMagnet() then takes the largest release rather than comparing"
+      "sizeAbsentMeans": "held, size unknown - pickMagnet() then takes the largest release rather than comparing",
+      "sizeAbsentMeasured": "On a real 10.10.7 server, no television episode carried MediaSources[].Size while every Movie did. A library whose items are Episodes can therefore be matched but never upgraded.",
+      "librariesPath": "/Library/VirtualFolders",
+      "librariesNote": "Used only to turn a library name into the ParentId the Items API wants. Needs an admin key; a non-admin key is answered with 403 and the sync then reads every library rather than failing.",
+      "measuredOnRealServer": {
+        "version": "10.10.7",
+        "totalItems": 15288,
+        "byLibrary": { "JAV": 582, "Movies": 164, "Porno": 188, "MMD": 9890, "Shows": 4464, "Hanime": 0 },
+        "note": "The reason a library name is worth setting: 582 items in one request, against 15,288 in four."
+      }
+    },
+    "pagination": {
+      "$comment": [
+        "The library is read in pages, and this is not an optimisation.",
+        "",
+        "An earlier version asked for Limit=5000 and treated that as the whole",
+        "library. Against a real 15,288-item server it returned the first 5,000 and",
+        "stopped, so owned works beyond the cut were not recognised and would have",
+        "been downloaded a second time - the exact failure the integration exists to",
+        "prevent. A limit that is 'never reached in practice' is a claim to measure,",
+        "not to assume.",
+        "",
+        "A short page is the only reliable end signal: TotalRecordCount and the page",
+        "size can disagree with what the server will actually hand over.",
+        "",
+        "Sequential rather than parallel on purpose - it is someone's home server,",
+        "and four overlapping requests to save two seconds is not a trade worth making."
+      ],
+      "pageSize": 5000,
+      "maxPages": 20,
+      "endSignal": "a page shorter than pageSize, or all items collected",
+      "sequential": true
     },
     "defaults": {
       "enabled": false,
       "host": "http://localhost",
       "port": 8096,
       "apiKey": "",
-      "link": "play"
+      "link": "play",
+      "library": ""
     },
     "cacheTtlMs": 21600000,
     "itemLimit": 5000,
+    "maxPages": 20,
     "linkModes": {
       "play": "/web/#/video?id=",
       "play-legacy": "/web/index.html#!/video?id=",
