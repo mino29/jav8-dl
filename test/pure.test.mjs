@@ -1056,22 +1056,23 @@ group("libraryIndexOf / libraryHit - matching a card against a library");
 }
 
 group("mediaUrl - the link a play button points at");
-// There is no single URL every Jellyfin version accepts, so there are three and
-// the user picks. These assertions are the contract for each.
+// It points at the item page and nothing else, because nothing else can work.
+// A "play directly" link loads the video OSD, which reads no URL parameters at
+// all and bounces to the server's home page - verified against a real 10.10.7
+// install by reading its own bundles, and confirmed by the Jellyfin team.
 {
   const base = "http://localhost:8096";
-  check("play", api.mediaUrl(base, "abc123", "play"), "http://localhost:8096/web/#/video?id=abc123");
-  check(
-    "play on an older server",
-    api.mediaUrl(base, "abc123", "play-legacy"),
-    "http://localhost:8096/web/index.html#!/video?id=abc123",
-  );
-  check("the item page", api.mediaUrl(base, "abc123", "details"), "http://localhost:8096/web/#/details?id=abc123");
-  check("a trailing slash on the base is not doubled", api.mediaUrl(base + "/", "abc", "play"), "http://localhost:8096/web/#/video?id=abc");
-  check("an unknown mode falls back to playing", api.mediaUrl(base, "abc", "nonsense"), api.mediaUrl(base, "abc", "play"));
-  check("a missing mode falls back to playing", api.mediaUrl(base, "abc", undefined), api.mediaUrl(base, "abc", "play"));
-  check("every advertised mode has a path", Object.keys(api.MEDIA_LINK).length, 3);
-  check("the default link mode is one of them", Object.keys(api.MEDIA_LINK).includes(api.DEFAULTS.mediaServer.link), true);
+  check("the item page", api.mediaUrl(base, "abc123"), "http://localhost:8096/web/#/details?id=abc123");
+  check("a trailing slash on the base is not doubled", api.mediaUrl(base + "/", "abc"), "http://localhost:8096/web/#/details?id=abc");
+  // There is exactly one route, and no mode argument can select another - which
+  // is the point: the two that were offered are gone.
+  check("one route only", Object.keys(api.MEDIA_LINK), ["details"]);
+  check("no direct-play route", api.MEDIA_LINK.play, undefined);
+  check("no legacy direct-play route", api.MEDIA_LINK["play-legacy"], undefined);
+  check("the mode argument is ignored", api.mediaUrl(base, "abc", "play"), api.mediaUrl(base, "abc"));
+  check("an empty id still composes", api.mediaUrl(base, ""), "http://localhost:8096/web/#/details?id=");
+  check("a missing id still composes", api.mediaUrl(base), "http://localhost:8096/web/#/details?id=");
+  check("a missing base does not throw", api.mediaUrl(undefined, "abc"), "/web/#/details?id=abc");
 }
 
 group("pickMagnet - an owned work is upgraded, not re-downloaded");
@@ -1289,8 +1290,8 @@ group("DEFAULTS.mediaServer - off, and pointing nowhere in particular");
   check("no key by default", d.apiKey, "");
   check("Jellyfin's own port", d.port, 8096);
   check("a documentation host", d.host, "http://localhost");
-  check("a link mode that exists", Object.keys(api.MEDIA_LINK).includes(d.link), true);
   check("no library named by default", d.library, "");
+  check("no link-mode setting remains", d.link, undefined);
 }
 
 // --------------------------------------------------------------------- report

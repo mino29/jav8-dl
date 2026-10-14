@@ -369,21 +369,46 @@
       "host": "http://localhost",
       "port": 8096,
       "apiKey": "",
-      "link": "play",
       "library": ""
     },
     "cacheTtlMs": 21600000,
     "itemLimit": 5000,
     "maxPages": 20,
     "linkModes": {
-      "play": "/web/#/video?id=",
-      "play-legacy": "/web/index.html#!/video?id=",
       "details": "/web/#/details?id="
     },
     "linkModeNotes": {
-      "play": "Jellyfin 10.9 and later.",
-      "play-legacy": "Jellyfin 10.8 and older, and Emby's hashbang form.",
-      "details": "The item page. The safe choice when neither play route works: one click from playing, and it always renders."
+      "details": "The work's page in the media server. The only link that can work - see whyNoDirectPlay."
+    },
+    "whyNoDirectPlay": {
+      "$comment": [
+        "The first version offered 'play directly' links as well: #/video?id=<id>",
+        "and the older hashbang #!/video?id=<id>. Both were wrong, and the way they",
+        "were wrong is worth recording so nobody adds them back.",
+        "",
+        "Both load the video OSD, find that nothing is playing, and bounce to the",
+        "server's home page. Read from a real 10.10.7 install rather than guessed:",
+        "the component behind #/video registers a listener for an internal",
+        "SHOW_VIDEO_OSD event and reads NO url parameters at all, so the id is",
+        "ignored. The client only navigates there itself, once playback is already",
+        "under way. Its route table ends with a catch-all redirect to /home.html,",
+        "which is the bounce.",
+        "",
+        "Nothing in the served bundles reads a query parameter on any route, and",
+        "PlayCommand appears only in the websocket remote-control handler. So there",
+        "is no URL that starts playback on this version, and the Jellyfin team says",
+        "the same on their own forum: 'I don't think this is currently possible.'",
+        "",
+        "The item page has been at #/details?id= since before 10.9 and always",
+        "renders; playing is then one click, with resume, subtitles and transcoding",
+        "all behaving normally. A setting offering a broken alternative was removed",
+        "rather than kept: an option that always lands on the home page is worse than",
+        "no option, because it promises something the server cannot do."
+      ],
+      "verifiedAgainst": "Jellyfin 10.10.7, by reading its own served bundles",
+      "videoRouteReadsParameters": false,
+      "playCommandOnlyFor": "websocket remote control",
+      "upstreamPosition": "not currently possible (jellyfin core team, forum)"
     },
     "libraryField": {
       "$comment": [

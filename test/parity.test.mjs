@@ -226,11 +226,19 @@ r.check("and no self-resolution failures", spec.codeMatching.verifiedOnRealLibra
 }
 // The three link routes, each pinned to the spec's path.
 r.check("link mode paths match the spec", api.MEDIA_LINK, spec.mediaServer.linkModes);
-r.check("the default link mode exists", Object.keys(api.MEDIA_LINK).includes(api.DEFAULTS.mediaServer.link), true);
 r.check("every documented link mode is offered", Object.keys(spec.mediaServer.linkModes).sort(), Object.keys(api.MEDIA_LINK).sort());
 for (const [mode, path] of Object.entries(spec.mediaServer.linkModes)) {
   r.check(`link mode ${mode} composes`, api.mediaUrl("http://localhost:8096", "abc", mode), "http://localhost:8096" + path + "abc");
 }
+// There is exactly one, because only one can work. A "play directly" option was
+// offered and always bounced to the server's home page.
+r.check("only the item page is offered", Object.keys(api.MEDIA_LINK), ["details"]);
+r.check("no play route is advertised", Object.keys(api.MEDIA_LINK).includes("play"), false);
+r.check("the spec records why", spec.mediaServer.whyNoDirectPlay.videoRouteReadsParameters, false);
+r.check("and that it was checked against a real install", spec.mediaServer.whyNoDirectPlay.verifiedAgainst.includes("10.10.7"), true);
+r.check("and that upstream agrees", spec.mediaServer.whyNoDirectPlay.upstreamPosition.includes("not currently possible"), true);
+// The URL is the item page, with no mode argument at all.
+r.check("the play button points at the item page", api.mediaUrl("http://localhost:8096", "abc"), "http://localhost:8096/web/#/details?id=abc");
 // The upgrade rule.
 r.check("upgrade ratio matches the spec", api.UPGRADE_MIN_RATIO, spec.mediaServer.ownedBehaviour.upgradeRatio);
 r.check("the ratio is a real step up", api.UPGRADE_MIN_RATIO > 1, true);

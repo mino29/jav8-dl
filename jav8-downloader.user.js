@@ -2,7 +2,7 @@
 // @name         JAV8 Downloader
 // @namespace    https://github.com/mino29/jav8-dl
 // @homepage     https://github.com/mino29/jav8-dl
-// @version      1.11.2
+// @version      1.11.3
 // @icon          data:image/png;base64,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
 // @description  Tick covers to queue them, filter by VR, prefer uncensored / subtitled / 4K releases, send to aria2 or qBittorrent, and play or skip whatever your Jellyfin or Emby library already holds. Settings live in the browser, not in a config file.
 // @author       mino29
@@ -264,8 +264,6 @@
       host: "http://localhost",
       port: 8096,
       apiKey: "",
-      // Where a "play" button sends you. See MEDIA_LINK and the README.
-      link: "play",
       // Optional: the name of one library to read. Blank reads everything.
       // Measured, not a guess: on a real 15,288-item server the JAV library is
       // 582 of them, and reading all 15,288 is four requests and a multi-megabyte
@@ -563,29 +561,42 @@
   }
 
   /**
-   * Deep links into a Jellyfin or Emby web client.
+   * Where a "play" button points: the work's page in the media server.
    *
-   * There is no one URL that every version accepts, so there are three and the
-   * user picks. Jellyfin 10.9 replaced the hashbang routes (`#!/video?id=`) with
-   * plain hash routes (`#/video?id=`), so a hard-coded link is wrong on roughly
-   * half the installs and the symptom is an error page where the video should
-   * be. Emby still answers to the hashbang form, which is the other reason both
-   * are offered rather than one being assumed.
+   * It is the item page and not the video player, and that is not a preference -
+   * it is the only thing that can work.
    *
-   * `details` is the item page, which has been at `#/details?id=` for long
-   * enough to be the safe choice when neither play route works: it is one click
-   * from playing, and it always renders.
+   * The first version offered `#/video?id=<id>` (and the older `#!/video?id=`
+   * form) as "play directly". Both load the video OSD, find that nothing is
+   * playing, and bounce to the server's home page. The reason is in the client's
+   * own code, read from a real 10.10.7 install: the component behind `#/video`
+   * registers a listener for an internal SHOW_VIDEO_OSD event and reads no URL
+   * parameters at all, so the id is ignored. The client only ever navigates there
+   * itself, once playback is already under way. Its own route table ends with a
+   * catch-all redirect to `/home.html`, which is the bounce.
+   *
+   * Nothing in the served bundle reads a query parameter on any route, and
+   * `PlayCommand` appears only in the websocket remote-control handler - so there
+   * is no URL that starts playback, on this version or on any current one. The
+   * Jellyfin team says the same thing on their own forum: "I don't think this is
+   * currently possible."
+   *
+   * So the option is gone rather than offered and broken. A dropdown entry that
+   * always lands on the home page is worse than no entry: it promises something
+   * the server cannot do, and the user is left to work out which of three choices
+   * is the real one.
+   *
+   * The item page has been at `#/details?id=` since before 10.9 and always
+   * renders; playing is then one click, with resume, subtitles and transcoding
+   * all behaving normally.
    */
   var MEDIA_LINK = {
-    play: "/web/#/video?id=",
-    "play-legacy": "/web/index.html#!/video?id=",
     details: "/web/#/details?id=",
   };
 
-  function mediaUrl(base, id, mode) {
+  function mediaUrl(base, id) {
     var root = String(base || "").replace(/\/+$/, "");
-    var path = MEDIA_LINK[mode] || MEDIA_LINK.play;
-    return root + path + encodeURIComponent(String(id || ""));
+    return root + MEDIA_LINK.details + encodeURIComponent(String(id || ""));
   }
 
   /**
@@ -2981,7 +2992,7 @@
       // offsetParent. decorateCard() normally has done this already, but a sync
       // can finish before the cards are decorated at all.
       if (getComputedStyle(card).position === "static") card.style.position = "relative";
-      var url = mediaUrl(library.base, hit.id, settings.mediaServer.link);
+      var url = mediaUrl(library.base, hit.id);
       if (existing) {
         existing.href = url;
         placePlay(existing, cover);
@@ -4390,7 +4401,7 @@ function deselectWork(href) {
           // The link is rebuilt only when it would actually change: this runs on
           // every slider move, and replacing a focused link under the cursor
           // would drop the focus of anyone tabbing through the panel.
-          var url = hit ? mediaUrl(library.base, hit.id, settings.mediaServer.link) : "";
+          var url = hit ? mediaUrl(library.base, hit.id) : "";
           if (inLib._url !== url) {
             inLib._url = url;
             inLib.textContent = "";
@@ -4570,16 +4581,6 @@ function deselectWork(href) {
         // work, because only the server knows what it calls its libraries.
         options: [["", "All libraries"]],
       },
-      {
-        key: "link",
-        label: "Open link",
-        type: "select",
-        options: [
-          ["play", "Play directly"],
-          ["play-legacy", "Play directly (Jellyfin 10.8 and older)"],
-          ["details", "Item page"],
-        ],
-      },
     ]);
 
     mediaSection.appendChild(
@@ -4590,6 +4591,17 @@ function deselectWork(href) {
           "fills in a moment after this opens. Reading everything works too, but asks for a " +
           "lot more: on one server holding films and television as well, a single library was " +
           "582 items out of 15,288.",
+      ),
+    );
+
+    mediaSection.appendChild(
+      el(
+        "p",
+        "hint",
+        "The play button opens the work's page in your server, where playing is one " +
+          "click. It cannot start playing by itself: no Jellyfin URL does, because the " +
+          "player page has nothing to play when it is opened directly and sends you " +
+          "back to the home page.",
       ),
     );
 

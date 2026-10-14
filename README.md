@@ -232,8 +232,9 @@ Once it is on:
 
 - ▶️ **A play button appears on the cover** of every work you already have — a
   round button in the middle of the cover, about a ninth of its surface, in the
-  style of Jellyfin's own. It opens that work in your media server and starts
-  playing. Middle-click and *open in new tab* work the way they do on any link.
+  style of Jellyfin's own. It opens that work's page in your media server, where
+  playing is one click. Middle-click and *open in new tab* work the way they do on
+  any link.
 - ✅ **Select all steps over them**, and says how many it skipped. The same goes
   for **All works** and **＋** on a performer — her whole filmography is only worth
   having if it is the whole filmography you *lack*.
@@ -269,9 +270,13 @@ Worth knowing:
 - 🔒 **Read-only, and it never sends anything to your server.** The key is stored
   in your browser like the other settings, and the only thing the script ever asks
   for is a list.
-- 🔗 **If the play button lands on an error page**, your Jellyfin is older or
-  newer than the link format. Change **Open link** to *Play directly (Jellyfin
-  10.8 and older)*, or to *Item page* — one dropdown, no editing.
+- 🔗 **The play button opens the work's page, not the player.** It cannot start
+  playing by itself, and that is a Jellyfin limitation rather than a choice: no
+  Jellyfin URL starts playback. The player page (`#/video`) reads no URL
+  parameters at all, so opening it directly finds nothing to play and sends you
+  back to the home page — which is what the earlier "play directly" options did.
+  The item page always renders, and playing is one click from there, with resume,
+  subtitles and transcoding all behaving normally.
 
 ### Adverts are hidden
 
@@ -419,10 +424,10 @@ an hour after five, so pushing on would lock you out of your own client.
   sent: adverts are refused at the magnet too.
 - 🐌 **jav8.vip starts ignoring you?** That is rate limiting. Wait an hour; the
   script is already as gentle as it can be while still being useful.
-- ▶️ **The play button opens an error page?** Your media server's web routes differ
-  from the default. Change **Open link** in **Settings** — *Play directly
-  (Jellyfin 10.8 and older)* for older servers, or *Item page* to always land on
-  the work's page instead. Nothing else changes.
+- ▶️ **The play button opens an error page?** It should not: it points at the
+  work's page in your server, which always renders. If the page loads but the
+  *work* is wrong, the match is the catalogue number — see the note above about
+  files with no code in the name.
 - 🎬 **A work I have is still offered as a download?** Only works whose *catalogue
   number* appears in your library are recognised. If your files are named without
   the code — a title only, or an arbitrary name — there is nothing to match on.
