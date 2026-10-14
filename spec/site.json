@@ -241,6 +241,119 @@
     "inFixtures": false
   },
 
+  "codeMatching": {
+    "$comment": [
+      "How a listing card is matched against a file in the user's own media",
+      "library. See codeKey(), codeKeys() and libraryIndexOf() in the userscript.",
+      "",
+      "The join is the catalogue number, not the title: a card carries",
+      "<p class=\"work-id highlight\">fex-004</p> and a work page carries the same",
+      "value in <dt class=\"highlight\">ipzz-961</dt>, so the site's end is exact",
+      "at both places. The library's end is not - it is whatever the file was",
+      "called - so codes are extracted from free text there rather than compared.",
+      "",
+      "The key is the alphanumerics with separators removed and leading zeros",
+      "dropped from the trailing digit run. Both transformations are needed by",
+      "real filenames: fex-004, fex004, FEX 004 and h_259fex00004 are the same",
+      "work, and so are DDH-0045 and DDH-45.",
+      "",
+      "A numeric prefix is kept when the whole thing is the code (259LUXU-1900 is",
+      "a real series), and dropped as an extra key when it is a maker prefix",
+      "(DMM writes h_<maker><code><padded number>). Both keys are emitted for a",
+      "match with a leading digit run rather than guessing which shape a filename",
+      "means, because the two conventions look identical.",
+      "",
+      "The extractor requires two letters and two digits, which is the entire",
+      "noise rule: x264, AV1, CD1, MP4 and 1080p all fail it, while HD1080 passes",
+      "and is harmless because a real catalogue code is never HD-1080."
+    ],
+    "keyRule": "uppercase alphanumerics, separators removed, leading zeros dropped from the trailing digit run",
+    "extractorPattern": "(\\d{0,4})([A-Za-z]{2,7})[ _-]?(\\d{2,5})",
+    "minimumLetters": 2,
+    "minimumDigits": 2,
+    "keysPerMatch": {
+      "withLeadingDigits": 2,
+      "withoutLeadingDigits": 1,
+      "note": "The bare key exists for DMM's maker prefix; a false match needs two makers to share a letter run and a number."
+    },
+    "examples": {
+      "fex-004": "FEX4",
+      "FEX-004": "FEX4",
+      "fex004": "FEX4",
+      "FEX 004": "FEX4",
+      "fex-4": "FEX4",
+      "DDH-0045": "DDH45",
+      "259LUXU-1900": "259LUXU1900",
+      "h_259fex00004": "259FEX4 and FEX4"
+    },
+    "notCodes": ["x264", "AV1", "CD1", "MP4", "1080p", "2024"]
+  },
+
+  "mediaServer": {
+    "$comment": [
+      "The optional Jellyfin / Emby integration. Read-only, off by default, and",
+      "inert until both `enabled` and an API key are set - a script that starts",
+      "talking to a server the user never mentioned is not one anybody should",
+      "install.",
+      "",
+      "One request reads the whole library, cached for six hours, because the",
+      "alternative is a request per card and a listing holds 34 of them. A library",
+      "changes when the user adds a download, not while they browse.",
+      "",
+      "The defaults are the products' own: 8096 is Jellyfin's port (Emby ships it",
+      "too) and the host is the documented localhost form. No real address belongs",
+      "in this file.",
+      "",
+      "There is no single \"play this\" URL every version accepts. Jellyfin 10.9",
+      "moved the web client from hashbang routes (#!/video?id=) to plain hash",
+      "routes (#/video?id=), so the destination is a three-way setting rather than",
+      "a constant that is wrong on half the installs.",
+      "",
+      "A work already held is skipped by bulk selection and upgraded by a hand",
+      "tick. Bulk means \"everything she has\", which is only worth having if it is",
+      "everything you lack; a hand tick is a deliberate request, and the only",
+      "reason to make one for a work you own is a fuller release."
+    ],
+    "protocol": {
+      "itemsPath": "/Items",
+      "query": "Recursive=true&IncludeItemTypes=Movie,Episode,Video&Fields=Path,MediaSources&Limit=5000",
+      "authHeader": "X-Emby-Token",
+      "authHeaderNote": "Accepted by both Emby and Jellyfin. An API key comes from the server dashboard's API Keys page; no password is stored.",
+      "responseFields": ["Id", "Name", "Path", "MediaSources[].Size"],
+      "sizeMayBeAbsent": true,
+      "sizeAbsentMeans": "held, size unknown - pickMagnet() then takes the largest release rather than comparing"
+    },
+    "defaults": {
+      "enabled": false,
+      "host": "http://localhost",
+      "port": 8096,
+      "apiKey": "",
+      "link": "play"
+    },
+    "cacheTtlMs": 21600000,
+    "itemLimit": 5000,
+    "linkModes": {
+      "play": "/web/#/video?id=",
+      "play-legacy": "/web/index.html#!/video?id=",
+      "details": "/web/#/details?id="
+    },
+    "linkModeNotes": {
+      "play": "Jellyfin 10.9 and later.",
+      "play-legacy": "Jellyfin 10.8 and older, and Emby's hashbang form.",
+      "details": "The item page. The safe choice when neither play route works: one click from playing, and it always renders."
+    },
+    "ownedBehaviour": {
+      "bulkSelection": "skipped, and the count says so",
+      "handTick": "upgraded rather than re-downloaded",
+      "upgradeRatio": 1.25,
+      "upgradePick": "the smallest release at least 1.25x the held size, so one tier up rather than the biggest file on the page",
+      "upgradeIgnoresWindow": true,
+      "upgradeIgnoresWindowWhy": "the window answers 'which release do I want'; an upgrade answers 'which is better than what I have', and a ceiling could exclude the only upgrade there is",
+      "tagPreferencesStillApply": true,
+      "nothingLarger": "nothing is sent, and the log says the work is already held"
+    }
+  },
+
   "selection": {
     "$comment": [
       "Order of preference, and why the largest wins inside the window.",
@@ -273,7 +386,8 @@
       "clean magnets whose size is inside the window, and among those the one closest to preferredSize",
       "if the window excludes every clean magnet, the largest clean one, flagged outside-window",
       "if there are no clean magnets, a suspect one rather than nothing",
-      "never an ad"
+      "never an ad",
+      "when prefs.upgradeFrom is set - the work is already in the library - the smallest release at least UPGRADE_MIN_RATIO larger, or nothing at all"
     ],
     "tieBreak": {
       "$comment": [

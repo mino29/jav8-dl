@@ -119,6 +119,30 @@ const SHIM = `
 </script>
 `;
 
+/**
+ * The seed that turns the integration on against the stub.
+ *
+ * It merges into the existing store rather than replacing it, so a snapshot left
+ * by an earlier load survives unless `fresh` says to clear - see ?cached=1.
+ */
+function seedFor(port, fresh) {
+  return `<script>
+${fresh ? "localStorage.clear();\nsessionStorage.clear();" : ""}
+(function () {
+  var store = {};
+  try { store = JSON.parse(sessionStorage.getItem("gm-store") || "{}"); } catch (e) {}
+  store["jav8-downloader-settings"] = {
+    active: "aria2",
+    filter: "all",
+    preferredSize: 5368709120,
+    downloaders: { aria2: { host: "http://127.0.0.1", port: ${port} } },
+    mediaServer: { enabled: true, host: "http://127.0.0.1", port: ${port}, apiKey: "stub-api-key", link: "play" },
+  };
+  sessionStorage.setItem("gm-store", JSON.stringify(store));
+})();
+</script>`;
+}
+
 function inject(html) {
   // Scripts go at the end of <head> so the userscript's document-idle
   // equivalent runs after the fixture markup exists.
@@ -136,6 +160,25 @@ function inject(html) {
  * markup - reporting success while testing nothing. Pagination is the whole
  * reason the query has to be part of the key.
  */
+/**
+ * Harness-only query parameters, which must not take part in route matching.
+ *
+ * They switch the stubs and seed storage; none of them is something the site
+ * would understand. Leaving them in the key broke the exact page-1 actress
+ * match - `/actress/58956?media=1` stopped matching `/^\/actress\/58956$/` and
+ * fell through to the generic actress fixture, so the crawl walked a different
+ * career than the test thought it was walking. That is the same class of bug as
+ * matching on the pathname alone, arriving from the other direction.
+ */
+const HARNESS_PARAMS = new Set(["media", "cached", "held", "badkey"]);
+
+function routeKey(url) {
+  const q = new URLSearchParams(url.search);
+  HARNESS_PARAMS.forEach((p) => q.delete(p));
+  const rest = q.toString();
+  return url.pathname + (rest ? "?" + rest : "");
+}
+
 const ROUTES = [
   [/^\/$/, "listing.html"],
   [/^\/updated(\?.*)?$/, "listing.html"],
@@ -163,10 +206,81 @@ const ROUTES = [
  * each protocol for the script to complete its happy path, and record what they
  * were sent so assertions do not depend on GM_xmlhttpRequest plumbing.
  *
+ * The media server stub is read-only by nature - the integration only ever
+ * lists a library - so it cannot queue anything anywhere.
+ *
  * The script is pointed at them as host=http://127.0.0.1 port=<this port>, so
  * the real endpoint composition (host + port + path) is what gets exercised.
  */
-const stubHits = { aria2: [], qbittorrent: [] };
+const stubHits = { aria2: [], qbittorrent: [], mediaServer: [] };
+
+/**
+ * A stand-in Jellyfin library.
+ *
+ * Every code here is one that is really on the captured listing page, so the
+ * play buttons have genuine cards to land on. A stub holding codes of its own
+ * invention would pass every assertion while matching nothing on the page - the
+ * same trap as the advert rule that was tested against cards shaped the way the
+ * rule expected.
+ *
+ * The spellings are the point, and each is a different real convention:
+ *
+ *   FEX-004        the site's own spelling
+ *   crpd 299       spaced
+ *   ddb068         unseparated and unpadded
+ *   h_259mida00817 DMM's maker prefix, which only matches via the bare key
+ *   skmj-039       held with no size at all, which is a different upgrade rule
+ *   ipzz-961       the work the detail fixture is about, held small so that the
+ *                  upgrade path has something to find
+ */
+const STUB_LIBRARY = {
+  Items: [
+    { Id: "lib-fex", Name: "FEX-004", Path: "/media/jav/FEX-004.mp4", MediaSources: [{ Size: 5368709120 }] },
+    { Id: "lib-crpd", Name: "crpd 299", Path: "/media/jav/crpd 299.mp4", MediaSources: [{ Size: 3221225472 }] },
+    { Id: "lib-ddb", Name: "ddb068", Path: "/media/jav/ddb068.mp4", MediaSources: [{ Size: 2147483648 }] },
+    { Id: "lib-mida", Name: "MIDA-817", Path: "/media/jav/h_259mida00817.mp4", MediaSources: [{ Size: 4294967296 }] },
+    { Id: "lib-skmj", Name: "SKMJ-039", Path: "/media/jav/SKMJ-039.mkv", MediaSources: [] },
+    { Id: "lib-ipzz", Name: "IPZZ-961", Path: "/media/jav/IPZZ-961 1.28GB.mp4", MediaSources: [{ Size: 1374389535 }] },
+    // On the actress fixture's career, so the crawl's skip is observable.
+    { Id: "lib-sone", Name: "SONE-991", Path: "/media/jav/SONE-991.mp4", MediaSources: [{ Size: 6442450944 }] },
+    // Not on the listing page, so nothing should be decorated from it.
+    { Id: "lib-elsewhere", Name: "ZZZ-999", Path: "/media/jav/ZZZ-999.mp4", MediaSources: [{ Size: 1073741824 }] },
+  ],
+  TotalRecordCount: 8,
+};
+
+/**
+ * The size the stub reports for IPZZ-961, when a page asked for one.
+ *
+ * The "held at 1.28GB" default makes the upgrade path fire. The other branch -
+ * held at a size nothing on the page beats - needs the library to say something
+ * different, and the script builds its own /Items URL, so the override has to
+ * come in on the page's URL instead: ?held=<bytes>. Without this the second
+ * branch is only ever exercised in the pure tests, which cannot see whether the
+ * panel actually says anything.
+ */
+let heldOverride = 0;
+
+/**
+ * Make /Items answer 401, for the wrong-API-key path.
+ *
+ * Set from the page's own URL for the same reason as heldOverride: the script
+ * builds its /Items request itself, so the only way to make it fail is to tell
+ * the stub beforehand. A wrong key is the first thing a new user hits, and the
+ * message it produces is the difference between "create a key in the dashboard"
+ * and "could not read the library".
+ */
+let rejectItems = false;
+
+/** The stub library with IPZZ-961 reported at a different size. */
+function withHeld(bytes) {
+  return {
+    Items: STUB_LIBRARY.Items.map((item) =>
+      item.Id === "lib-ipzz" ? { ...item, MediaSources: [{ Size: bytes }] } : item,
+    ),
+    TotalRecordCount: STUB_LIBRARY.TotalRecordCount,
+  };
+}
 
 function handleStub(req, res, url) {
   const path = url.pathname;
@@ -181,8 +295,28 @@ function handleStub(req, res, url) {
     if (path === "/__harness__/stub-reset") {
       stubHits.aria2.length = 0;
       stubHits.qbittorrent.length = 0;
+      stubHits.mediaServer.length = 0;
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ ok: true }));
+      return;
+    }
+
+    // The media server. Only /Items is used by the script, and it is read-only,
+    // so there is nothing here that could queue anything anywhere.
+    if (path === "/Items") {
+      stubHits.mediaServer.push({
+        path,
+        query: url.search,
+        token: req.headers["x-emby-token"] || null,
+        accept: req.headers.accept || null,
+      });
+      if (url.searchParams.get("fail") === "401" || rejectItems) {
+        res.writeHead(401, { "Content-Type": "text/plain" });
+        res.end("Unauthorized");
+        return;
+      }
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify(heldOverride ? withHeld(heldOverride) : STUB_LIBRARY));
       return;
     }
 
@@ -272,7 +406,7 @@ const server = createServer((req, res) => {
     res.end(JSON.stringify({ ok: true }));
     return;
   }
-  if (path.startsWith("/__harness__/stub-") || path === "/jsonrpc" || path.startsWith("/api/v2/")) {
+  if (path.startsWith("/__harness__/stub-") || path === "/jsonrpc" || path.startsWith("/api/v2/") || path === "/Items") {
     handleStub(req, res, url);
     return;
   }
@@ -409,19 +543,44 @@ setTimeout(function () {
     return;
   }
 
-  const route = ROUTES.find(([re]) => re.test(path + (url.search || "")));
+  const route = ROUTES.find(([re]) => re.test(routeKey(url)));
   if (!route) {
     res.writeHead(404, { "Content-Type": "text/plain" });
-    res.end("no fixture for " + path + (url.search || ""));
+    res.end("no fixture for " + routeKey(url));
     return;
   }
   try {
     const html = readFileSync(join(fixtures, route[1]), "utf8");
+    // ?media=1 turns the Jellyfin / Emby integration on against the stub above
+    // and seeds the settings the script would otherwise need a form filled in
+    // for. It exists so the feature can be exercised in a real browser in one
+    // URL: a stub that is never reachable from the page is a stub that tests
+    // nothing, and seeding by hand is not reproducible.
+    //
+    // Inserted *before* the GM shim, not after it. The shim snapshots
+    // sessionStorage into its own memory when it runs, so a seed placed after it
+    // is one page load behind: the first load reads nothing, and only a second
+    // load sees the settings. That looks exactly like the feature not working.
+    //
+    // ?cached=1 keeps whatever library snapshot is already there, which is how
+    // the cache path is exercised - with the clear in place every load would
+    // re-read the library and the cache could never be observed being used.
+    const seeded =
+      url.searchParams.get("media") === "1"
+        ? inject(html).replace(SHIM, () => seedFor(port, url.searchParams.get("cached") !== "1") + SHIM)
+        : inject(html);
+    // The size the stub reports for the work this fixture is about, so the
+    // "nothing on this page beats what you have" branch can be reached in a
+    // browser. See heldOverride. Assigned on every fixture request, not only
+    // when present, so an override cannot leak into the next page and make an
+    // unrelated check pass or fail for the wrong reason.
+    heldOverride = Number(url.searchParams.get("held")) || 0;
+    rejectItems = url.searchParams.get("badkey") === "1";
     res.writeHead(200, {
       "Content-Type": "text/html; charset=utf-8",
       "Cache-Control": "no-store, max-age=0",
     });
-    res.end(inject(html));
+    res.end(seeded);
   } catch (err) {
     res.writeHead(500, { "Content-Type": "text/plain" });
     res.end(String(err));
@@ -436,4 +595,5 @@ server.listen(port, "127.0.0.1", () => {
   console.log(`  actress 2p  http://127.0.0.1:${port}/actress/58956`);
   console.log(`  performers  http://127.0.0.1:${port}/top-actresses`);
   console.log(`  detail       http://127.0.0.1:${port}/v/557564`);
+  console.log(`  with library http://127.0.0.1:${port}/updated?media=1`);
 });

@@ -88,6 +88,15 @@ export function loadApi() {
     "ABSOLUTE_HREF",
     "magnetTags",
     "applyTagPrefs",
+    "codeKey",
+    "codeKeys",
+    "libraryIndexOf",
+    "libraryHit",
+    "mediaUrl",
+    "MEDIA_LINK",
+    "UPGRADE_MIN_RATIO",
+    "smallest",
+    "CODE_IN_TEXT",
   ];
   const context = vm.createContext({});
   vm.runInContext(

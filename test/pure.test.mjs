@@ -927,6 +927,275 @@ group("the slider must not change which magnet is picked");
   check("default slider keeps it in-window", picked.reason, "in-window");
 }
 
+group("codeKey - one key for every way a catalogue number is written");
+// The site writes the code in the listing card and again on the work page, and
+// neither of those is the shape a filename uses. These are the real spellings:
+// `fex-004` on the site, `FEX-004` in one filename, `h_259fex00004` in a DMM
+// name, and `259LUXU-1900` where the number comes first.
+{
+  check("the site's own spelling", api.codeKey("fex-004"), "FEX4");
+  check("uppercase", api.codeKey("FEX-004"), "FEX4");
+  check("no separator", api.codeKey("fex004"), "FEX4");
+  check("a space instead of a dash", api.codeKey("FEX 004"), "FEX4");
+  check("an underscore", api.codeKey("fex_004"), "FEX4");
+  check("already unpadded", api.codeKey("fex-4"), "FEX4");
+  check("punctuation around it", api.codeKey("[FEX-004]"), "FEX4");
+
+  // A numeric prefix is a real series naming scheme, not an edge case.
+  check("a numeric prefix survives", api.codeKey("259LUXU-1900"), "259LUXU1900");
+  check("and matches without the dash", api.codeKey("259luxu1900"), "259LUXU1900");
+  check("300MIUM is the same shape", api.codeKey("300MIUM-123"), "300MIUM123");
+
+  // Padding is dropped, so a three-digit and a four-digit spelling agree.
+  check("0045 and 45 agree", api.codeKey("DDH-0045"), api.codeKey("DDH-45"));
+
+  // codeKey() is for codes, not filenames: the two callers that hand it a string
+  // are the listing card and the work page, and both carry an exact catalogue
+  // number. Filenames go through codeKeys(), which is where the DMM spelling is
+  // handled - see the next group. Passing a whole filename here would glue its
+  // `h_` prefix onto the key, which is why nothing does.
+
+  // Nothing code-shaped is returned compacted rather than emptied, so a caller
+  // cannot be handed a falsy key it did not expect.
+  check("a bare word is returned compacted", api.codeKey("UNCENSORED"), "UNCENSORED");
+  check("empty stays empty", api.codeKey(""), "");
+  check("undefined is handled", api.codeKey(undefined), "");
+}
+
+group("codeKeys - pulling codes out of a filename");
+// Library filenames are prose. Each of these is a real naming convention, and
+// the noise cases are the reason the rule needs two letters and two digits.
+{
+  const one = (text) => api.codeKeys(text).join(",");
+  check("a plain filename", one("IPZZ-961.mp4"), "IPZZ961");
+  check("bracketed and suffixed", one("[JAV] IPZZ-961 1080p.mp4"), "IPZZ961");
+  check("an uncensored suffix", one("IPZZ961-U.mkv"), "IPZZ961");
+  check("chinese subs and a space", one("ipzz 961-c 4K.mkv"), "IPZZ961");
+  check("the dmm spelling", one("h_259fex00004.mp4"), "259FEX4,FEX4");
+
+  // A numeric prefix is part of the code, so the full key has to be there; and
+  // because DMM's maker prefix looks identical, the bare key is emitted too.
+  check("a numeric prefix keeps both keys", one("259LUXU-1900.mp4"), "259LUXU1900,LUXU1900");
+
+  // The point of the bare key: a DMM-named library still matches the code the
+  // site prints on the card.
+  check("the dmm form matches the site's code", api.codeKeys("h_259fex00004.mp4").includes(api.codeKey("fex-004")), true);
+
+  // A path can name more than one thing; all of them are worth indexing, because
+  // the item is only matched if one of them is the code the site uses.
+  check("two codes in one name", one("ABP-123 (S1 E2) IPX-456.mkv"), "ABP123,IPX456");
+
+  // The noise rule. Each of these would match something if the floor were one
+  // letter or one digit.
+  check("x264 is not a code", one("movie.x264.mkv"), "");
+  check("AV1 is not a code", one("movie.AV1.mkv"), "");
+  check("CD1 is not a code", one("movie.CD1.avi"), "");
+  check("MP4 alone is not a code", one("MP4"), "");
+  check("1080p alone is not a code", one("1080p.mkv"), "");
+  check("a bare number is not a code", one("2024"), "");
+  check("a year before the code is not part of it", one("2024 ABP-123.mkv"), "ABP123");
+  check("empty input yields nothing", one(""), "");
+  check("undefined yields nothing", api.codeKeys(undefined).length, 0);
+
+  // Duplicates collapse: a filename that repeats the code must not index twice.
+  check("the same code twice yields one key", one("IPZZ-961 IPZZ-961.mp4"), "IPZZ961");
+  check("a bare key that repeats the full one is not duplicated", one("IPZZ-961.mp4").split(",").length, 1);
+}
+
+group("libraryIndexOf / libraryHit - matching a card against a library");
+// The shape the Jellyfin response is mapped into, and the lookup a card makes.
+{
+  const items = [
+    { id: "a1", name: "FEX-004", path: "/media/jav/FEX-004.mp4", size: 5 * GB },
+    { id: "b2", name: "IPZZ-961", path: "/media/jav/[JAV] IPZZ-961 1080p.mp4", size: 3 * GB },
+    { id: "c3", name: "259LUXU-1900", path: "/media/jav/259LUXU-1900.mp4", size: 2 * GB },
+    // No size at all: a freshly scanned file, or a client that omits MediaSources.
+    { id: "d4", name: "ABP-123", path: "/media/jav/ABP-123.mp4", size: 0 },
+    // An item with no Id cannot be linked to, so it must not be indexed.
+    { id: "", name: "ZZZ-999", path: "/media/jav/ZZZ-999.mp4", size: GB },
+  ];
+  const index = api.libraryIndexOf(items);
+
+  check("the site's code finds it", api.libraryHit(index, "fex-004").id, "a1");
+  check("the size comes through", api.libraryHit(index, "fex-004").size, 5 * GB);
+  check("a differently written code still finds it", api.libraryHit(index, "FEX004").id, "a1");
+  check("a numeric prefix finds it", api.libraryHit(index, "259LUXU-1900").id, "c3");
+  check("a work that is not held is null", api.libraryHit(index, "ZZZ-001"), null);
+  check("an item with no id is not indexed", api.libraryHit(index, "ZZZ-999"), null);
+  check("held with size unknown reads as 0", api.libraryHit(index, "ABP-123").size, 0);
+
+  // The DMM-named item is reached from the site's own code, which is the whole
+  // reason the extractor emits the bare key as well as the full one.
+  const dmm = api.libraryIndexOf([
+    { id: "dmm", name: "259fex00004", path: "/media/jav/h_259fex00004.mp4", size: 4 * GB },
+  ]);
+  check("a DMM-named file matches the site's code", api.libraryHit(dmm, "fex-004").id, "dmm");
+
+  // Two copies of the same work: the larger one is what an upgrade has to beat,
+  // so it is the one on record. Keeping the smaller would offer an "upgrade"
+  // that is smaller than a copy the user already has.
+  const twice = api.libraryIndexOf([
+    { id: "lo", name: "FEX-004", path: "/a/FEX-004.mp4", size: 2 * GB },
+    { id: "hi", name: "FEX-004", path: "/b/FEX-004 4K.mp4", size: 8 * GB },
+  ]);
+  check("the largest copy wins", api.libraryHit(twice, "fex-004").id, "hi");
+  check("and its size is the bar", api.libraryHit(twice, "fex-004").size, 8 * GB);
+
+  // Order must not matter, or the answer depends on the server's sort.
+  const reversed = api.libraryIndexOf([
+    { id: "hi", name: "FEX-004", path: "/b/FEX-004 4K.mp4", size: 8 * GB },
+    { id: "lo", name: "FEX-004", path: "/a/FEX-004.mp4", size: 2 * GB },
+  ]);
+  check("the same answer either way round", api.libraryHit(reversed, "fex-004").id, "hi");
+
+  check("an empty library matches nothing", api.libraryHit({}, "FEX-004"), null);
+  check("a missing library matches nothing", api.libraryHit(null, "FEX-004"), null);
+  check("an empty code matches nothing", api.libraryHit(index, ""), null);
+  check("no items yields an empty index", Object.keys(api.libraryIndexOf([])).length, 0);
+  check("undefined items yields an empty index", Object.keys(api.libraryIndexOf(undefined)).length, 0);
+}
+
+group("mediaUrl - the link a play button points at");
+// There is no single URL every Jellyfin version accepts, so there are three and
+// the user picks. These assertions are the contract for each.
+{
+  const base = "http://localhost:8096";
+  check("play", api.mediaUrl(base, "abc123", "play"), "http://localhost:8096/web/#/video?id=abc123");
+  check(
+    "play on an older server",
+    api.mediaUrl(base, "abc123", "play-legacy"),
+    "http://localhost:8096/web/index.html#!/video?id=abc123",
+  );
+  check("the item page", api.mediaUrl(base, "abc123", "details"), "http://localhost:8096/web/#/details?id=abc123");
+  check("a trailing slash on the base is not doubled", api.mediaUrl(base + "/", "abc", "play"), "http://localhost:8096/web/#/video?id=abc");
+  check("an unknown mode falls back to playing", api.mediaUrl(base, "abc", "nonsense"), api.mediaUrl(base, "abc", "play"));
+  check("a missing mode falls back to playing", api.mediaUrl(base, "abc", undefined), api.mediaUrl(base, "abc", "play"));
+  check("every advertised mode has a path", Object.keys(api.MEDIA_LINK).length, 3);
+  check("the default link mode is one of them", Object.keys(api.MEDIA_LINK).includes(api.DEFAULTS.mediaServer.link), true);
+}
+
+group("pickMagnet - an owned work is upgraded, not re-downloaded");
+// The whole point of the library integration: a hand tick on a work already on
+// disk must not send the same release again.
+{
+  const m = (size, name) => mag(size, "clean", name);
+  const owned = 3 * GB_;
+
+  // Three releases, one of them the copy they already have.
+  const pool = [m(owned, "the one I have"), m(5 * GB_, "a bit bigger"), m(12 * GB_, "much bigger")];
+
+  {
+    const picked = api.pickMagnet(pool, LO, HI, api.DEFAULTS.preferredSize, { upgradeFrom: owned });
+    check("an upgrade is sent", picked.reason, "upgrade");
+    // "One tier up" is the requirement, so the smallest release that clears the
+    // bar wins - not the largest on the page.
+    check("the next step up, not the biggest", picked.magnet.size, 5 * GB_);
+  }
+  {
+    // The copy they have is the largest release: nothing to gain, so nothing is
+    // sent. This is the case the feature exists for.
+    const picked = api.pickMagnet([m(2 * GB_, "smaller"), m(owned, "mine")], LO, HI, api.DEFAULTS.preferredSize, {
+      upgradeFrom: owned,
+    });
+    check("no upgrade means no magnet", picked.magnet, null);
+    check("and the reason says why", picked.reason, "already-owned");
+  }
+  {
+    // A release a couple of percent larger is the same encode in a different
+    // container, so it does not count.
+    const just = Math.round(owned * 1.01);
+    const picked = api.pickMagnet([m(just, "barely bigger"), m(owned, "mine")], LO, HI, api.DEFAULTS.preferredSize, {
+      upgradeFrom: owned,
+    });
+    check("a 1% larger release is not an upgrade", picked.magnet, null);
+    check("reason already-owned", picked.reason, "already-owned");
+  }
+  {
+    // Exactly at the ratio counts: the rule is a floor, not a strict inequality
+    // that no real size can hit.
+    const at = Math.round(owned * api.UPGRADE_MIN_RATIO);
+    const picked = api.pickMagnet([m(at, "exactly one step")], LO, HI, api.DEFAULTS.preferredSize, {
+      upgradeFrom: owned,
+    });
+    check("exactly at the ratio qualifies", picked.magnet.size, at);
+    check("reason upgrade", picked.reason, "upgrade");
+  }
+  {
+    // Size unknown - held, but the server did not say how big. The largest is
+    // the only honest guess, and it is flagged as the same reason so the log can
+    // say which case it was.
+    const picked = api.pickMagnet(pool, LO, HI, api.DEFAULTS.preferredSize, { upgradeFrom: 0 });
+    check("an unknown size takes the largest", picked.magnet.size, 12 * GB_);
+    check("reason upgrade", picked.reason, "upgrade");
+  }
+  {
+    // 0 and undefined must not be confused: undefined is "not owned", and it has
+    // to keep behaving exactly as it did before this feature existed.
+    const normal = api.pickMagnet(pool, LO, HI, api.DEFAULTS.preferredSize, {});
+    check("no upgradeFrom is an ordinary pick", normal.reason, "in-window");
+    check("and picks by preference, as it always did", normal.magnet.size, 5 * GB_);
+    const four = api.pickMagnet(pool, LO, HI, api.DEFAULTS.preferredSize);
+    check("the 4-arg form is unchanged", four.magnet.size, 5 * GB_);
+    check("and reports in-window", four.reason, "in-window");
+    // Which is the point: without an upgrade instruction the 12GB release is not
+    // chosen, so the upgrade path really is doing something rather than agreeing
+    // with the default by accident.
+    check("the upgrade really changed the answer", normal.magnet.size !== 12 * GB_, true);
+  }
+  {
+    // The upgrade rule ignores the size window on purpose: it answers "what is
+    // better than what I have", not "what do I want", and a ceiling could
+    // exclude the only upgrade there is.
+    const picked = api.pickMagnet([m(200 * GB_, "huge")], LO, HI, api.DEFAULTS.preferredSize, { upgradeFrom: owned });
+    check("the window does not veto an upgrade", picked.reason, "upgrade");
+    check("even past the ceiling", picked.magnet.size, 200 * GB_);
+  }
+  {
+    // Tag preferences still apply, so an upgrade can be steered to a 中字 or
+    // 無碼 release the way an ordinary pick can.
+    const subs = mag(6 * GB_, "clean", "ABF-001-C");
+    const plain = mag(5 * GB_, "clean", "ABF-001");
+    const picked = api.pickMagnet([plain, subs], LO, HI, api.DEFAULTS.preferredSize, {
+      upgradeFrom: owned,
+      chinese: true,
+    });
+    check("a tag preference steers the upgrade", picked.magnet.name, "ABF-001-C");
+  }
+  {
+    // Adverts are still never sent, upgrade or not.
+    const picked = api.pickMagnet([mag(9 * GB_, "ad", "AD-9"), m(owned, "mine")], LO, HI, api.DEFAULTS.preferredSize, {
+      upgradeFrom: owned,
+    });
+    check("an advert is not an upgrade", picked.magnet, null);
+    check("reason already-owned", picked.reason, "already-owned");
+  }
+}
+
+group("smallest - the counterpart of largest");
+check("picks the smallest", api.smallest([mag(3 * GB_), mag(1 * GB_), mag(2 * GB_)]).size, 1 * GB_);
+check("one element", api.smallest([mag(4 * GB_)]).size, 4 * GB_);
+check("empty list is null", api.smallest([]), null);
+check("ties keep the first", api.smallest([mag(2 * GB_, "clean", "a"), mag(2 * GB_, "clean", "b")]).name, "a");
+
+group("UPGRADE_MIN_RATIO - the documented step");
+// The value is a decision, not a detail: it is what stops a 1% larger release
+// being treated as a reason to download the whole thing again.
+check("the ratio is 1.25", api.UPGRADE_MIN_RATIO, 1.25);
+check("a quarter larger is enough", 100 * api.UPGRADE_MIN_RATIO, 125);
+
+group("DEFAULTS.mediaServer - off, and pointing nowhere in particular");
+// The integration must be inert out of the box: a script that starts talking to
+// a server the user never mentioned is not one anybody should install. And the
+// defaults must be the products' own, so nothing here names a real machine.
+{
+  const d = api.DEFAULTS.mediaServer;
+  check("off by default", d.enabled, false);
+  check("no key by default", d.apiKey, "");
+  check("Jellyfin's own port", d.port, 8096);
+  check("a documentation host", d.host, "http://localhost");
+  check("a link mode that exists", Object.keys(api.MEDIA_LINK).includes(d.link), true);
+}
+
 // --------------------------------------------------------------------- report
 // The crawler is asynchronous, so its assertions have to land before the tally.
 await crawlerTests();

@@ -2,9 +2,9 @@
 // @name         JAV8 Downloader
 // @namespace    https://github.com/mino29/jav8-dl
 // @homepage     https://github.com/mino29/jav8-dl
-// @version      1.10.0
+// @version      1.11.0
 // @icon          data:image/png;base64,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
-// @description  Tick covers to queue them, filter by VR, prefer uncensored / subtitled / 4K releases, and send to aria2 or qBittorrent. Settings live in the browser, not in a config file.
+// @description  Tick covers to queue them, filter by VR, prefer uncensored / subtitled / 4K releases, send to aria2 or qBittorrent, and play or skip whatever your Jellyfin or Emby library already holds. Settings live in the browser, not in a config file.
 // @author       mino29
 // @match        *://jav8.vip/*
 // @match        *://*.jav8.vip/*
@@ -57,6 +57,32 @@
  *   /latest found *none* of these flags in 149 magnets, because those listings
  *   are dominated by one streamer's uploads. Actress filmographies are where
  *   catalogue releases live.
+ *
+ * Jellyfin / Emby note, and why the matching key looks the way it does:
+ *
+ * - The integration is driven by the code, not the title. A listing card carries
+ *   `<p class="work-id highlight">fex-004</p>`, and a work page carries the same
+ *   value in `<dt class="highlight">ipzz-961</dt>` - so both ends of the site
+ *   give an exact catalogue number. A library filename does not, which is why
+ *   the code is extracted from free text there instead of compared as a string.
+ * - Codes are written several ways and every one of them is real: `fex-004` on
+ *   the site, `FEX004`, `FEX 004` and `h_259fex00004` in a DMM filename, and
+ *   `259LUXU-1900` where the number comes *first*. So the key is the
+ *   alphanumerics with leading zeros dropped from the trailing digit run:
+ *   `FEX-004` and `FEX4` are the same key, and so are `259LUXU-1900` and
+ *   `259luxu1900`.
+ * - At least two letters and at least two digits are required. That one rule is
+ *   what keeps the noise out without a blocklist: `x264`, `AV1`, `CD1` and
+ *   `MP4` all fail it, while `HD1080` passes and is harmless, because a real
+ *   catalogue code is never `HD-1080` for the two to collide.
+ * - There is no single "play this" URL that every media-server version accepts.
+ *   Jellyfin 10.9 moved the web client from hashbang routes (`#!/video?id=`) to
+ *   plain hash routes (`#/video?id=`). So the destination is a setting with
+ *   three choices rather than a constant that is wrong for half the installs.
+ * - A work already in the library is skipped by *bulk* selection and upgraded by
+ *   a *hand* tick. Bulk means "everything she has", which is only worth having if
+ *   it is everything you lack; a hand tick is a deliberate request, and the only
+ *   reason to make one for a work you already own is a fuller release.
  *
  * qBittorrent note, measured against a live v5.2.3 WebUI rather than assumed:
  *
@@ -174,6 +200,19 @@
   });
 
   /**
+   * How much larger a release has to be before it counts as an upgrade.
+   *
+   * Used only when the work is already in the library and was ticked by hand:
+   * the point there is not to download it again but to replace it with a better
+   * copy, and a release a couple of percent larger is the same encode in a
+   * different container. A quarter is the smallest step that is reliably a
+   * different release rather than a different mux, and it is a ratio rather than
+   * a number of bytes because the gap between a 1080p and a 4K release grows
+   * with the release.
+   */
+  var UPGRADE_MIN_RATIO = 1.25;
+
+  /**
    * Vendor defaults for a stock install.
    *
    * These are publicly documented product defaults shown as placeholders in the
@@ -214,6 +253,19 @@
       chinese: false,
       uhd: false,
       skipAI: true,
+    },
+    // The optional Emby / Jellyfin integration. Off, with an empty key, because
+    // a script that starts talking to a server the user never mentioned is not
+    // one anybody should install. Both defaults are the products' own: 8096 is
+    // Jellyfin's port (Emby ships 8096 too) and the host is the documented
+    // localhost form, so nothing here names a particular machine.
+    mediaServer: {
+      enabled: false,
+      host: "http://localhost",
+      port: 8096,
+      apiKey: "",
+      // Where a "play" button sends you. See MEDIA_LINK and the README.
+      link: "play",
     },
   };
 
@@ -364,6 +416,155 @@
       .trim()
       .toUpperCase()
       .replace(/[^A-Z0-9-]/g, "");
+  }
+
+  /**
+   * A comparison key for a catalogue code.
+   *
+   * `FEX-004`, `fex004`, `FEX 004` and `h_259fex00004` all end up as `FEX4`, and
+   * `259LUXU-1900` stays `259LUXU1900`. Two transformations do that, and both
+   * are there because real filenames need them:
+   *
+   *   - every separator goes, because a file may write the code with a dash, a
+   *     space, an underscore or nothing at all;
+   *   - leading zeros come off the trailing digit run, because `fex-004` on the
+   *     site is `fex-4` in the next filename along.
+   *
+   * Note the prefix is allowed to contain digits. That is what makes
+   * `259LUXU-1900` work, and numeric prefixes are not rare - `259LUXU-`,
+   * `300MIUM-` and `200GANA-` are all real series. Requiring the character
+   * before the number to be a letter keeps the stripping from firing on a string
+   * that is not code-shaped at all.
+   *
+   * Anything that does not look like a code is returned compacted and unchanged,
+   * so a caller cannot be handed an empty key by an input it did not expect.
+   */
+  function codeKey(raw) {
+    var compact = normalizeCode(raw).replace(/-/g, "");
+    var m = /^([A-Z0-9]*?[A-Z])(0*)(\d{1,5})$/.exec(compact);
+    if (!m) return compact;
+    return m[1] + String(Number(m[2] + m[3]));
+  }
+
+  /**
+   * Every catalogue code a free-text string mentions.
+   *
+   * Library filenames are prose, not codes: `[JAV] IPZZ-961 1080p.mp4`,
+   * `IPZZ961-U`, `259LUXU-1900-c 4K.mkv`. So this pulls codes out of a string
+   * rather than trimming one, and returns all of them because a filename may
+   * name a series as well as an episode.
+   *
+   * The shape is "letters, then an optional separator, then digits" - at least
+   * two of each - with an optional run of up to four digits in front. The digit
+   * run is grabbed greedily so a five-digit code is not read as a two-digit one
+   * with a suffix.
+   *
+   * Two keys come out of a match that has a leading digit run, and both are
+   * needed because two real conventions disagree about what that run is:
+   *
+   *   - DMM glues a maker number onto the front and pads the code:
+   *     `fex-004` becomes `h_259fex00004`. The site never writes that form, so
+   *     without the bare key a library named by a DMM tool would match nothing
+   *     at all.
+   *   - `259LUXU-1900` is the code itself, digits and all, and matches on the
+   *     full key.
+   *
+   * Emitting both rather than guessing which one a filename means is the honest
+   * choice: the extra key is specific enough that a false match needs two
+   * different makers to share a letter run *and* a number. When that does
+   * happen the failure is a work reported as already held, which the log says
+   * out loud rather than hiding - not a silent duplicate download.
+   *
+   * Pure, and deliberately not anchored: a code in the middle of a filename is
+   * the normal case, not the exception.
+   */
+  var CODE_IN_TEXT = /(\d{0,4})([A-Za-z]{2,7})[ _-]?(\d{2,5})/g;
+
+  function codeKeys(text) {
+    var s = String(text || "");
+    var out = [];
+    var seen = {};
+    var m;
+    CODE_IN_TEXT.lastIndex = 0;
+    while ((m = CODE_IN_TEXT.exec(s)) !== null) {
+      // The pattern always consumes at least four characters, so it cannot match
+      // empty and loop; the guard is here because a hang costs far more than a
+      // comparison if that ever stops being true.
+      if (m.index === CODE_IN_TEXT.lastIndex) CODE_IN_TEXT.lastIndex++;
+      var candidates = [m[1] + m[2] + m[3]];
+      if (m[1]) candidates.push(m[2] + m[3]);
+      for (var i = 0; i < candidates.length; i++) {
+        var key = codeKey(candidates[i]);
+        if (!key || seen[key]) continue;
+        seen[key] = true;
+        out.push(key);
+      }
+    }
+    return out;
+  }
+
+  /**
+   * Index library entries by every code they mention.
+   *
+   * Keyed rather than listed so a lookup is one property read per card: a
+   * listing of 34 covers must not become 34 scans of a 500-item library.
+   *
+   * The largest copy wins when a library holds the same work twice. That is not
+   * arbitrary - the size on record is the bar an upgrade has to clear, so
+   * keeping the smaller one would offer an "upgrade" that is smaller than a copy
+   * the user already has.
+   *
+   * Pure: it takes plain {id, name, path, size} records so it can be tested
+   * without a server, and so the Jellyfin response shape is mapped in one place
+   * rather than at every use.
+   */
+  function libraryIndexOf(items) {
+    var index = {};
+    (items || []).forEach(function (item) {
+      if (!item || !item.id) return;
+      var size = Number(item.size) || 0;
+      var keys = codeKeys(item.name).concat(codeKeys(item.path));
+      keys.forEach(function (key) {
+        var prev = index[key];
+        if (!prev || size > prev.size) {
+          index[key] = { id: item.id, size: size, name: item.name || "" };
+        }
+      });
+    });
+    return index;
+  }
+
+  /** The library entry for a work code, or null when it is not held. */
+  function libraryHit(index, code) {
+    var key = codeKey(code);
+    if (!key) return null;
+    return (index && index[key]) || null;
+  }
+
+  /**
+   * Deep links into a Jellyfin or Emby web client.
+   *
+   * There is no one URL that every version accepts, so there are three and the
+   * user picks. Jellyfin 10.9 replaced the hashbang routes (`#!/video?id=`) with
+   * plain hash routes (`#/video?id=`), so a hard-coded link is wrong on roughly
+   * half the installs and the symptom is an error page where the video should
+   * be. Emby still answers to the hashbang form, which is the other reason both
+   * are offered rather than one being assumed.
+   *
+   * `details` is the item page, which has been at `#/details?id=` for long
+   * enough to be the safe choice when neither play route works: it is one click
+   * from playing, and it always renders.
+   */
+  var MEDIA_LINK = {
+    play: "/web/#/video?id=",
+    "play-legacy": "/web/index.html#!/video?id=",
+    details: "/web/#/details?id=",
+  };
+
+  function mediaUrl(base, id, mode) {
+    var root = String(base || "").replace(/\/+$/, "");
+    var path = MEDIA_LINK[mode] || MEDIA_LINK.play;
+    return root + path + encodeURIComponent(String(id || ""));
   }
 
   /**
@@ -600,6 +801,10 @@
    * The floor keeps its original job - skipping 200 MB samples - and the ceiling
    * keeps excluding the absurd multi-hundred-GB labels. Both still apply as a
    * hard filter; only the tie-break within them changed.
+   *
+   * `prefs.upgradeFrom` replaces all of that with one rule, and only the caller
+   * that knows the work is already in the user's library sets it. See the block
+   * inside for why an upgrade is not a size preference.
    */
   function pickMagnet(magnets, minBytes, maxBytes, preferredBytes, prefs) {
     var pool = (magnets || []).filter(function (m) {
@@ -624,6 +829,29 @@
     // Unreachable in practice - applyTagPrefs() only narrows to a non-empty set -
     // but returning a reason beats throwing on an invariant nobody can see.
     if (!candidates.length) return { magnet: null, reason: "ads-only", relaxed: tagged.relaxed };
+
+    // Already in the library, and ticked by hand: this is an upgrade, not a
+    // download. Only a release meaningfully larger than the copy on disk is
+    // worth sending, so the size window and the preferred size are both set
+    // aside here - they answer "which release do I want", and the question is
+    // now "which release is better than the one I have".
+    //
+    // `upgradeFrom` is 0 when the library knows the work but not its size. The
+    // largest release is then the only honest guess at an upgrade, and the
+    // caller says so rather than implying a comparison it could not make.
+    var upgradeFrom = prefs ? prefs.upgradeFrom : undefined;
+    if (upgradeFrom !== undefined && upgradeFrom !== null) {
+      if (upgradeFrom > 0) {
+        var bigger = candidates.filter(function (m) {
+          return m.size >= upgradeFrom * UPGRADE_MIN_RATIO;
+        });
+        if (!bigger.length) {
+          return { magnet: null, reason: "already-owned", relaxed: tagged.relaxed };
+        }
+        return { magnet: smallest(bigger), reason: "upgrade", relaxed: tagged.relaxed };
+      }
+      return { magnet: largest(candidates), reason: "upgrade", relaxed: tagged.relaxed };
+    }
 
     var inWindow = candidates.filter(function (m) {
       return m.size >= minBytes && m.size <= maxBytes;
@@ -669,6 +897,20 @@
   function largest(list) {
     return list.reduce(function (best, m) {
       return best === null || m.size > best.size ? m : best;
+    }, null);
+  }
+
+  /**
+   * The smallest release in a list.
+   *
+   * The counterpart of largest(), and used for one thing: picking the *next*
+   * step up when a work is already in the library. Among the releases that beat
+   * what the user has, the smallest is the one that beats it by the least - a
+   * tier up rather than the biggest file on the page.
+   */
+  function smallest(list) {
+    return list.reduce(function (best, m) {
+      return best === null || m.size < best.size ? m : best;
     }, null);
   }
 
@@ -1125,9 +1367,16 @@
   applyPreferredSize();
 
   /** The stored override for one field, or undefined if the default applies. */
-  function overrideFor(engine, key) {
-    var engineOverrides = (storedSettings.downloaders || {})[engine];
-    return engineOverrides ? engineOverrides[key] : undefined;
+  function overridesFor(section) {
+    // The media server lives at the top level, not under `downloaders`: that
+    // object is a list of places to *send* a magnet, and this is not one.
+    if (section === "mediaServer") return storedSettings.mediaServer || {};
+    return (storedSettings.downloaders || {})[section] || {};
+  }
+
+  /** The stored override for one field, or undefined if the default applies. */
+  function overrideFor(section, key) {
+    return overridesFor(section)[key];
   }
 
   function persist() {
@@ -1143,6 +1392,7 @@
       preferredSize: settings.preferredSize,
       tags: settings.tags || DEFAULTS.tags,
       downloaders: storedSettings.downloaders || {},
+      mediaServer: storedSettings.mediaServer || {},
     });
   }
 
@@ -1155,6 +1405,217 @@
     // keep showing values that no longer exist.
     requestTagRefresh();
     requestMagnetRefresh();
+    libraryRepaint();
+  }
+
+  // -------------------------------------------------------- media server
+  // The optional Jellyfin / Emby integration. Everything here is inert until
+  // `mediaServer.enabled` is set and an API key is present; with either missing
+  // the script behaves exactly as it did before this existed.
+
+  var SERVER_KEY = STORE_KEY + "-library";
+
+  /**
+   * How long a library snapshot is trusted before it is re-read.
+   *
+   * Six hours, because a library changes when the user adds a download - not
+   * while they browse - and the read is one request. Shorter would mean a
+   * request per session for an answer that is almost always identical; no cache
+   * at all would mean a request per page view.
+   */
+  var SERVER_TTL_MS = 6 * 60 * 60 * 1000;
+
+  /**
+   * How many items to ask for in one page.
+   *
+   * A JAV library is hundreds of entries, not thousands, so this is a ceiling
+   * that should never be reached rather than a real page size. If it is reached,
+   * syncLibrary() says so instead of silently reporting a partial library - a
+   * missing entry means a work gets downloaded twice, which is exactly the thing
+   * this feature exists to prevent.
+   */
+  var SERVER_LIMIT = 5000;
+
+  var library = { at: 0, base: "", index: {} };
+
+  /** The scheme://host:port of the configured server. */
+  function mediaServerBase() {
+    var cfg = settings.mediaServer || DEFAULTS.mediaServer;
+    return origin(cfg.host, cfg.port);
+  }
+
+  /**
+   * Read the cached snapshot.
+   *
+   * Deliberately tolerant: every failure path here means "no library yet", which
+   * is a working state, because nothing is skipped and no play button is shown
+   * until the index is known. A corrupt cache must not take the page down.
+   */
+  function readLibrary() {
+    var raw = null;
+    try {
+      raw = GM_getValue(SERVER_KEY, null);
+    } catch (e) {
+      raw = null;
+    }
+    if (raw === null || raw === undefined || raw === "") {
+      try {
+        raw = window.localStorage.getItem(SERVER_KEY);
+      } catch (e) {
+        raw = null;
+      }
+    }
+    if (typeof raw === "string") {
+      try {
+        raw = JSON.parse(raw);
+      } catch (e) {
+        raw = null;
+      }
+    }
+    if (!raw || typeof raw !== "object" || !raw.index || typeof raw.index !== "object") return;
+    library = {
+      at: Number(raw.at) || 0,
+      base: typeof raw.base === "string" ? raw.base : "",
+      index: raw.index,
+    };
+  }
+
+  function writeLibrary() {
+    var data = { at: library.at, base: library.base, index: library.index };
+    try {
+      GM_setValue(SERVER_KEY, data);
+    } catch (e) {
+      try {
+        window.localStorage.setItem(SERVER_KEY, JSON.stringify(data));
+      } catch (e2) {
+        /* nothing left to try; the snapshot is rebuilt next sync anyway */
+      }
+    }
+  }
+
+  /**
+   * Forget a snapshot that belongs to a different server.
+   *
+   * The index is derived from codes, so it carries no record of where it came
+   * from - which means a cache read from one server would happily claim matches
+   * against another. Keyed on the base for that reason, and checked on load and
+   * on save rather than only at sync time.
+   */
+  function libraryMatchesServer() {
+    return library.base === mediaServerBase();
+  }
+
+  function dropLibrary() {
+    library = { at: 0, base: "", index: {} };
+    writeLibrary();
+  }
+
+  /** The index to match against, or an empty one when it cannot be trusted. */
+  function libraryIndex() {
+    if (!settings.mediaServer || !settings.mediaServer.enabled) return {};
+    if (!libraryMatchesServer()) return {};
+    return library.index || {};
+  }
+
+  /** The library entry for a work code, or null. */
+  function mediaServerHit(code) {
+    return libraryHit(libraryIndex(), code);
+  }
+
+  /**
+   * Ask the server for the whole library, once.
+   *
+   * One request for the whole library, not one per card: a listing holds 34
+   * covers and a career crawl walks hundreds of pages, so per-card lookups would
+   * be thousands of requests against a home server and would turn a browsing aid
+   * into the heaviest thing the script does.
+   */
+  function syncLibrary(force) {
+    var cfg = settings.mediaServer || DEFAULTS.mediaServer;
+    if (!cfg.enabled) return Promise.resolve(false);
+    var apiKey = String(cfg.apiKey || "").trim();
+    if (!apiKey) {
+      log("Jellyfin / Emby: no API key set, so the library cannot be read.", "wa");
+      return Promise.resolve(false);
+    }
+    var base = mediaServerBase();
+    var url =
+      endpoint(cfg.host, cfg.port, "/Items") +
+      "?Recursive=true&IncludeItemTypes=Movie,Episode,Video" +
+      "&Fields=Path,MediaSources&Limit=" + SERVER_LIMIT;
+    log("Reading your media library from " + base + "…", "mu");
+    return request("GET", url, {
+      headers: { "X-Emby-Token": apiKey, Accept: "application/json" },
+      timeout: 30000,
+    }).then(
+      function (res) {
+        var parsed;
+        try {
+          parsed = JSON.parse(res.responseText);
+        } catch (e) {
+          parsed = null;
+        }
+        if (!parsed || !Array.isArray(parsed.Items)) {
+          log("Jellyfin / Emby: " + base + " did not answer with a library list. Check the host and port.", "er");
+          return false;
+        }
+        var items = parsed.Items.map(function (it) {
+          var sources = it.MediaSources || [];
+          var first = sources.length ? sources[0] : null;
+          return {
+            id: it.Id,
+            name: it.Name,
+            path: it.Path,
+            // Not every item carries a size - a freshly scanned file may not, and
+            // some clients omit MediaSources entirely. 0 means "held, size
+            // unknown", which pickMagnet() treats differently from a real size.
+            size: first && first.Size ? Number(first.Size) : 0,
+          };
+        });
+        library = { at: Date.now(), base: base, index: libraryIndexOf(items) };
+        writeLibrary();
+        var recognised = Object.keys(library.index).length;
+        log("Library read: " + items.length + " items, " + recognised + " titles recognised.", "ok");
+        if (parsed.TotalRecordCount && parsed.TotalRecordCount > items.length) {
+          log(
+            "The library holds " + parsed.TotalRecordCount + " items but only " + items.length +
+              " were returned, so some titles were not seen.",
+            "wa",
+          );
+        }
+        libraryRepaint();
+        return true;
+      },
+      function (err) {
+        if (statusOf(err) === 401) {
+          log("Jellyfin / Emby rejected the API key. Create one in the server dashboard under API Keys.", "er");
+        } else if (!statusOf(err)) {
+          // No status at all means the request never arrived, which is the same
+          // shape as a userscript manager refusing it before it leaves the
+          // browser - a wrong address and a missing @connect entry look
+          // identical from here, so both remedies are named rather than one
+          // being guessed at.
+          log(
+            "Jellyfin / Emby: no answer from " + base + ". Check the host and port in Settings, " +
+              "and that the manager's @connect allows it.",
+            "er",
+          );
+        } else {
+          log("Jellyfin / Emby: " + base + " answered " + statusOf(err) + ", so the library could not be read.", "er");
+        }
+        return false;
+      },
+    );
+  }
+
+  /** Re-read if the snapshot is stale. Called once, from init(). */
+  function syncLibraryIfStale() {
+    if (!settings.mediaServer || !settings.mediaServer.enabled) return;
+    if (!libraryMatchesServer()) {
+      dropLibrary();
+      libraryRepaint();
+    }
+    if (Date.now() - library.at > SERVER_TTL_MS) syncLibrary(false);
   }
 
   // ------------------------------------------------------------------- http
@@ -1580,6 +2041,19 @@
 .jd-badge{position:absolute;bottom:4px;left:4px;z-index:40;font-size:9px;line-height:1.5;
   padding:0 4px;border-radius:3px;background:rgba(12,16,20,.8);color:#9ab;pointer-events:none}
 .jd-badge.vr{color:#f6ad55}
+/* The library "play" button sits opposite the tick box, so the two never
+  compete for the same corner, and stays translucent until hovered because it is
+  an offer rather than the page's primary action - the same reasoning as .jd-box.
+  A real anchor, so middle-click and "open in new tab" behave as anyone expects;
+  it is positioned on the card, which decorateAll() has already made relative. */
+.jd-play{position:absolute;top:4px;right:4px;z-index:41;width:24px;height:24px;
+  border-radius:5px;background:rgba(10,14,18,.86);border:1px solid rgba(255,255,255,.55);
+  box-shadow:0 1px 4px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;
+  color:#fff;font:12px/1 sans-serif;text-decoration:none;opacity:.62;
+  transition:opacity .12s,background .12s}
+.jd-play:hover{opacity:1;background:#276749;border-color:#68d391}
+.jd-inlib{color:#68d391;text-decoration:none}
+.jd-inlib:hover{text-decoration:underline}
 .jd-panel{position:fixed;top:12px;right:12px;z-index:2147483000;width:264px;
   background:#1d2126;color:#9ab;border:1px solid #303840;border-radius:6px;
   font:12px/1.5 -apple-system,Segoe UI,Roboto,"Helvetica Neue",sans-serif;
@@ -2193,6 +2667,68 @@
   }
 
   /**
+   * Put a "play" button on every card whose work the library already holds.
+   *
+   * Separate from decorateCard(), which runs once per card and bails on the
+   * second call. This one has to be re-runnable: a library sync finishes long
+   * after the cards were decorated, and the buttons have to appear then rather
+   * than on the next page load - which may be a page the user never visits.
+   *
+   * The card is an <a>, so the button carries an href of its own and stops the
+   * click from reaching the card. stopPropagation() is what does that: the
+   * anchor's default action only runs if the event reaches it, and the button's
+   * own default (following its href, in a new tab) is untouched. It is a real
+   * anchor so middle-click and "open in new tab" work the way a link should.
+   */
+  function decoratePlays() {
+    var on = !!(settings.mediaServer && settings.mediaServer.enabled);
+    worksOnPage().forEach(function (card) {
+      var href = card.getAttribute("href");
+      var info = known.get(href) || workInfoFromCard(card);
+      var existing = card.querySelector(".jd-play");
+      var hit = on ? mediaServerHit(info.code) : null;
+      if (!hit) {
+        // Removed rather than left behind: switching the server off, or pointing
+        // at one that does not hold this work, must take the buttons with it.
+        if (existing) existing.remove();
+        return;
+      }
+      var url = mediaUrl(library.base, hit.id, settings.mediaServer.link);
+      if (existing) {
+        existing.href = url;
+        return;
+      }
+      var play = el("a", "jd-play", "\u25b6");
+      play.href = url;
+      play.target = "_blank";
+      play.rel = "noopener noreferrer";
+      play.title = "Play " + (info.code || "this work") + " from your library";
+      // None of these reach the card: the click opens the player in a new tab,
+      // and the other four are what would otherwise start a drag or select the
+      // cover text on the way past.
+      ["click", "auxclick", "mousedown", "mouseup", "contextmenu"].forEach(function (type) {
+        play.addEventListener(type, function (event) {
+          event.stopPropagation();
+        });
+      });
+      card.appendChild(play);
+    });
+  }
+
+  /**
+   * Is this work already in the configured library?
+   *
+   * Read through mediaServerHit() rather than the index directly, so the three
+   * conditions that make the answer "no" - integration off, no snapshot yet,
+   * snapshot from a different server - are all decided in one place.
+   */
+  function isOwned(href) {
+    var info = known.get(href);
+    if (!info) return false;
+    return !!mediaServerHit(info.code);
+  }
+
+  /**
    * Does this card survive the current VR filter?
    *
    * One predicate for hiding cards and for the page-wide buttons, so "select all"
@@ -2336,11 +2872,27 @@
    * Driven from the card list rather than from a click handler per checkbox so
    * that it cannot disagree with `selected` however many cards there are, and so
    * the visible state and the model are always updated together.
+   *
+   * Bulk selection, and only bulk selection, steps over what the library already
+   * holds. "Select all" means "everything on this page", and it is only worth
+   * having if it is everything you lack; a work you already own is not work, it
+   * is a second download of the same torrent. A hand tick is a deliberate
+   * request and is left alone - see pickMagnet() for what it does instead.
+   *
+   * Returns the ticked count and the skipped count, because a button that
+   * silently ticks fewer covers than it names is a button nobody can trust.
    */
   function setPageSelection(on) {
     var cards = selectableCards();
+    var ticked = 0;
+    var skipped = 0;
     cards.forEach(function (card) {
       var href = card.getAttribute("href");
+      if (on && isOwned(href)) {
+        skipped++;
+        return;
+      }
+      ticked++;
       if (on) selected.add(href);
       else selected.delete(href);
       var box = card.querySelector(".jd-box");
@@ -2355,7 +2907,7 @@
     updateCount();
     requestBulkRefresh();
     selectionChanged();
-    return cards.length;
+    return { ticked: ticked, skipped: skipped };
   }
 
   // ---------------------------------------------- performer links, site-wide
@@ -2462,7 +3014,17 @@
         log(job.label + ": no works found on any page.", "wa");
         return;
       }
-      outcome.hrefs.forEach(function (href) {
+      // Her whole filmography is the one selection that is worth having because
+      // it is exhaustive, so it is the one that must not spend a download on a
+      // work the user already has. A hand tick is untouched by this - see
+      // pickMagnet() for what that does instead.
+      var owned = [];
+      var keep = outcome.hrefs.filter(function (href) {
+        if (!isOwned(href)) return true;
+        owned.push(href);
+        return false;
+      });
+      keep.forEach(function (href) {
         selected.add(href);
       });
       // The crawl survives navigation, so the ticks it produced must too - and so
@@ -2471,8 +3033,15 @@
 
       var where = pagesPhrase(result.pages);
       warnIfTruncated(result, where, "The works found so far are queued.");
-      if (!outcome.hrefs.length) {
-        log(job.label + ": " + result.works.length + " works found, but none match " + filterScope() + ".", "wa");
+      if (owned.length) {
+        log(owned.length + " of her works are already in your library and were left unticked.", "mu");
+      }
+      if (!keep.length) {
+        log(
+          job.label + ": " + result.works.length + " works found, but none match " +
+            filterScope() + (owned.length ? ", or they are all already in your library" : "") + ".",
+          "wa",
+        );
         return;
       }
 
@@ -2480,20 +3049,20 @@
         // The panel button on her own page sends as it goes, so hand straight
         // over to a send job. Enqueuing rather than calling keeps the traversal
         // and both endings in one place.
-        if (!confirmSend(outcome.hrefs.length, job.label)) {
+        if (!confirmSend(keep.length, job.label)) {
           log("Cancelled - " + job.label + "'s works were not sent.", "wa");
           return;
         }
-        enqueue({ kind: "send", label: job.label, hrefs: outcome.hrefs, cursor: 0, sent: 0, failures: 0 });
+        enqueue({ kind: "send", label: job.label, hrefs: keep, cursor: 0, sent: 0, failures: 0 });
         log(
-          job.label + ": " + outcome.hrefs.length + " of " + result.works.length +
+          job.label + ": " + keep.length + " of " + result.works.length +
             " works found (" + filterScope() + ", from " + where + "). Sending now.",
           "ok",
         );
         return;
       }
       log(
-        job.label + ": " + outcome.hrefs.length + " of " + result.works.length +
+        job.label + ": " + keep.length + " of " + result.works.length +
           " works queued (" + filterScope() + ", from " + where +
           "). Press Download selected to send them.",
         "ok",
@@ -2779,6 +3348,45 @@
   }
 
   /**
+   * Redraw everything that depends on the library snapshot.
+   *
+   * One funnel, called from every point that can change the answer - a sync
+   * finishing, settings being saved, the cache being dropped - so a play button
+   * cannot outlive the library entry it points at, and a work page cannot keep
+   * claiming a status that a sync has since changed.
+   */
+  function libraryRepaint() {
+    decoratePlays();
+    requestMagnetRefresh();
+    requestBulkRefresh();
+    var status = document.querySelector(".jd-libstatus");
+    if (status && status._paint) status._paint();
+  }
+
+  /** "just now", "12 min ago", "3 hours ago" - coarse on purpose. */
+  function agePhrase(ms) {
+    var mins = Math.max(0, Math.round(Number(ms) / 60000));
+    if (mins < 1) return "just now";
+    if (mins < 60) return mins + " min ago";
+    var hours = Math.round(mins / 60);
+    return hours + (hours === 1 ? " hour ago" : " hours ago");
+  }
+
+  /** One line describing what the script knows about the library. */
+  function libraryStatusText() {
+    var cfg = settings.mediaServer || DEFAULTS.mediaServer;
+    if (!cfg.enabled) return "Off.";
+    if (!String(cfg.apiKey || "").trim()) return "No API key set, so the library cannot be read.";
+    if (!libraryMatchesServer()) return "Not read from " + mediaServerBase() + " yet.";
+    var known = Object.keys(library.index || {}).length;
+    if (!library.at) return "Not read yet.";
+    return (
+      known + " title" + (known === 1 ? "" : "s") + " recognised · read " +
+      agePhrase(Date.now() - library.at)
+    );
+  }
+
+  /**
  * Redraw the queue row.
  *
  * Kept outside buildPanel() because the queue is driven from many places - a
@@ -3040,17 +3648,30 @@ function deselectWork(href) {
         return card.dataset.jdDone === "1";
       }).length;
       var scoped = countScope();
-      selectAll.textContent = cards.length ? "Select all (" + cards.length + ")" : "Select all";
-      selectAll.title = cards.length
-        ? "Tick all " + cards.length + " " + scoped + (total > cards.length ? " (of " + total + " works)" : "")
-        : "Nothing to select";
+      // The count on the button is what the click will actually tick, not what
+      // is on the page. A bulk action that steps over owned works has to say so
+      // on its face: "Select all (34)" that ticks 28 is the same lie as a button
+      // that ignores the filter, and the title is the only place that can
+      // explain why without a paragraph on the button itself.
+      var owned = settings.mediaServer && settings.mediaServer.enabled
+        ? cards.filter(function (card) {
+            return isOwned(card.getAttribute("href"));
+          }).length
+        : 0;
+      var tickable = cards.length - owned;
+      selectAll.textContent = tickable ? "Select all (" + tickable + ")" : "Select all";
+      selectAll.title = !cards.length
+        ? "Nothing to select"
+        : "Tick " + tickable + " " + scoped +
+          (total > cards.length ? " (of " + total + " works)" : "") +
+          (owned ? " · " + owned + " already in your library, left alone" : "");
       var hidden = total - cards.length;
       clearBtn.title = selected.size
         ? "Untick all " + selected.size + " selected works, including " + hidden +
           " hidden by the filter"
         : "Nothing is ticked";
       clearBtn.disabled = !selected.size;
-      selectAll.disabled = !cards.length;
+      selectAll.disabled = !tickable;
     }
 
     // Exposed so the rest of the script can refresh the labels when the filter
@@ -3061,7 +3682,16 @@ function deselectWork(href) {
       // Guarded rather than assumed: a listing that renders after the panel is
       // built has no cards to act on, and claiming "selected 34" would be a lie
       // the count would immediately contradict.
-      if (!setPageSelection(true)) log("No works match the current filter.", "wa");
+      var out = setPageSelection(true);
+      if (!out.ticked && !out.skipped) {
+        log("No works match the current filter.", "wa");
+      } else if (out.skipped) {
+        log(
+          "Ticked " + out.ticked + ", skipped " + out.skipped +
+            " already in your library. Tick one by hand to upgrade it instead.",
+          "mu",
+        );
+      }
     });
     clearBtn.addEventListener("click", function () {
       // Reaches every tab on its own; the extra refresh is only for this page's
@@ -3203,15 +3833,63 @@ function deselectWork(href) {
       .join(" or ");
   }
 
+  /**
+   * The tag preferences, plus an upgrade instruction when the library already
+   * holds the work.
+   *
+   * A fresh object every time: `settings.tags` is the live settings object, and
+   * adding a field to it would persist an upgrade rule as if it were a tag.
+   *
+   * `upgradeFrom` is a number, and 0 is meaningful - it means "held, size
+   * unknown" - so the presence check is against undefined/null and not against
+   * falsiness. Getting that wrong would silently turn every size-less item into
+   * an ordinary pick, which is the duplicate download this exists to prevent.
+   */
+  function prefsFor(hit) {
+    var prefs = {};
+    var tags = settings.tags || {};
+    Object.keys(tags).forEach(function (k) {
+      prefs[k] = tags[k];
+    });
+    if (hit) prefs.upgradeFrom = hit.size > 0 ? hit.size : 0;
+    return prefs;
+  }
+
   function sendOne(href, label) {
     var target = engine();
     return fetchMagnets(href)
       .then(function (detail) {
-        var picked = pickMagnet(detail.magnets, settings.minSize, settings.maxSize, settings.preferredSize, settings.tags);
+        // Looked up here rather than captured when the work was ticked: a tick
+        // and the send can be minutes and one library sync apart, and the answer
+        // that matters is the one at the moment of sending.
+        var hit = settings.mediaServer && settings.mediaServer.enabled
+          ? mediaServerHit(detail.code)
+          : null;
+        var picked = pickMagnet(
+          detail.magnets,
+          settings.minSize,
+          settings.maxSize,
+          settings.preferredSize,
+          prefsFor(hit),
+        );
         if (!picked.magnet) {
+          if (picked.reason === "already-owned") {
+            return {
+              ok: false,
+              reason: "already in your library at " + formatSize(hit.size) +
+                " and no release here is a real upgrade, so nothing was sent",
+            };
+          }
           return { ok: false, reason: picked.reason === "ads-only" ? "only advert magnets" : "no magnets on this page" };
         }
-        if (picked.reason === "outside-window") {
+        if (picked.reason === "upgrade") {
+          log(
+            label + ": already in your library" +
+              (hit.size > 0 ? " at " + formatSize(hit.size) : "") +
+              ", taking the next release up",
+            "mu",
+          );
+        } else if (picked.reason === "outside-window") {
           log(label + ": " + formatSize(picked.magnet.size) + " is outside your size window", "wa");
         }
         var relaxed = relaxedNames(picked.relaxed);
@@ -3323,9 +4001,35 @@ function deselectWork(href) {
         })) {
           head.appendChild(document.createTextNode(" · adverts marked"));
         }
+        // Always present and hidden when not held, for the same reason the note
+        // below is: a library sync can finish after this panel is built, and a
+        // page that keeps saying "not in your library" while the play buttons
+        // appear on the listing behind it is a contradiction the user has to
+        // resolve by hand.
+        var inLib = el("span");
+        inLib.style.display = "none";
+        head.appendChild(inLib);
         box.appendChild(head);
 
-        var picked = pickMagnet(detail.magnets, settings.minSize, settings.maxSize, settings.preferredSize, settings.tags);
+        /**
+         * The library entry for this work, asked for afresh every time.
+         *
+         * Not captured at load: the snapshot can arrive, expire or be pointed at
+         * a different server while the page sits open, and the answer that
+         * matters is the current one.
+         */
+        function libraryNow() {
+          if (!settings.mediaServer || !settings.mediaServer.enabled) return null;
+          return mediaServerHit(detail.code);
+        }
+
+        var picked = pickMagnet(
+          detail.magnets,
+          settings.minSize,
+          settings.maxSize,
+          settings.preferredSize,
+          prefsFor(libraryNow()),
+        );
 
         // Marks this panel as populated so a repeat visit does not duplicate it.
         var rows = el("div", "jd-magnet-rows");
@@ -3373,14 +4077,52 @@ function deselectWork(href) {
          * chosen" while the control that decides it had moved underneath.
          */
         rows._repick = function () {
-          var now = pickMagnet(detail.magnets, settings.minSize, settings.maxSize, settings.preferredSize, settings.tags);
+          var hit = libraryNow();
+          var now = pickMagnet(
+            detail.magnets,
+            settings.minSize,
+            settings.maxSize,
+            settings.preferredSize,
+            prefsFor(hit),
+          );
           Array.prototype.forEach.call(rows.children, function (row) {
             row.classList.toggle("pick", !!(now.magnet && row.dataset.jdUri === now.magnet.uri));
           });
+
+          // The link is rebuilt only when it would actually change: this runs on
+          // every slider move, and replacing a focused link under the cursor
+          // would drop the focus of anyone tabbing through the panel.
+          var url = hit ? mediaUrl(library.base, hit.id, settings.mediaServer.link) : "";
+          if (inLib._url !== url) {
+            inLib._url = url;
+            inLib.textContent = "";
+            if (hit) {
+              inLib.appendChild(document.createTextNode(" · "));
+              var play = el("a", "jd-inlib", "\u25b6 play from your library");
+              play.href = url;
+              play.target = "_blank";
+              play.rel = "noopener noreferrer";
+              inLib.appendChild(play);
+            }
+            inLib.style.display = hit ? "" : "none";
+          }
+
           var note = box.querySelector(".jd-window-note");
           if (note) {
             // Both reasons can apply at once, and then both have to be said.
             var parts = [];
+            var held = hit ? (hit.size > 0 ? " at " + formatSize(hit.size) : "") : "";
+            if (now.reason === "already-owned") {
+              parts.push(
+                "Already in your library" + held +
+                  ", and nothing here is a larger release, so nothing would be sent.",
+              );
+            } else if (now.reason === "upgrade") {
+              parts.push(
+                "Already in your library" + held +
+                  ", so this is the next release up rather than the one you have.",
+              );
+            }
             if (now.reason === "outside-window") {
               parts.push(
                 "No magnet fell inside " + formatSize(settings.minSize) + "–" +
@@ -3440,26 +4182,53 @@ function deselectWork(href) {
 
     var inputs = {};
 
-    function section(title, engineName, fields) {
+    /**
+     * One settings group.
+     *
+     * `bucket` is the storage key for the group: `aria2`, `qbittorrent`, or
+     * `mediaServer`. Text and number fields show the vendor default as a
+     * placeholder and hold the user's own value only, so an untouched field is
+     * visibly untouched. Checkboxes and selects cannot express "empty means
+     * default", so they always carry a value.
+     */
+    function section(title, bucket, fields) {
       var wrap = el("div", "jd-set");
       wrap.appendChild(el("h4", null, title));
+      var defaults = DEFAULTS.downloaders[bucket] || DEFAULTS[bucket] || {};
       fields.forEach(function (field) {
         var label = el("label");
         label.appendChild(el("span", null, field.label));
-        var input = el("input");
-        input.type = field.secret ? "password" : field.type || "text";
-        if (field.type) input.type = field.type;
-        // Placeholder is the vendor default; the value is only the user's own
-        // override, so an untouched field is visibly untouched.
-        var fallback = DEFAULTS.downloaders[engineName][field.key];
-        input.placeholder = fallback === "" || fallback === undefined ? field.placeholder : String(fallback);
-        var mine = overrideFor(engineName, field.key);
-        input.value = mine === undefined ? "" : String(mine);
-        inputs[engineName + "." + field.key] = { input: input, spec: field };
+        var input = el(field.type === "select" ? "select" : "input");
+        if (field.type === "checkbox") {
+          input.type = "checkbox";
+        } else if (field.type !== "select") {
+          input.type = field.secret ? "password" : field.type || "text";
+        }
+        if (field.type === "select") {
+          field.options.forEach(function (pair) {
+            var option = el("option", null, pair[1]);
+            option.value = pair[0];
+            input.appendChild(option);
+          });
+        }
+        var fallback = defaults[field.key];
+        var mine = overrideFor(bucket, field.key);
+        if (field.type === "checkbox") {
+          input.checked = mine === undefined ? !!fallback : !!mine;
+        } else if (field.type === "select") {
+          input.value = String(mine === undefined ? fallback : mine);
+        } else {
+          // Placeholder is the vendor default; the value is only the user's own
+          // override, so an untouched field is visibly untouched.
+          input.placeholder = fallback === "" || fallback === undefined ? field.placeholder : String(fallback);
+          input.value = mine === undefined ? "" : String(mine);
+        }
+        inputs[bucket + "." + field.key] = { input: input, spec: field };
         label.appendChild(input);
         wrap.appendChild(label);
       });
       box.appendChild(wrap);
+      return wrap;
     }
 
     section("aria2", "aria2", [
@@ -3478,6 +4247,57 @@ function deselectWork(href) {
       { key: "category", label: "Category", placeholder: "jav" },
     ]);
 
+    box.appendChild(el("h3", null, "Jellyfin / Emby (optional)"));
+    box.appendChild(
+      el(
+        "p",
+        "hint",
+        "Read-only. With this on, works already in your library are marked with a " +
+          "play button, left out of Select all, and upgraded rather than re-downloaded " +
+          "when you tick one by hand. Needs an API key from the server's dashboard " +
+          "(Dashboard → API Keys). Leave it off and nothing here is used.",
+      ),
+    );
+
+    var mediaSection = section("Server", "mediaServer", [
+      { key: "enabled", label: "Enabled", type: "checkbox" },
+      { key: "host", label: "Host", placeholder: "http://localhost" },
+      { key: "port", label: "Port", type: "number", placeholder: "8096" },
+      { key: "apiKey", label: "API key", secret: true, placeholder: "(from the dashboard)" },
+      {
+        key: "link",
+        label: "Open link",
+        type: "select",
+        options: [
+          ["play", "Play directly"],
+          ["play-legacy", "Play directly (Jellyfin 10.8 and older)"],
+          ["details", "Item page"],
+        ],
+      },
+    ]);
+
+    var status = el("div", "jd-count jd-libstatus");
+    status._paint = function () {
+      status.textContent = "Library: " + libraryStatusText();
+    };
+    mediaSection.appendChild(status);
+
+    var syncRow = el("div", "jd-actions");
+    var syncBtn = el("button", "jd-btn ghost", "Read library now");
+    syncBtn.type = "button";
+    syncBtn.addEventListener("click", function () {
+      // Collected first, so the button reads the address that is on screen
+      // rather than the one that was saved last time.
+      collect();
+      syncBtn.disabled = true;
+      syncLibrary(true).then(function () {
+        syncBtn.disabled = false;
+      });
+    });
+    syncRow.appendChild(syncBtn);
+    mediaSection.appendChild(syncRow);
+    status._paint();
+
     var actions = el("div", "jd-actions");
     var test = el("button", "jd-btn", "Test connection");
     var save = el("button", "jd-btn", "Save");
@@ -3490,22 +4310,39 @@ function deselectWork(href) {
     box.appendChild(actions);
 
     function collect() {
-      // Rebuild the sparse override map from what is currently in the form:
-      // blank means "vendor default", so the key is dropped entirely.
-      var overrides = {};
+      // Rebuild the sparse override maps from what is currently in the form:
+      // blank means "vendor default", so the key is dropped entirely. The media
+      // server is a sibling of `downloaders`, not an entry in it - that object
+      // is a list of places to *send* a magnet, and this is not one.
+      var downloaders = {};
+      var mediaServer = {};
       Object.keys(inputs).forEach(function (key) {
-        var parts = key.split(".");
-        var engineName = parts[0];
+        var bucket = key.split(".")[0];
         var field = inputs[key];
-        var raw = field.input.value.trim();
-        if (!overrides[engineName]) overrides[engineName] = {};
-        if (raw === "") {
-          delete overrides[engineName][field.spec.key];
+        var spec = field.spec;
+        var target;
+        if (bucket === "mediaServer") {
+          target = mediaServer;
+        } else {
+          if (!downloaders[bucket]) downloaders[bucket] = {};
+          target = downloaders[bucket];
+        }
+        if (spec.type === "checkbox") {
+          target[spec.key] = field.input.checked;
           return;
         }
-        overrides[engineName][field.spec.key] = field.spec.type === "number" ? Number(raw) : raw;
+        if (spec.type === "select") {
+          target[spec.key] = field.input.value;
+          return;
+        }
+        var raw = field.input.value.trim();
+        if (raw === "") {
+          delete target[spec.key];
+          return;
+        }
+        target[spec.key] = spec.type === "number" ? Number(raw) : raw;
       });
-      storedSettings = { ...storedSettings, downloaders: overrides };
+      storedSettings = { ...storedSettings, downloaders: downloaders, mediaServer: mediaServer };
       settings = deepMerge(DEFAULTS, storedSettings);
     }
 
@@ -3533,6 +4370,18 @@ function deselectWork(href) {
       // last "reachable" describes a configuration that no longer exists.
       targetReachable = false;
       persist();
+      // The library snapshot belongs to the server it was read from, so a
+      // changed address has to invalidate it rather than leave the last server's
+      // titles answering for this one. Read again straight away, because the
+      // user has just told the script where to look and a play button that only
+      // appears on the next page load reads as the setting not working.
+      if (!libraryMatchesServer()) {
+        dropLibrary();
+        libraryRepaint();
+        if (settings.mediaServer.enabled) syncLibrary(true);
+      } else {
+        libraryRepaint();
+      }
       log("Settings saved", "ok");
       closeSettings();
     });
@@ -3569,6 +4418,9 @@ function deselectWork(href) {
       document.head.appendChild(style);
     }
     cards.forEach(decorateCard);
+    // After the ticks, because the play button is positioned relative to the
+    // same card and must never end up underneath one.
+    decoratePlays();
     applyFilter();
     updateCount();
     // Cards are only decorated now, so this is the first point at which the
@@ -3585,12 +4437,19 @@ function deselectWork(href) {
     // the pause flag to decide what to show.
     restoreSelection();
     loadQueue();
+    // The cached library, before any card is decorated, so a page load paints
+    // its play buttons from the cache instead of waiting for a request.
+    readLibrary();
     // Live sync from sibling tabs. Registered once, and its handler only ever
     // reads - see onSharedChange().
     window.addEventListener("storage", onSharedChange);
 
     buildPanel();
     renderQueueStatus();
+
+    // Before the detail-page branch below, which returns early. One request per
+    // six hours, or none at all when the snapshot is fresh.
+    syncLibraryIfStale();
 
     // Hide the site's own advert cards here rather than only inside
     // decorateAll(), because decorateAll() gives up on a route with no works and

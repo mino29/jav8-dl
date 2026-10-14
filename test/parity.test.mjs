@@ -155,6 +155,77 @@ for (const key of ["ofWhichOfferUncensoredChoice", "ofWhichOfferChineseChoice",
   r.check(`${key} is a real ratio`, worth[key] >= 0 && worth[key] <= 1, true);
 }
 
+// ------------------------------------------------------------- code matching
+// The matching key and the extractor are the join between the site and the
+// user's library. A change to either is a change to what "already have it"
+// means, so both are pinned here.
+r.check("the extractor pattern agrees with the spec", api.CODE_IN_TEXT.source, spec.codeMatching.extractorPattern);
+r.check("the key rule agrees on the site's own spelling", api.codeKey("fex-004"), spec.codeMatching.examples["fex-004"]);
+r.check("and on the unpadded one", api.codeKey("fex-4"), spec.codeMatching.examples["fex-4"]);
+r.check("and on the numeric-prefix series", api.codeKey("259LUXU-1900"), spec.codeMatching.examples["259LUXU-1900"]);
+// Every example in the spec has to be the value the code produces, or the spec
+// is documenting a rule that is not the one implemented.
+for (const [input, expected] of Object.entries(spec.codeMatching.examples)) {
+  const actual = input === "h_259fex00004"
+    ? api.codeKeys(input).join(" and ")
+    : api.codeKey(input);
+  r.check(`example ${input}`, actual, expected);
+}
+// The noise rule, restated: each of these must yield no key at all.
+for (const noise of spec.codeMatching.notCodes) {
+  r.check(`${noise} is not a code`, api.codeKeys(noise).length, 0);
+}
+r.check("the minimum letter count is real", api.codeKeys("A1").length, 0);
+r.check("the minimum digit count is real", api.codeKeys("AB1").length, 0);
+r.check("two and two is enough", api.codeKeys("AB12").length, 1);
+r.check("a leading digit run yields two keys", api.codeKeys("259LUXU-1900.mp4").length, spec.codeMatching.keysPerMatch.withLeadingDigits);
+r.check("no leading digit run yields one", api.codeKeys("IPZZ-961.mp4").length, spec.codeMatching.keysPerMatch.withoutLeadingDigits);
+
+// --------------------------------------------------------------- media server
+// The integration is opt-in and points nowhere in particular until the user says
+// otherwise. Both of those are asserted, because either one failing is the
+// difference between a feature and a surprise.
+r.check("media server defaults match the spec", api.DEFAULTS.mediaServer, spec.mediaServer.defaults);
+r.check("the integration is off by default", api.DEFAULTS.mediaServer.enabled, false);
+r.check("no API key ships", api.DEFAULTS.mediaServer.apiKey, "");
+r.check("the default host is a documentation address", api.DEFAULTS.mediaServer.host, "http://localhost");
+r.check("the default port is Jellyfin's", api.DEFAULTS.mediaServer.port, 8096);
+// The three link routes, each pinned to the spec's path.
+r.check("link mode paths match the spec", api.MEDIA_LINK, spec.mediaServer.linkModes);
+r.check("the default link mode exists", Object.keys(api.MEDIA_LINK).includes(api.DEFAULTS.mediaServer.link), true);
+r.check("every documented link mode is offered", Object.keys(spec.mediaServer.linkModes).sort(), Object.keys(api.MEDIA_LINK).sort());
+for (const [mode, path] of Object.entries(spec.mediaServer.linkModes)) {
+  r.check(`link mode ${mode} composes`, api.mediaUrl("http://localhost:8096", "abc", mode), "http://localhost:8096" + path + "abc");
+}
+// The upgrade rule.
+r.check("upgrade ratio matches the spec", api.UPGRADE_MIN_RATIO, spec.mediaServer.ownedBehaviour.upgradeRatio);
+r.check("the ratio is a real step up", api.UPGRADE_MIN_RATIO > 1, true);
+r.check("bulk selection skips owned works", spec.mediaServer.ownedBehaviour.bulkSelection.startsWith("skipped"), true);
+// The two behaviours have to be the ones the code implements, not just prose.
+const held = 3 * api.GB;
+const upgraded = api.pickMagnet(
+  [
+    { uri: "a", size: held, tier: "clean", name: "mine" },
+    { uri: "b", size: 4 * api.GB, tier: "clean", name: "next" },
+    { uri: "c", size: 12 * api.GB, tier: "clean", name: "big" },
+  ],
+  api.DEFAULTS.minSize,
+  api.DEFAULTS.maxSize,
+  api.DEFAULTS.preferredSize,
+  { upgradeFrom: held },
+);
+r.check("an owned work is upgraded, not re-downloaded", upgraded.reason, "upgrade");
+r.check("and the pick is one tier up", upgraded.magnet.size, 4 * api.GB);
+const stuck = api.pickMagnet(
+  [{ uri: "a", size: held, tier: "clean", name: "mine" }],
+  api.DEFAULTS.minSize,
+  api.DEFAULTS.maxSize,
+  api.DEFAULTS.preferredSize,
+  { upgradeFrom: held },
+);
+r.check("nothing larger means nothing sent", stuck.magnet, null);
+r.check("and it is named as already owned", stuck.reason, "already-owned");
+
 // ------------------------------------------------------------------ ad cards
 // The facts the script relies on, restated from the live page. These are the
 // assertions that would have caught the previous rule: it assumed ad cards were

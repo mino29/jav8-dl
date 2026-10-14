@@ -34,6 +34,10 @@ Three steps. The third is the one people miss.
 
 Then reload any jav8.vip page and tick something.
 
+That is all that is required. If you keep your collection on Jellyfin or Emby,
+there is an optional extra: see [Play from your
+library](#play-from-your-library-and-do-not-download-it-twice).
+
 ## You need a download client already set up
 
 **This script does not install, start or configure aria2 or qBittorrent. It only
@@ -112,6 +116,8 @@ In short:
 
 - ✅ **Tick** the covers you want, press **Download selected**, and walk away
 - 📏 **Size** slider picks the release closest to the size you asked for
+- ▶️ **Already in your library?** It gets a play button instead of a second
+  download — see [Jellyfin / Emby](#play-from-your-library-and-do-not-download-it-twice)
 - 🙈 **Adverts are hidden** automatically — you never see or send one
 - 🔁 **Queues keep going** when you change page, refresh, or open another tab
 - ⏸️ **Pause** freezes everything without losing your place
@@ -130,7 +136,7 @@ The panel in the top right corner holds the controls:
 | **＋** | On any performer link: queue her entire filmography |
 | **Pause / Start** | Hold everything, or let it go again |
 | **Cancel all** | Stop every crawl and download in progress |
-| **Settings** | Client address, credentials, save path |
+| **Settings** | Client address, credentials, save path, and the optional [Jellyfin / Emby](#play-from-your-library-and-do-not-download-it-twice) server |
 
 ### Several tabs at once
 
@@ -201,6 +207,46 @@ Two notes on how this was worked out, because they are both easy to get wrong:
 - 🀄 The same fact is written two different ways and the two barely overlap:
   uncensored is `-U` *or* `无码`, subtitles are `-C` *or* `-中文字幕`. Matching
   either spelling alone finds about half of what it claims to.
+
+### Play from your library, and do not download it twice
+
+If you keep your collection on **Jellyfin** or **Emby**, the script can read that
+server and use it. Off by default, and nothing happens until you turn it on.
+
+Set it up in **Settings → Jellyfin / Emby**: tick **Enabled**, give it the
+address, and paste an **API key** from the server's own dashboard (*Dashboard →
+API Keys → +*). Then press **Read library now**, or just reload a page. The panel
+says how many titles it recognised and when it last looked.
+
+Once it is on:
+
+- ▶️ **A play button appears on the cover** of every work you already have, in the
+  top-right corner. It opens that work in your media server and starts playing.
+  Middle-click and *open in new tab* work the way they do on any link.
+- ✅ **Select all steps over them**, and says how many it skipped. The same goes
+  for **All works** and **＋** on a performer — her whole filmography is only worth
+  having if it is the whole filmography you *lack*.
+- ⬆️ **Ticking one by hand upgrades it instead.** You asked for that work on
+  purpose, so the only reason is a better copy: the script takes the smallest
+  release at least a quarter larger than the one you have, and says so. If nothing
+  on the page is bigger, **nothing is sent** and the log tells you why. It will
+  not hand you the same torrent again.
+
+Worth knowing:
+
+- 🔍 **The match is the catalogue number, not the title.** A cover carries
+  `fex-004`; a file called `FEX-004`, `fex 004`, `fex004` or `h_259fex00004` is
+  recognised as the same work. Numbers that begin a code, like `259LUXU-1900`,
+  are handled too.
+- 📚 **One request, cached for six hours.** The script asks your server for the
+  whole library once and keeps the answer, so browsing costs one request per six
+  hours rather than one per cover. **Read library now** refreshes it on demand.
+- 🔒 **Read-only, and it never sends anything to your server.** The key is stored
+  in your browser like the other settings, and the only thing the script ever asks
+  for is a list.
+- 🔗 **If the play button lands on an error page**, your Jellyfin is older or
+  newer than the link format. Change **Open link** to *Play directly (Jellyfin
+  10.8 and older)*, or to *Item page* — one dropdown, no editing.
 
 ### Adverts are hidden
 
@@ -315,6 +361,16 @@ The panel log says what went wrong. The usual ones:
 - **"refused the login"** — wrong username or password.
 - **"could not read this page from jav8.vip"** — the site was slow or rate
   limiting. Nothing is wrong with your download client.
+- **"Jellyfin / Emby rejected the API key"** — the key is wrong, or was deleted in
+  the server dashboard. Make a new one there and paste it into **Settings**.
+- **"Jellyfin / Emby: no API key set"** — the integration is on but the key box is
+  empty. Nothing is read, nothing is skipped, and no play buttons appear.
+- **"Jellyfin / Emby: no answer from ..."** — the request never left the browser,
+  or nothing is listening. Check the host and port in **Settings**, and that your
+  manager's `@connect` allows that host (the script ships `@connect *`, which
+  does).
+- **"Jellyfin / Emby: ... answered 404"** — the address is right but the API is
+  not there. Check it is Jellyfin or Emby on that port, not something else.
 
 A batch stops after three failed logins on purpose. qBittorrent bans your IP for
 an hour after five, so pushing on would lock you out of your own client.
@@ -338,6 +394,13 @@ an hour after five, so pushing on would lock you out of your own client.
   sent: adverts are refused at the magnet too.
 - 🐌 **jav8.vip starts ignoring you?** That is rate limiting. Wait an hour; the
   script is already as gentle as it can be while still being useful.
+- ▶️ **The play button opens an error page?** Your media server's web routes differ
+  from the default. Change **Open link** in **Settings** — *Play directly
+  (Jellyfin 10.8 and older)* for older servers, or *Item page* to always land on
+  the work's page instead. Nothing else changes.
+- 🎬 **A work I have is still offered as a download?** Only works whose *catalogue
+  number* appears in your library are recognised. If your files are named without
+  the code — a title only, or an arbitrary name — there is nothing to match on.
 
 ## How it picks a magnet
 
@@ -348,8 +411,17 @@ Short version:
 - 🏷️ Keep only the releases matching your [release tags](#release-tags). This
   decides *which* releases are eligible; the size then decides which of those to
   take. A tag nothing here matches is set aside rather than blocking the work.
+- ⬆️ If you already have the work in [Jellyfin or Emby](#play-from-your-library-and-do-not-download-it-twice)
+  and ticked it by hand, take the smallest release at least a quarter larger than
+  the copy you have — or nothing at all, if there is none.
 - 📏 Ignore anything outside your size window.
 - 🎯 Of what is left, take the one **closest to your preferred size**.
+
+An upgrade is deliberately not a size preference. The window and the slider answer
+*which release do I want*; when the work is already on your disk the question is
+*which release is better than the one I have*, and a ceiling could rule out the
+only answer. Tag preferences still apply, so an upgrade can be steered to a
+subtitled or uncensored release the same way an ordinary pick can.
 
 Adverts are recognised by markers like `▷` or words like `夸克`, plus a
 deprioritised tier for names containing `@`. The same markers hide advert *covers*
@@ -365,6 +437,14 @@ npm run harness   # serve captured pages at 127.0.0.1:8980 for a browser
 npm run shot      # regenerate docs/panel.png from the real script
 npm run verify    # icon freshness + tests + version bump, before committing
 ```
+
+The harness stubs both download clients *and* a small Jellyfin library, so the
+optional integration can be exercised in a browser without a server. Open
+`http://127.0.0.1:8980/updated?media=1` for a listing with the integration already
+switched on and seeded; `?cached=1` keeps the previous library snapshot instead of
+re-reading it, and `?held=<bytes>` says the fixture's work is held at a given size.
+The stub is read-only by nature — the integration only ever lists a library — so
+none of it can queue anything anywhere.
 
 No dependencies and no build step. The script is a single file you install by
 opening a URL, so anything that has to be compiled first would be a liability.

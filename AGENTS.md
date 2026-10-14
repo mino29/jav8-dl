@@ -265,3 +265,25 @@ Kept here because they are the kind that come back:
   edit the script without bumping, confirm it still exits 1. Restore afterwards
   with `git restore --source=HEAD --staged --worktree -- <path>` and confirm git
   reports the file clean.
+- A harness that seeds storage must seed it *before* the shim that reads it. The
+  GM shim snapshots `sessionStorage` into its own memory when it runs, so a seed
+  placed after it is one page load behind: the first load reads nothing and only
+  a second load sees the settings. That is indistinguishable from the feature not
+  working, and it cost an hour of looking at the wrong thing. Insert the seed
+  ahead of the shim, not merely before the userscript.
+- A harness-only query parameter must not take part in route matching. Adding
+  `?media=1` to switch a stub on silently broke the exact page-1 actress route:
+  `/actress/58956?media=1` stopped matching `/^\/actress\/58956$/` and fell
+  through to the generic actress fixture, so the crawl walked a different career
+  than the test believed - and still reported a plausible count. This is the same
+  bug as matching on the pathname alone, arriving from the other direction, and
+  the fix is to strip the harness's own parameters before comparing.
+- Matching a work against a media library is not a string comparison, and the
+  spellings that matter are not the ones you would guess. The site writes
+  `fex-004`; a filename may write `FEX004`, `fex 004`, or DMM's
+  `h_259fex00004`, which glues a maker number on the front and pads the code.
+  Requiring the number to be the code's own prefix (as `259LUXU-1900` really is)
+  would have matched none of the DMM-named libraries, which is most of them. Two
+  keys per match - with and without the leading digits - is the honest answer,
+  and the failure mode when it over-matches is a work reported as already held,
+  which the log says out loud rather than a silent duplicate download.
