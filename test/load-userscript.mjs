@@ -92,6 +92,7 @@ export function loadApi() {
     "codeKeys",
     "libraryIndexOf",
     "libraryHit",
+    "recognisedCount",
     "findLibrary",
     "libraryNames",
     "morePages",

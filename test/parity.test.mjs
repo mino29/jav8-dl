@@ -198,8 +198,10 @@ r.check("the page size matches the spec", spec.mediaServer.pagination.pageSize, 
 r.check("the page cap matches the spec", spec.mediaServer.pagination.maxPages, 20);
 r.check("the cap is not reachable on a real library", spec.mediaServer.pagination.maxPages * 5000 > spec.mediaServer.protocol.measuredOnRealServer.totalItems, true);
 r.check("the spec records the real server", spec.mediaServer.protocol.measuredOnRealServer.version, "10.10.7");
-r.check("the named library really is the small one", spec.mediaServer.protocol.measuredOnRealServer.byLibrary.JAV < spec.mediaServer.protocol.measuredOnRealServer.totalItems, true);
-r.check("every measured library is accounted for", Object.values(spec.mediaServer.protocol.measuredOnRealServer.byLibrary).reduce((a, b) => a + b, 0), spec.mediaServer.protocol.measuredOnRealServer.totalItems);
+r.check("the named library really is the small one", spec.mediaServer.protocol.measuredOnRealServer.libraryReadItems < spec.mediaServer.protocol.measuredOnRealServer.totalItems, true);
+r.check("and the largest library is most of it", spec.mediaServer.protocol.measuredOnRealServer.largestLibraryItems < spec.mediaServer.protocol.measuredOnRealServer.totalItems, true);
+// The library names are the user's own inventory, so they must not be here.
+r.check("no library names are recorded", spec.mediaServer.protocol.measuredOnRealServer.byLibrary, undefined);
 // The page rule itself, driven the way the reader drives it.
 r.check("one full page is not the end", api.morePages({ collected: 5000, lastPage: 5000, total: 15288, pageSize: spec.mediaServer.pagination.pageSize, pages: 1, maxPages: spec.mediaServer.pagination.maxPages }), true);
 r.check("the cap ends it", api.morePages({ collected: 100000, lastPage: 5000, total: 999999, pageSize: spec.mediaServer.pagination.pageSize, pages: spec.mediaServer.pagination.maxPages, maxPages: spec.mediaServer.pagination.maxPages }), false);
@@ -209,6 +211,19 @@ r.check("a library name resolves through findLibrary", api.findLibrary([{ Name: 
 // The matching was checked against a real library, and the spec says so.
 r.check("the spec records the real-library check", spec.codeMatching.verifiedOnRealLibrary.dangerousCollisions, 0);
 r.check("and no self-resolution failures", spec.codeMatching.verifiedOnRealLibrary.selfResolutionFailures, 0);
+// The reported count must be items, not keys: the log printed keys and produced
+// "583 items, 626 titles recognised", which cannot be true.
+{
+  const items = [
+    { id: "a", name: "FEX-004", path: "/media/jav/FEX-004.mp4" },
+    { id: "b", name: "MIDA-817", path: "/media/jav/h_259mida00817.mp4" },
+    { id: "c", name: "Some Film (2019)", path: "/media/movies/Some Film (2019).mkv" },
+  ];
+  const counted = api.libraryIndexOf(items);
+  r.check("the key count is larger than the reported count", Object.keys(counted).length > api.recognisedCount(items), true);
+  r.check("but the reported count never exceeds the item count", api.recognisedCount(items) <= items.length, true);
+  r.check("and it is the number of items with a code", api.recognisedCount(items), 2);
+}
 // The three link routes, each pinned to the spec's path.
 r.check("link mode paths match the spec", api.MEDIA_LINK, spec.mediaServer.linkModes);
 r.check("the default link mode exists", Object.keys(api.MEDIA_LINK).includes(api.DEFAULTS.mediaServer.link), true);
@@ -244,6 +259,16 @@ const stuck = api.pickMagnet(
 );
 r.check("nothing larger means nothing sent", stuck.magnet, null);
 r.check("and it is named as already owned", stuck.reason, "already-owned");
+
+// The play button's shape and place are a requirement, not a detail: it was
+// asked to be round, centred on the cover, and about a ninth of its surface.
+r.check("the play button is documented as a circle", spec.mediaServer.playButton.shape.startsWith("circle"), true);
+r.check("centred on the cover", spec.mediaServer.playButton.shape.includes("centred"), true);
+r.check("a ninth of the cover, as area", Math.abs(spec.mediaServer.playButton.areaFraction - 1 / 9) < 0.001, true);
+r.check("measured at runtime, not in CSS", spec.mediaServer.playButton.measuredAtRuntime, true);
+r.check("re-placed when the cover resizes", spec.mediaServer.playButton.repositionedBy.includes("ResizeObserver"), true);
+r.check("the library is chosen from a list", spec.mediaServer.libraryField.populatedFrom, "/Library/VirtualFolders");
+r.check("blank means every library", spec.mediaServer.libraryField.emptyMeans, "read every library");
 
 // ------------------------------------------------------------------ ad cards
 // The facts the script relies on, restated from the live page. These are the

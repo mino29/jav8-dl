@@ -2,7 +2,7 @@
 // @name         JAV8 Downloader
 // @namespace    https://github.com/mino29/jav8-dl
 // @homepage     https://github.com/mino29/jav8-dl
-// @version      1.11.1
+// @version      1.11.2
 // @icon          data:image/png;base64,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
 // @description  Tick covers to queue them, filter by VR, prefer uncensored / subtitled / 4K releases, send to aria2 or qBittorrent, and play or skip whatever your Jellyfin or Emby library already holds. Settings live in the browser, not in a config file.
 // @author       mino29
@@ -544,6 +544,22 @@
     var key = codeKey(code);
     if (!key) return null;
     return (index && index[key]) || null;
+  }
+
+  /**
+   * How many of these items carry at least one catalogue code.
+   *
+   * Reported instead of the number of *keys*, which is what the log used to
+   * print and which is larger than the item count whenever one item has two
+   * spellings of its code - DMM's maker-prefix form and the code itself. That
+   * produced "583 items, 626 titles recognised", which is not a sentence that
+   * can be true, and it was the first thing anyone asked about.
+   */
+  function recognisedCount(items) {
+    return (items || []).filter(function (item) {
+      if (!item) return false;
+      return codeKeys(item.name).length > 0 || codeKeys(item.path).length > 0;
+    }).length;
   }
 
   /**
@@ -1515,7 +1531,7 @@
    */
   var SERVER_MAX_PAGES = 20;
 
-  var library = { at: 0, base: "", index: {} };
+  var library = { at: 0, base: "", index: {}, items: 0, recognised: 0 };
 
   /** The scheme://host:port of the configured server. */
   function mediaServerBase() {
@@ -1556,11 +1572,19 @@
       at: Number(raw.at) || 0,
       base: typeof raw.base === "string" ? raw.base : "",
       index: raw.index,
+      items: Number(raw.items) || 0,
+      recognised: Number(raw.recognised) || 0,
     };
   }
 
   function writeLibrary() {
-    var data = { at: library.at, base: library.base, index: library.index };
+    var data = {
+      at: library.at,
+      base: library.base,
+      index: library.index,
+      items: library.items,
+      recognised: library.recognised,
+    };
     try {
       GM_setValue(SERVER_KEY, data);
     } catch (e) {
@@ -1585,7 +1609,7 @@
   }
 
   function dropLibrary() {
-    library = { at: 0, base: "", index: {} };
+    library = { at: 0, base: "", index: {}, items: 0, recognised: 0 };
     writeLibrary();
   }
 
@@ -1626,13 +1650,25 @@
     return resolveLibraryId(cfg, apiKey, base)
       .then(function (parentId) {
         return collectLibrary(cfg, apiKey, parentId).then(function (items) {
-          library = { at: Date.now(), base: base, index: libraryIndexOf(items) };
+          var recognised = recognisedCount(items);
+          library = {
+            at: Date.now(),
+            base: base,
+            index: libraryIndexOf(items),
+            items: items.length,
+            recognised: recognised,
+          };
           writeLibrary();
-          var recognised = Object.keys(library.index).length;
-          log(
-            "Library read: " + items.length + " items, " + recognised + " titles recognised.",
-            "ok",
-          );
+          log("Library read: " + items.length + " items, " + recognised + " with a catalogue number.", "ok");
+          // Worth saying out loud, because the reason a work the user owns is
+          // still offered for download is almost always this and not a bug.
+          if (recognised < items.length) {
+            log(
+              (items.length - recognised) + " of them have no code in the name or path, " +
+                "so nothing on the site can match them.",
+              "mu",
+            );
+          }
           libraryRepaint();
           return true;
         });
@@ -2222,17 +2258,21 @@
 .jd-badge{position:absolute;bottom:4px;left:4px;z-index:40;font-size:9px;line-height:1.5;
   padding:0 4px;border-radius:3px;background:rgba(12,16,20,.8);color:#9ab;pointer-events:none}
 .jd-badge.vr{color:#f6ad55}
-/* The library "play" button sits opposite the tick box, so the two never
-  compete for the same corner, and stays translucent until hovered because it is
-  an offer rather than the page's primary action - the same reasoning as .jd-box.
-  A real anchor, so middle-click and "open in new tab" behave as anyone expects;
-  it is positioned on the card, which decorateAll() has already made relative. */
-.jd-play{position:absolute;top:4px;right:4px;z-index:41;width:24px;height:24px;
-  border-radius:5px;background:rgba(10,14,18,.86);border:1px solid rgba(255,255,255,.55);
-  box-shadow:0 1px 4px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;
-  color:#fff;font:12px/1 sans-serif;text-decoration:none;opacity:.62;
-  transition:opacity .12s,background .12s}
-.jd-play:hover{opacity:1;background:#276749;border-color:#68d391}
+/* The library "play" button: a disc centred on the cover, sized so its area is
+  about a ninth of the cover's - Jellyfin's own shape, and big enough to be the
+  obvious thing to click without hiding what is underneath. Its size and place
+  are measured from the cover rather than written in CSS, because the site gives
+  the cover no width, height or aspect ratio of its own (the <img> carries only
+  a src), so its box comes from CSS that is not ours and moves with the
+  viewport. */
+.jd-play{position:absolute;z-index:41;box-sizing:border-box;display:flex;align-items:center;
+  justify-content:center;border-radius:50%;background:rgba(8,11,15,.55);
+  border:2px solid rgba(255,255,255,.85);box-shadow:0 2px 12px rgba(0,0,0,.55);color:#fff;
+  text-decoration:none;opacity:.68;transition:opacity .12s,background .12s,transform .12s}
+.jd-play:hover{opacity:1;background:rgba(39,103,73,.94);border-color:#68d391;transform:scale(1.07)}
+.jd-play::before{content:"";display:block;width:0;height:0;
+  border-style:solid;border-color:transparent transparent transparent #fff;
+  border-width:.95em 0 .95em 1.65em;margin-left:.14em}
 .jd-inlib{color:#68d391;text-decoration:none}
 .jd-inlib:hover{text-decoration:underline}
 .jd-panel{position:fixed;top:12px;right:12px;z-index:2147483000;width:264px;
@@ -2848,6 +2888,61 @@
   }
 
   /**
+   * Size and centre the play button on the cover.
+   *
+   * Measured rather than written in CSS because the cover carries no width,
+   * height or aspect ratio of its own - it is an <img> with only a src - so its
+   * rendered box comes entirely from stylesheets that are not ours and changes
+   * with the viewport.
+   *
+   * The diameter is chosen so the disc's *area* is about a ninth of the cover's.
+   * That is not a ninth of its width: on a 3:4 cover it works out at about 43%
+   * of the width, and a width-relative rule would look right on one poster shape
+   * and wrong on the next. The floor is there because a ninth of a very small
+   * cover is too small to hit; usability wins over the ratio at that point.
+   */
+  function placePlay(play, cover) {
+    if (!play || !cover) return;
+    var w = cover.offsetWidth;
+    var h = cover.offsetHeight;
+    if (!w || !h) return;
+    var d = Math.round(Math.sqrt((4 * w * h) / (9 * Math.PI)));
+    d = Math.max(28, Math.min(d, Math.round(w * 0.75)));
+    play.style.width = d + "px";
+    play.style.height = d + "px";
+    // The triangle is sized in em, so the disc has to carry the scale that makes
+    // it proportionate: without this it stays the same 7x8px at every size, and
+    // looks lost in a 97px disc.
+    play.style.fontSize = Math.max(9, Math.round(d * 0.22)) + "px";
+    play.style.left = Math.round(cover.offsetLeft + (w - d) / 2) + "px";
+    play.style.top = Math.round(cover.offsetTop + (h - d) / 2) + "px";
+  }
+
+  /**
+   * One observer for every cover on the page, not one per card.
+   *
+   * A cover has no size at all until its image loads and the grid lays out, so
+   * the first measurement is usually 0x0 and a button placed from it would have
+   * no size. Re-measuring on the cover's own resize covers that and the
+   * responsive grid in one rule.
+   */
+  var playSizer = null;
+
+  function watchPlay(cover, play) {
+    cover._jdPlay = play;
+    if (typeof ResizeObserver !== "function") return;
+    if (!playSizer) {
+      playSizer = new ResizeObserver(function (entries) {
+        entries.forEach(function (entry) {
+          var button = entry.target._jdPlay;
+          if (button && button.isConnected) placePlay(button, entry.target);
+        });
+      });
+    }
+    playSizer.observe(cover);
+  }
+
+  /**
    * Put a "play" button on every card whose work the library already holds.
    *
    * Separate from decorateCard(), which runs once per card and bails on the
@@ -2866,24 +2961,41 @@
     worksOnPage().forEach(function (card) {
       var href = card.getAttribute("href");
       var info = known.get(href) || workInfoFromCard(card);
+      var cover = card.querySelector(SELECTORS.cover);
       var existing = card.querySelector(".jd-play");
       var hit = on ? mediaServerHit(info.code) : null;
       if (!hit) {
         // Removed rather than left behind: switching the server off, or pointing
         // at one that does not hold this work, must take the buttons with it.
-        if (existing) existing.remove();
+        if (existing) {
+          existing.remove();
+          if (cover && cover._jdPlay === existing) {
+            cover._jdPlay = null;
+            if (playSizer) playSizer.unobserve(cover);
+          }
+        }
         return;
       }
+      if (!cover) return;
+      // The button is positioned against the card, so the card has to be the
+      // offsetParent. decorateCard() normally has done this already, but a sync
+      // can finish before the cards are decorated at all.
+      if (getComputedStyle(card).position === "static") card.style.position = "relative";
       var url = mediaUrl(library.base, hit.id, settings.mediaServer.link);
       if (existing) {
         existing.href = url;
+        placePlay(existing, cover);
         return;
       }
-      var play = el("a", "jd-play", "\u25b6");
+      // No text child: the triangle is a CSS pseudo-element, so it scales with
+      // the disc instead of depending on which font the platform picks for ▶.
+      var play = el("a", "jd-play");
       play.href = url;
       play.target = "_blank";
       play.rel = "noopener noreferrer";
-      play.title = "Play " + (info.code || "this work") + " from your library";
+      var label = "Play " + (info.code || "this work") + " from your library";
+      play.title = label;
+      play.setAttribute("aria-label", label);
       // None of these reach the card: the click opens the player in a new tab,
       // and the other four are what would otherwise start a drag or select the
       // cover text on the way past.
@@ -2893,6 +3005,8 @@
         });
       });
       card.appendChild(play);
+      placePlay(play, cover);
+      watchPlay(cover, play);
     });
   }
 
@@ -3561,9 +3675,12 @@
     if (!libraryMatchesServer()) return "Not read from " + mediaServerBase() + " yet.";
     var known = Object.keys(library.index || {}).length;
     if (!library.at) return "Not read yet.";
+    if (!library.recognised) {
+      return "Read, but no catalogue number found in any of " + library.items + " items.";
+    }
     return (
-      known + " title" + (known === 1 ? "" : "s") + " recognised · read " +
-      agePhrase(Date.now() - library.at)
+      library.items + (library.items === 1 ? " item, " : " items, ") + library.recognised +
+      " with a catalogue number · read " + agePhrase(Date.now() - library.at)
     );
   }
 
@@ -4445,7 +4562,14 @@ function deselectWork(href) {
       { key: "host", label: "Host", placeholder: "http://localhost" },
       { key: "port", label: "Port", type: "number", placeholder: "8096" },
       { key: "apiKey", label: "API key", secret: true, placeholder: "(from the dashboard)" },
-      { key: "library", label: "Library", placeholder: "all libraries" },
+      {
+        key: "library",
+        label: "Library",
+        type: "select",
+        // Filled from the server; see fillLibrarySelect(). A static list cannot
+        // work, because only the server knows what it calls its libraries.
+        options: [["", "All libraries"]],
+      },
       {
         key: "link",
         label: "Open link",
@@ -4462,11 +4586,89 @@ function deselectWork(href) {
       el(
         "p",
         "hint",
-        "Name one library (for example JAV) to read only that one. Leave it blank " +
-          "to read everything, which works but asks for a lot more: on a server " +
-          "holding films and television too, one library was 582 items out of 15,288.",
+        "Name one library to read only that one. The list is read from your server, so it " +
+          "fills in a moment after this opens. Reading everything works too, but asks for a " +
+          "lot more: on one server holding films and television as well, a single library was " +
+          "582 items out of 15,288.",
       ),
     );
+
+    /**
+     * Fill the Library dropdown from the server.
+     *
+     * Typing a name was a worse idea than it looked: it has to match exactly, the
+     * user has no way to see what the server calls its libraries, and a near miss
+     * silently falls back to reading everything. The list is one request, and
+     * only when this dialog is opened.
+     *
+     * The chosen value is always kept as an option, even when the server does not
+     * list it - because it is unreachable right now, or because the key is not an
+     * admin key and cannot list libraries at all. Otherwise opening the dialog
+     * and pressing Save would quietly clear a setting that was working.
+     */
+    function fillLibrarySelect() {
+      var field = inputs["mediaServer.library"];
+      if (!field) return;
+      var select = field.input;
+      var stored = overrideFor("mediaServer", "library");
+      var wanted = String(stored === undefined ? DEFAULTS.mediaServer.library : stored) || "";
+
+      function add(value, text) {
+        var option = el("option", null, text);
+        option.value = value;
+        select.appendChild(option);
+      }
+
+      function reset(extra) {
+        select.textContent = "";
+        add("", "All libraries");
+        if (extra) extra();
+        // Asked for by scanning, not by building a selector out of the value: a
+        // library name is arbitrary text and a quote in one would throw.
+        var found = false;
+        Array.prototype.forEach.call(select.options, function (option) {
+          if (option.value === wanted) found = true;
+        });
+        if (wanted && !found) add(wanted, wanted + " (not listed)");
+        select.value = wanted;
+      }
+
+      reset();
+      select.disabled = !wanted && !String(settings.mediaServer.apiKey || "").trim();
+
+      var cfg = settings.mediaServer || DEFAULTS.mediaServer;
+      var apiKey = String(cfg.apiKey || "").trim();
+      if (!apiKey) return;
+      request("GET", endpoint(cfg.host, cfg.port, "/Library/VirtualFolders"), {
+        headers: { "X-Emby-Token": apiKey, Accept: "application/json" },
+        timeout: 15000,
+      }).then(
+        function (res) {
+          var folders;
+          try {
+            folders = JSON.parse(res.responseText);
+          } catch (e) {
+            folders = null;
+          }
+          var names = libraryNames(folders);
+          if (!names.length) return;
+          reset(function () {
+            names.forEach(function (name) {
+              add(name, name);
+            });
+          });
+          select.disabled = false;
+        },
+        function () {
+          // Left as it was - "All libraries" plus whatever was already chosen.
+          // Pressing Read library now reports the real problem a moment later,
+          // and a dropdown that empties itself on a network blip would look like
+          // the setting had been lost.
+          select.disabled = false;
+        },
+      );
+    }
+    fillLibrarySelect();
 
     var status = el("div", "jd-count jd-libstatus");
     status._paint = function () {
@@ -4479,8 +4681,10 @@ function deselectWork(href) {
     syncBtn.type = "button";
     syncBtn.addEventListener("click", function () {
       // Collected first, so the button reads the address that is on screen
-      // rather than the one that was saved last time.
+      // rather than the one that was saved last time. The library list is
+      // re-read with it, so a key typed just now fills the dropdown too.
       collect();
+      fillLibrarySelect();
       syncBtn.disabled = true;
       syncLibrary().then(function () {
         syncBtn.disabled = false;

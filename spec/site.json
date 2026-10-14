@@ -275,7 +275,9 @@
       "items": 5000,
       "note": "Checked against a real Jellyfin rather than only invented filenames. Of 34 catalogue codes taken from the captured listing fixture, 5 were genuinely held and every one matched the right work; the other 29 matched nothing. No key that the site can produce was claimed by more than one file, and every one of the 1869 code-like paths resolved to itself.",
       "dangerousCollisions": 0,
-      "selfResolutionFailures": 0
+      "selfResolutionFailures": 0,
+      "reportedCountIsItems": true,
+      "reportedCountNote": "The first version logged the number of keys, which exceeds the number of items whenever one item has two spellings of its code, and printed '583 items, 626 titles recognised'. The count is of items now; see recognisedCount()."
     },
     "keysPerMatch": {
       "withLeadingDigits": 2,
@@ -334,8 +336,10 @@
       "measuredOnRealServer": {
         "version": "10.10.7",
         "totalItems": 15288,
-        "byLibrary": { "JAV": 582, "Movies": 164, "Porno": 188, "MMD": 9890, "Shows": 4464, "Hanime": 0 },
-        "note": "The reason a library name is worth setting: 582 items in one request, against 15,288 in four."
+        "librariesPresent": 7,
+        "libraryReadItems": 582,
+        "largestLibraryItems": 9890,
+        "note": "The reason a library name is worth setting: the library holding the works this script is for was 582 items, against 15,288 for the whole server, and the largest single library held 9,890 that could never match. The library names themselves are the user's own inventory and are deliberately not recorded here."
       }
     },
     "pagination": {
@@ -380,6 +384,50 @@
       "play": "Jellyfin 10.9 and later.",
       "play-legacy": "Jellyfin 10.8 and older, and Emby's hashbang form.",
       "details": "The item page. The safe choice when neither play route works: one click from playing, and it always renders."
+    },
+    "libraryField": {
+      "$comment": [
+        "The library is chosen from a dropdown filled by the server, not typed.",
+        "",
+        "Typing was the first version and it was wrong: the name has to match",
+        "exactly, the user cannot see what the server calls its libraries, and a",
+        "near miss silently falls back to reading everything - which looks like the",
+        "setting being ignored. The list is one request to",
+        "/Library/VirtualFolders, made when the settings dialog is opened and when",
+        "Read library now is pressed.",
+        "",
+        "The chosen value is always kept as an option even when the server does not",
+        "list it, so opening the dialog and saving cannot silently clear a working",
+        "setting just because the server was unreachable."
+      ],
+      "populatedFrom": "/Library/VirtualFolders",
+      "emptyMeans": "read every library",
+      "offeredWhenUnreachable": "the current value, marked '(not listed)'"
+    },
+    "playButton": {
+      "$comment": [
+        "A disc centred on the cover, in the style of Jellyfin's own.",
+        "",
+        "Its size and place are measured from the cover at runtime rather than",
+        "written in CSS, because the site gives the cover no width, height or aspect",
+        "ratio of its own - the <img> carries only a src - so its box comes from",
+        "stylesheets that are not ours and moves with the viewport.",
+        "",
+        "The diameter is chosen so the disc's AREA is about a ninth of the cover's,",
+        "which is what was asked for and is not a ninth of the width: on a 3:4 cover",
+        "that is about 43% of the width. A width-relative rule would look right on",
+        "one poster shape and wrong on the next.",
+        "",
+        "A cover has no size until its image loads, so the first measurement is",
+        "usually 0x0; a ResizeObserver on each cover re-places the button when the",
+        "box becomes real and when the grid reflows."
+      ],
+      "shape": "circle, centred on the cover",
+      "areaFraction": 0.111,
+      "diameterForThreeByFour": "about 0.43 of the cover width",
+      "minimumPixels": 28,
+      "measuredAtRuntime": true,
+      "repositionedBy": "ResizeObserver on the cover"
     },
     "ownedBehaviour": {
       "bulkSelection": "skipped, and the count says so",

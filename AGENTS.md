@@ -295,3 +295,19 @@ Kept here because they are the kind that come back:
   keys per match - with and without the leading digits - is the honest answer,
   and the failure mode when it over-matches is a work reported as already held,
   which the log says out loud rather than a silent duplicate download.
+- A count that can exceed the total it is a count *of* is not a count. The log
+  printed the number of match keys next to the number of items, and because one
+  item can produce two keys it read "583 items, 626 titles recognised" - a
+  sentence that cannot be true. The user asked about it before anything else, and
+  they were right to. Report the number of items that matched, and when that is
+  less than the total say by how much and why, because "why is a work I own still
+  offered for download?" is almost always a file with no catalogue number in its
+  name.
+- Test *data* can accidentally satisfy the matcher under test, and then it proves
+  the opposite of what it looks like. Filler items named `Filler 10`, `Filler 11`
+  were meant to be inert, but two letters and two digits is all the code
+  extractor asks for, so every one of them matched as the catalogue code
+  `FILLER-10` - and a page-loop test reported 5000 recognised titles instead of 9.
+  The assertion looked right because the number was plausible. Give fixture data
+  no shape at all that the code under test looks for, and check the number is
+  what you expect before trusting the thing it is measuring.

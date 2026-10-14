@@ -218,19 +218,22 @@ address, and paste an **API key** from the server's own dashboard (*Dashboard �
 API Keys → +*). Then press **Read library now**, or just reload a page. The panel
 says how many titles it recognised and when it last looked.
 
-**Name the library that holds your JAV**, in the **Library** box — for example
-`JAV`. It is optional, but it is the difference between one small request and
-four large ones: measured on a real server holding films and television too, the
-JAV library was 582 items out of 15,288. Leave it blank and everything is read,
-which works but is slower and makes the script look at a great many titles that
-could never match. If the name is not one the server has, the log lists the ones
-it does.
+**Name the library that holds your JAV**, from the **Library** dropdown — it is
+read from your server when the panel opens, so it fills in a moment after the
+dialog appears. It is optional, but it is the difference between one small
+request and four large ones: measured on a real server holding films and
+television too, the JAV library was 582 items out of 15,288. *All libraries* reads
+everything, which works but makes the script look at a great many titles that
+could never match. A library that has gone missing from the list — because the
+server is unreachable right now — is kept and marked *(not listed)* rather than
+cleared.
 
 Once it is on:
 
-- ▶️ **A play button appears on the cover** of every work you already have, in the
-  top-right corner. It opens that work in your media server and starts playing.
-  Middle-click and *open in new tab* work the way they do on any link.
+- ▶️ **A play button appears on the cover** of every work you already have — a
+  round button in the middle of the cover, about a ninth of its surface, in the
+  style of Jellyfin's own. It opens that work in your media server and starts
+  playing. Middle-click and *open in new tab* work the way they do on any link.
 - ✅ **Select all steps over them**, and says how many it skipped. The same goes
   for **All works** and **＋** on a performer — her whole filmography is only worth
   having if it is the whole filmography you *lack*.
@@ -239,6 +242,18 @@ Once it is on:
   release at least a quarter larger than the one you have, and says so. If nothing
   on the page is bigger, **nothing is sent** and the log tells you why. It will
   not hand you the same torrent again.
+
+The panel reports the read as two numbers, and both are worth reading:
+
+```
+Library read: 583 items, 583 with a catalogue number.
+```
+
+The first is everything in the library you asked it to read. The second is how
+many of those carry a catalogue number the site could match on — a file called
+`Some Film (2019).mkv` has none, and can never be recognised. When those two
+numbers differ the script says by how much and why, because "why is a work I own
+still being offered?" is almost always this and not a bug.
 
 Worth knowing:
 

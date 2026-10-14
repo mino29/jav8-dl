@@ -1183,34 +1183,68 @@ group("UPGRADE_MIN_RATIO - the documented step");
 check("the ratio is 1.25", api.UPGRADE_MIN_RATIO, 1.25);
 check("a quarter larger is enough", 100 * api.UPGRADE_MIN_RATIO, 125);
 
+group("recognisedCount - the number the log reports must be able to be true");
+// The log used to print the number of *keys*, which is larger than the number of
+// items whenever one item carries two spellings of its code. On a real library
+// that read "583 items, 626 titles recognised", which is impossible and was the
+// first thing the user queried.
+{
+  const items = [
+    { name: "FEX-004", path: "/media/jav/FEX-004.mp4" },
+    { name: "MIDA-817", path: "/media/jav/h_259mida00817.mp4" }, // two keys, one item
+    { name: "Some Film (2019)", path: "/media/movies/Some Film (2019).mkv" }, // no code
+    { name: "", path: "" },
+    null,
+  ];
+  check("counts items, not keys", api.recognisedCount(items), 2);
+  // The same item that produces two keys still counts once.
+  check("a two-key item counts once", api.recognisedCount([{ name: "MIDA-817", path: "/media/jav/h_259mida00817.mp4" }]), 1);
+  check("the key count for that item is two", api.codeKeys("h_259mida00817.mp4").length, 2);
+  check("never more than the item count", api.recognisedCount(items) <= items.length, true);
+  check("an item with no code is not counted", api.recognisedCount([{ name: "Some Film (2019)", path: "/media/movies/Some Film (2019).mkv" }]), 0);
+  // Worth knowing: a filler-style name DOES look like a code to the extractor,
+  // because "filler-9000" has the shape of one. It is harmless - no catalogue
+  // code is "FILLER-9000" - but it is the reason the reported number has to be a
+  // count of items rather than of keys.
+  check("a filler name still looks code-shaped", api.codeKeys("filler-9000.mkv"), ["FILLER9000"]);
+  check("an empty list is zero", api.recognisedCount([]), 0);
+  check("null is zero", api.recognisedCount(null), 0);
+  check("a null item is skipped", api.recognisedCount([null, undefined]), 0);
+  // A code in either the name or the path is enough; the real server puts it in
+  // the path more often than the name.
+  check("name only", api.recognisedCount([{ name: "ABP-123", path: "/x/y.mkv" }]), 1);
+  check("path only", api.recognisedCount([{ name: "A Film", path: "/x/ABP-123.mkv" }]), 1);
+}
+
 group("findLibrary - a library name is what a user has, an id is what the API wants");
-// Measured against a real server: the JAV library is 582 items of 15,288, and
-// reading one library rather than all of them is the difference between one
-// small request and four large ones.
+// Measured against a real server: one library held 582 items of 15,288, and
+// reading that one rather than all of them is the difference between one small
+// request and four large ones. The names and ids below are invented - the real
+// ones are the user's own inventory and do not belong in a public repository.
 {
   const folders = [
-    { Name: "Movies", ItemId: "f137a2dd21bbc1b99aa5c0f6bf02a805" },
-    { Name: "JAV", ItemId: "dab8313c032081c0dbf785d2302d6d87" },
-    { Name: "MMD", ItemId: "72e86350d2aa7aaf92f7aecdc7de2e8a" },
+    { Name: "Films", ItemId: "aaaa0000bbbb1111cccc2222dddd3333" },
+    { Name: "Archive", ItemId: "eeee4444ffff5555aaaa6666bbbb7777" },
+    { Name: "Other", ItemId: "cccc8888dddd9999eeee0000ffff1111" },
   ];
-  check("a name resolves", api.findLibrary(folders, "JAV"), "dab8313c032081c0dbf785d2302d6d87");
-  check("case does not matter", api.findLibrary(folders, "jav"), "dab8313c032081c0dbf785d2302d6d87");
-  check("surrounding space is trimmed", api.findLibrary(folders, "  JAV  "), "dab8313c032081c0dbf785d2302d6d87");
+  check("a name resolves", api.findLibrary(folders, "Archive"), "eeee4444ffff5555aaaa6666bbbb7777");
+  check("case does not matter", api.findLibrary(folders, "archive"), "eeee4444ffff5555aaaa6666bbbb7777");
+  check("surrounding space is trimmed", api.findLibrary(folders, "  Archive  "), "eeee4444ffff5555aaaa6666bbbb7777");
   // A raw id is accepted, so someone who has one does not have to look up a name.
-  check("an id resolves directly", api.findLibrary(folders, "72e86350d2aa7aaf92f7aecdc7de2e8a"), "72e86350d2aa7aaf92f7aecdc7de2e8a");
-  check("a partial name is not a match", api.findLibrary(folders, "JA"), null);
-  check("an unknown name is null", api.findLibrary(folders, "Films"), null);
+  check("an id resolves directly", api.findLibrary(folders, "cccc8888dddd9999eeee0000ffff1111"), "cccc8888dddd9999eeee0000ffff1111");
+  check("a partial name is not a match", api.findLibrary(folders, "Arch"), null);
+  check("an unknown name is null", api.findLibrary(folders, "Films II"), null);
   // Blank means "read everything", which is the default and must not be mistaken
   // for a library named "".
   check("blank is null, not a match", api.findLibrary(folders, ""), null);
   check("whitespace is null", api.findLibrary(folders, "   "), null);
   check("undefined is null", api.findLibrary(folders, undefined), null);
-  check("no folders is null", api.findLibrary([], "JAV"), null);
-  check("null folders is null", api.findLibrary(null, "JAV"), null);
+  check("no folders is null", api.findLibrary([], "Archive"), null);
+  check("null folders is null", api.findLibrary(null, "Archive"), null);
   // A folder with no name must not match a blank request.
   check("an unnamed folder does not match blank", api.findLibrary([{ ItemId: "x" }], ""), null);
 
-  check("the names are listed for a did-you-mean", api.libraryNames(folders), ["Movies", "JAV", "MMD"]);
+  check("the names are listed for a did-you-mean", api.libraryNames(folders), ["Films", "Archive", "Other"]);
   check("unnamed folders are left out", api.libraryNames([{ Name: "A" }, { ItemId: "x" }, { Name: "  " }]), ["A"]);
   check("no folders lists nothing", api.libraryNames(null), []);
 }

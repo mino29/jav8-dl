@@ -257,14 +257,18 @@ const STUB_ITEMS = [
   { Id: "lib-elsewhere", Name: "ZZZ-999", Path: "/media/jav/ZZZ-999.mp4", Size: 1073741824, lib: "stub-jav-lib" },
 ];
 
-/** Filler items, for exercising the page loop. Names carry no catalogue code. */
+/** Filler items, for exercising the page loop. Carries no catalogue code at all. */
 function fillerItems(from, count) {
   const out = [];
   for (let i = 0; i < count; i++) {
     out.push({
       Id: "filler-" + (from + i),
-      Name: "Filler " + (from + i),
-      Path: "/media/tv/Filler/Season 1/Filler S01E" + (from + i) + " filler-9000.mkv",
+      // No digits anywhere in the name or path. "Filler 10" would NOT do: two
+      // letters and two digits is all the extractor asks for, so it reads as the
+      // catalogue code FILLER-10 - which is why the recognised count in the
+      // page-loop test was 5000 rather than 9 until this was fixed.
+      Name: "Filler",
+      Path: "/media/tv/Filler/Season One/Filler S01E01.mkv",
       Size: 0,
       lib: "stub-tv-lib",
     });
