@@ -280,19 +280,19 @@ Worth knowing:
 
 ### What you have already watched, and what you never want
 
-Two lists of catalogue numbers, in **Settings → Watched and blacklist**. Both are
+Two lists of catalogue numbers, in **Settings → Watched and ignored**. Both are
 matched on the number, not the title, so `FEX-004`, `fex 004`, `fex004` and
 `h_259fex00004` all mean the same work.
 
-**Watched** is the list of works you have seen, so they are not downloaded twice.
-**Blacklist** is the list of works you never want, whatever else is true of them.
+**Watched** is the list of works you have seen. **Ignored** is the list of works
+you never want, whatever else is true of them.
 
 Three ways in, and they all write to the same list:
 
-- 🔵 **A blue check on the cover**, and two small buttons beside it. Hover a cover
-  to get them; they stay out of the way until you do. On a touch screen they are
-  always visible, because otherwise they cannot be reached at all. The same two
-  buttons are on the work's own page.
+- 🔵 **A blue check on the cover**, and two small buttons beside it — a check and
+  an eye. Hover a cover to get them; they stay out of the way until you do. On a
+  touch screen they are always visible, because otherwise they cannot be reached
+  at all. The same two buttons are on the work's own page.
 - 📋 **Paste a list.** Type or paste into the box — one per line, or a whole
   filename, or a magnet link, whatever you have — and press **Add pasted**.
   `#` starts a comment and blank lines are ignored, so a list you keep in a text
@@ -303,23 +303,28 @@ Three ways in, and they all write to the same list:
   automatic, because an automatic re-import would keep bringing back the ones you
   just unticked by hand.
 
-Three things worth knowing about them:
+Four things worth knowing about them:
 
 - **Watched is a log, not a copy.** Importing only ever adds. Nothing you remove
   by hand comes back, which is the whole point of not doing it automatically.
-- **Blacklisted works are dimmed, not removed.** The button that undoes it has to
-  stay reachable, so they are blurred and greyed — hover the cover and it comes
-  back. **Filter → Blacklisted only** shows just those, undimmed, so you can find
-  and clear the list.
-- **A blacklisted work is refused, not quietly skipped.** If you tick one by hand
-  anyway, nothing is sent and the log says why, with a pointer to the button that
-  lifts it. This is checked at the moment of sending as well as when you select,
-  because a work can be blacklisted while it is sitting in your selection.
+- **Ignored works are dimmed, not removed.** The eye that undoes it has to stay
+  reachable, so they are blurred and greyed — hover the cover and it comes back.
+  **Filter → Ignored only** shows just those, undimmed, so you can find and clear
+  the list.
+- **Ignoring a work unticks it**, whether you had ticked it by hand or **Select
+  all** had. A queue holding something you just said you never want is worse than
+  a queue one item short, and hunting the cover down to untick it again would be
+  worse still. Marking a work *watched* does **not** untick it — that one is advice
+  for bulk selection, not a veto.
+- **An ignored work is refused, not quietly skipped.** If you tick one by hand
+  anyway, nothing is sent and the log says why. This is checked at the moment of
+  sending as well as when you select, because a work can be ignored from another
+  tab while it is sitting in your selection.
 
-**Select all** steps over watched and blacklisted works as well as ones you own,
-and says how many of each it left alone — `Tick 29 works on this page · 2 in your
-library, 1 watched, 1 blacklisted`. A tick you place by hand is left alone; only
-a blacklisted work refuses you.
+**Select all** steps over watched and ignored works as well as ones you own, and
+says how many of each it left alone — `Ticked 26, skipped 8 (1 ignored, 6 in your
+library, 1 watched)`. A tick you place by hand is left alone; only an ignored work
+refuses you.
 
 #### The playback log, and why it is optional
 

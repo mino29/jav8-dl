@@ -472,25 +472,25 @@
       "want. Both are per-profile, stored as plain text, and matched by codeKey()",
       "so every spelling of a work means the same work.",
       "",
-      "Watched and blacklisted are not preferences. Watched is a log: importing adds",
+      "Watched and ignored are not preferences. Watched is a log: importing adds",
       "and never removes, so a code the user un-ticked by hand cannot come back from",
-      "a later import. Blacklisted is a veto: it is enforced at selection AND at the",
+      "a later import. Ignored is a veto: it is enforced at selection AND at the",
       "send path, exactly as the advert rule is, because a work that reaches the send",
       "path any other way must still not be sent.",
       "",
-      "Precedence when several apply is blacklist > owned > watched, and each work is",
+      "Precedence when several apply is ignored > owned > watched, and each work is",
       "counted under exactly one reason. A work can be owned and watched, so",
       "independent tallies would not sum to the number skipped - which is a bug that",
       "reported a negative count once already.",
       "",
-      "A blacklisted card is dimmed rather than removed, so the toggle that undoes it",
+      "An ignored card is dimmed rather than removed, so the eye that undoes it",
       "stays reachable. Only the content is filtered, never the card: a CSS filter on",
       "the card creates a stacking context, and the absolutely-positioned toggles",
       "would be dimmed inside it."
     ],
     "keys": {
       "watched": "jav8-downloader-settings-watched",
-      "blocked": "jav8-downloader-settings-blocked"
+      "ignored": "jav8-downloader-settings-ignored"
     },
     "storage": {
       "$comment": [
@@ -515,31 +515,70 @@
       "deduplicateOnWrite": true,
       "roundTripMustBeLossless": true
     },
-    "precedence": ["blocked", "owned", "watched"],
-    "skipPhrase": "3 blacklisted, 2 in your library, 1 watched",
+    "precedence": ["ignored", "owned", "watched"],
+    "skipPhrase": "3 ignored, 2 in your library, 1 watched",
     "countsAreDisjoint": true,
     "enforcedAt": ["bulk selection", "career crawl", "the send path"],
     "handTick": {
       "watched": "still allowed - a hand tick is a deliberate request, and only a bulk action steps over a watched work",
-      "blocked": "refused, and the log names the toggle that lifts it"
+      "ignored": "refused, and the log names the eye that opens it again"
     },
     "filters": {
       "all": "All",
       "vr": "VR only",
       "non-vr": "non-VR only",
-      "blocked": "Blacklisted only"
+      "ignored": "Ignored only"
     },
     "filterNotes": {
-      "all": "every work, with blacklisted ones dimmed rather than removed",
-      "blocked": "a way to find them, and cards render un-dimmed in this view"
+      "all": "every work, with ignored ones dimmed rather than removed",
+      "ignored": "a way to find them, and cards render un-dimmed in this view"
+    },
+    "ignoringDeselects": {
+      "$comment": [
+        "Ignoring a work drops it from the selection there and then, because the two",
+        "answers contradict each other: a queue holding something the user has just",
+        "said they never want is worse than a queue one item short, and the user",
+        "would otherwise have to find the cover again and untick it themselves.",
+        "",
+        "Watching a work does NOT untick it. Watched is advice for bulk selection,",
+        "not a veto - a hand tick means download this one anyway - so the two marks",
+        "differ here on purpose."
+      ],
+      "ignored": "unticks every card with that code, by code rather than by href",
+      "watched": "leaves the selection alone",
+      "logNamesIt": true
     },
     "display": {
       "watchedBadge": "a blue circle with a white check, top-right, pointer-events none so the cover link still works",
       "toggles": "two buttons in the lower half, right-aligned, invisible until the cover is hovered",
+      "watchedToggle": "a drawn check; tooltip 'Mark watched', and 'Watched - click to undo' when set",
+      "ignoreToggle": "a drawn eye - an almond outline with a pupil - and the pupil becomes a bar when set, so the eye shuts. The tooltip is 'Skip this', and 'Ignored - click to undo' when set.",
+      "ignoreGlyph": {
+        "$comment": [
+          "A crossed-out circle was the first attempt and read as a no-entry sign",
+          "rather than as an eye. Both states are drawn from the same pseudo-element:",
+          "the almond is the outline and one ::-part is either the pupil or the bar.",
+          "Drawn rather than typed so it scales with the button and does not depend",
+          "on which font the platform picks for a glyph."
+        ],
+        "openEye": "almond outline (border-radius 0 100% 0 100%, rotated 45deg) with a round pupil",
+        "shutEye": "the same outline with a diagonal bar where the pupil was"
+      },
       "touch": "kept permanently visible under @media (hover: none), or they would be unreachable",
-      "blockedDim": "grayscale(1) blur(6px) brightness(.6) and opacity .5 on .work-cover and .work-intro only; revealed on hover",
+      "ignoredDim": "grayscale(1) blur(6px) brightness(.6) and opacity .5 on .work-cover and .work-intro only; revealed on hover",
       "noFilterTransition": true,
       "noFilterTransitionWhy": "animating a blur is a per-frame GPU cost for a decoration"
+    },
+    "codeDisplay": {
+      "$comment": [
+        "Every code the user sees is uppercased by displayCode(). Uppercase and",
+        "nothing else: the obvious shortcut is codeKey(), and it is wrong, because",
+        "that is the matcher and it is eager - handed 'this work' it answers",
+        "THISWORK, and handed a href it answers V557564. Displaying a work title as",
+        "a code nobody uses is worse than leaving the site's own casing alone."
+      ],
+      "rule": "String(code).toUpperCase(), no normalisation",
+      "whyNotCodeKey": "codeKey() invents codes out of prose, which is right for matching and wrong for display"
     },
     "history": {
       "$comment": [

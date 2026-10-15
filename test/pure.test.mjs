@@ -1407,18 +1407,42 @@ group("skipReason - one reason per work, by precedence");
 // A work can be owned *and* watched, so independent tallies would double-count it
 // and the reasons would not sum to the number skipped.
 {
-  check("blacklist wins over everything", api.skipReason({ blocked: true, owned: true, watched: true }), "blocked");
-  check("blacklist over watched", api.skipReason({ blocked: true, watched: true }), "blocked");
+  check("ignore wins over everything", api.skipReason({ ignored: true, owned: true, watched: true }), "ignored");
+  check("ignore over watched", api.skipReason({ ignored: true, watched: true }), "ignored");
   check("owned over watched", api.skipReason({ owned: true, watched: true }), "owned");
   check("watched alone", api.skipReason({ watched: true }), "watched");
   check("owned alone", api.skipReason({ owned: true }), "owned");
   check("nothing marked", api.skipReason({}), null);
   check("null", api.skipReason(null), null);
 
-  check("the phrase names every reason", api.skipReasonPhrase({ blocked: 3, owned: 2, watched: 1 }), "3 blacklisted, 2 in your library, 1 watched");
-  check("the phrase omits empty reasons", api.skipReasonPhrase({ blocked: 0, owned: 4, watched: 0 }), "4 in your library");
-  check("an empty phrase is empty", api.skipReasonPhrase({ blocked: 0, owned: 0, watched: 0 }), "");
-  check("the order is fixed", api.skipReasonPhrase({ watched: 1, owned: 1, blocked: 1 }), "1 blacklisted, 1 in your library, 1 watched");
+  check("the phrase names every reason", api.skipReasonPhrase({ ignored: 3, owned: 2, watched: 1 }), "3 ignored, 2 in your library, 1 watched");
+  check("the phrase omits empty reasons", api.skipReasonPhrase({ ignored: 0, owned: 4, watched: 0 }), "4 in your library");
+  check("an empty phrase is empty", api.skipReasonPhrase({ ignored: 0, owned: 0, watched: 0 }), "");
+  check("the order is fixed", api.skipReasonPhrase({ watched: 1, owned: 1, ignored: 1 }), "1 ignored, 1 in your library, 1 watched");
+}
+
+group("displayCode - one casing rule for every code the user sees");
+// The site writes codes in lowercase and in several spellings, and every one of
+// them is printed back somewhere. One function, so the rule is made once.
+{
+  check("lowercase site form", api.displayCode("fex-004"), "FEX-004");
+  check("spaced form", api.displayCode("crpd 299"), "CRPD 299");
+  check("unpadded form", api.displayCode("ddb068"), "DDB068");
+  check("already upper", api.displayCode("MIDA-801"), "MIDA-801");
+  check("numeric prefix", api.displayCode("259LUXU-1900"), "259LUXU-1900");
+  check("dmm form", api.displayCode("h_259fex00004"), "H_259FEX00004");
+  check("idempotent", api.displayCode(api.displayCode("fex-004")), "FEX-004");
+  // It uppercases and stops there. codeKey() would have been the obvious
+  // shortcut and the wrong one: it is the matcher, it is eager, and it invents a
+  // code out of prose - "this work" is THISWORK to it and a href is V557564.
+  // Displaying a title as a code nobody uses is worse than leaving its casing be.
+  check("prose is not read as a code", api.displayCode("this work"), "THIS WORK");
+  check("a href is not read as a code", api.displayCode("/v/557564"), "/V/557564");
+  check("the matcher would have mangled it", api.codeKey("this work"), "THISWORK");
+  check("empty stays empty", api.displayCode(""), "");
+  check("undefined stays empty", api.displayCode(undefined), "");
+  check("null stays empty", api.displayCode(null), "");
+  check("a number survives", api.displayCode(2020), "2020");
 }
 
 // --------------------------------------------------------------------- report

@@ -293,7 +293,18 @@ const keySuffix = (name) => {
   return m && storeKey && storeKey[1] + m[1];
 };
 r.check("the watched key matches the spec", keySuffix("WATCHED"), spec.watched.keys.watched);
-r.check("the blocked key matches the spec", keySuffix("BLOCKED"), spec.watched.keys.blocked);
+r.check("the ignored key matches the spec", keySuffix("IGNORED"), spec.watched.keys.ignored);
+// The term is one word across the whole surface. A rename that reaches the labels
+// and not the storage key is the version that quietly orphans a user's list, and
+// one that reaches neither leaves the spec describing a key nothing uses.
+r.check("the old term is gone from the script", /blacklist/i.test(script), false);
+r.check("and from the storage keys", script.includes("-blocked"), false);
+r.check("the ignored class is the one CSS uses", script.includes('.work.jd-ignored'), true);
+r.check("and the ignore button class", script.includes('.jd-mark.ignore'), true);
+r.check("the ignore state is drawn, not a glyph", script.includes('.jd-mark.ignore.on::after'), true);
+r.check("which is the shut eye", spec.watched.display.ignoreGlyph.shutEye.includes('bar'), true);
+r.check("the open eye is an almond with a pupil", spec.watched.display.ignoreGlyph.openEye.includes('almond'), true);
+r.check("the tooltip is short", spec.watched.display.ignoreToggle.includes('Skip this'), true);
 
 // The cleaning rules are inlined as regexes, and the spec states them as strings.
 // One of these is the fix for a bug that produced ten false codes out of one
@@ -307,7 +318,7 @@ r.check("the label is not sliced", spec.watched.cleaning.extractFromWholeLabel, 
 // The filter options and the filters the code compares against have to be the
 // same set, or a label exists for a filter nothing reads.
 const filterLabels = {};
-for (const m of script.matchAll(/\[\s*"(all|vr|non-vr|blocked)",\s*"([^"]+)"\s*\]/g)) filterLabels[m[1]] = m[2];
+for (const m of script.matchAll(/\[\s*"(all|vr|non-vr|ignored)",\s*"([^"]+)"\s*\]/g)) filterLabels[m[1]] = m[2];
 // Keyed as sorted pairs, not as an object: the reporter compares deeply and the
 // order the options happen to be written in is not part of the contract.
 r.check(
@@ -318,9 +329,22 @@ r.check(
 const filtersCompared = [...new Set([...script.matchAll(/settings\.filter === "([a-z-]+)"/g)].map((m) => m[1]))];
 r.check("every filter the code compares is an option", filtersCompared.sort(), Object.keys(spec.watched.filters).sort());
 
+// Ignoring deselects; watching does not. Both are behaviour the user asked for
+// and neither is visible in a count, so they are pinned as behaviour.
+r.check("ignoring unticks the work", script.includes('deselectCode(code)'), true);
+r.check("by code, not by href", script.includes('codeKey(info.code) === key'), true);
+r.check("watching does not untick", script.includes('on && which === "ignored"'), true);
+r.check("the log says it happened", script.includes('" - deselected"'), true);
+
+// Codes are uppercased for display, and the rule is deliberately not the matcher.
+r.check("the display rule is uppercase only", spec.watched.codeDisplay.rule, "String(code).toUpperCase(), no normalisation");
+r.check("and the matcher is ruled out", spec.watched.codeDisplay.whyNotCodeKey.includes("wrong for display"), true);
+r.check("the function really is a bare uppercase", api.displayCode("fex-004"), "FEX-004");
+r.check("and really does not normalise", api.displayCode("this work"), "THIS WORK");
+
 // Precedence is the property that keeps the counts from disagreeing with the
 // number skipped, so it is checked as behaviour rather than read off the spec.
-r.check("the precedence is what the spec says", spec.watched.precedence, ["blocked", "owned", "watched"]);
+r.check("the precedence is what the spec says", spec.watched.precedence, ["ignored", "owned", "watched"]);
 for (let i = 0; i < spec.watched.precedence.length; i++) {
   const on = {};
   spec.watched.precedence.slice(i).forEach((k) => {
@@ -328,11 +352,11 @@ for (let i = 0; i < spec.watched.precedence.length; i++) {
   });
   r.check("everything but " + spec.watched.precedence[i] + " yields " + spec.watched.precedence[i], api.skipReason(on), spec.watched.precedence[i]);
 }
-r.check("one reason or none, never two", api.skipReason({ blocked: true, owned: true, watched: true }).split(",").length, 1);
+r.check("one reason or none, never two", api.skipReason({ ignored: true, owned: true, watched: true }).split(",").length, 1);
 
 // The blacklist is a veto, so it has to be enforced where a work actually leaves
 // for the client - not only where it is selected.
-r.check("the send path refuses a blacklisted work", script.includes('markFor("blocked", detail.code)'), true);
+r.check("the send path refuses an ignored work", script.includes('markFor("ignored", detail.code)'), true);
 r.check("three places decide what is skipped", (script.match(/skipReason\(\{/g) || []).length >= 3, true);
 r.check("the count is not reconciled by subtraction", script.includes("hidden - ads"), false);
 

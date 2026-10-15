@@ -102,6 +102,7 @@ export function loadApi() {
     "isWatchedItem",
     "skipReason",
     "skipReasonPhrase",
+    "displayCode",
     "findLibrary",
     "libraryNames",
     "morePages",

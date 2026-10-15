@@ -349,4 +349,36 @@ Kept here because they are the kind that come back:
   reads as the user's server being wrong. When a test fails with a plausible
   message about the world rather than the harness, check that the harness is
   actually being reached.
+- Do not build a *display* helper out of the *matcher*. `displayCode()` was
+  written as `codeKey(code) || code`, which looks like the obvious shortcut and is
+  the opposite: `codeKey()` is the eager extractor that invents codes out of prose,
+  so the display helper turned `this work` into `THISWORK` and a href into
+  `V557564`. The requirement was only that codes print in capitals, so the function
+  is `String(code).toUpperCase()` and stops there. Eagerness is a property of the
+  matching rule and is correct there; inheriting it into rendering is a bug with a
+  confident-looking signature.
+- A CSS-drawn glyph has to be rendered and looked at, because "the properties say
+  the right thing" and "it looks like the thing" are different claims. The eye was
+  a box with `border-radius: 0 100% 0 100%` rotated 45 degrees, which is a real
+  almond with its points at the top and the bottom - a vertical leaf, not an eye.
+  It wanted -45. Nothing in the stylesheet said so; every computed value was
+  exactly what was written. Render the rules against a real engine, at the size
+  they ship at as well as large, and look. `npm run shot` already knows where
+  headless Chrome is, and a scratch HTML file next to it is enough - the browser
+  tools need a visible window and will not do it here.
+- Two marks that mean different things must not share one sentence. `Select all`
+  reported "skipped 6 already in your library" with the reason written out by hand,
+  which was correct when the library was the only reason and silently wrong the
+  moment a second one existed - it named a library for a batch that had been
+  skipped for being watched. It now goes through the same phrase as the button's
+  tooltip and the career crawl, and its trailing advice is shown only when
+  something was actually skipped for being owned. Adding a reason is the moment to
+  grep for the places that spell out the old set.
+- Watch what the terms are before you rename. `blocked` was used both for the
+  ignore list and, in two unrelated comments, for a host that `@connect` refuses -
+  so a blind replace would have changed prose about the network. And a rename that
+  reaches the labels but not the storage key is the version that quietly orphans
+  the user's list, which is why the parity test now asserts the old term is gone
+  from the script *and* that the class the CSS uses is the one the code toggles.
+
 
