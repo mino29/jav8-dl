@@ -278,6 +278,83 @@ Worth knowing:
   The item page always renders, and playing is one click from there, with resume,
   subtitles and transcoding all behaving normally.
 
+### What you have already watched, and what you never want
+
+Two lists of catalogue numbers, in **Settings → Watched and blacklist**. Both are
+matched on the number, not the title, so `FEX-004`, `fex 004`, `fex004` and
+`h_259fex00004` all mean the same work.
+
+**Watched** is the list of works you have seen, so they are not downloaded twice.
+**Blacklist** is the list of works you never want, whatever else is true of them.
+
+Three ways in, and they all write to the same list:
+
+- 🔵 **A blue check on the cover**, and two small buttons beside it. Hover a cover
+  to get them; they stay out of the way until you do. On a touch screen they are
+  always visible, because otherwise they cannot be reached at all. The same two
+  buttons are on the work's own page.
+- 📋 **Paste a list.** Type or paste into the box — one per line, or a whole
+  filename, or a magnet link, whatever you have — and press **Add pasted**.
+  `#` starts a comment and blank lines are ignored, so a list you keep in a text
+  file works as it is. **Show list** puts your current list back in the box and
+  on the clipboard, so you can keep a copy or move it to another browser.
+- 📖 **Import from Jellyfin / Emby**, if you turned that on. Reads what your
+  server still holds *and* its playback log, and adds them. It is a button, never
+  automatic, because an automatic re-import would keep bringing back the ones you
+  just unticked by hand.
+
+Three things worth knowing about them:
+
+- **Watched is a log, not a copy.** Importing only ever adds. Nothing you remove
+  by hand comes back, which is the whole point of not doing it automatically.
+- **Blacklisted works are dimmed, not removed.** The button that undoes it has to
+  stay reachable, so they are blurred and greyed — hover the cover and it comes
+  back. **Filter → Blacklisted only** shows just those, undimmed, so you can find
+  and clear the list.
+- **A blacklisted work is refused, not quietly skipped.** If you tick one by hand
+  anyway, nothing is sent and the log says why, with a pointer to the button that
+  lifts it. This is checked at the moment of sending as well as when you select,
+  because a work can be blacklisted while it is sitting in your selection.
+
+**Select all** steps over watched and blacklisted works as well as ones you own,
+and says how many of each it left alone — `Tick 29 works on this page · 2 in your
+library, 1 watched, 1 blacklisted`. A tick you place by hand is left alone; only
+a blacklisted work refuses you.
+
+#### The playback log, and why it is optional
+
+The import reads two places, because neither is complete:
+
+- the **live library**, which knows what you have started and finished, and any
+  played flag you have set yourself;
+- the **Playback Reporting** plugin's log, which remembers plays of items you have
+  since deleted. That is the only place those are still known — measured on a real
+  server, 373 of the codes it produced were for titles the library no longer had.
+
+So the plugin is worth having if you delete. If it is not installed the import
+simply says so and uses the live state, which is not an error — it is the state
+every other server is permanently in.
+
+On a real server the two together produced 914 codes, against 409 from the live
+state alone. Expect roughly **5 of every 34 covers** on a listing to carry a
+check.
+
+The log spans every library on the server, so it is full of things that are not
+releases — films, dance videos, home video. Two rules clean it, and both were
+measured rather than guessed:
+
+- **GUIDs are stripped first.** Some files are named with the item's GUID, and a
+  GUID is full of hex pairs that look exactly like catalogue numbers. One GUID
+  produced a fake code, and ten more came out of a single label. Without this a
+  false "already watched" would quietly stop a download you wanted.
+- **The number has to come first.** A release file is named code-first, so
+  `[ABF-246] Arrogant office lady` counts and `Blade Runner 2049` does not, even
+  though the words are number-shaped in the middle. Of 808 log rows that yielded
+  a number, 785 survived and the 23 that did not were all films and GUIDs.
+
+Nothing is ever written to your media server. Every request the script makes with
+your API key is a `GET`.
+
 ### Adverts are hidden
 
 jav8.vip splices its own advert cards into every listing — they look like covers

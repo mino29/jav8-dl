@@ -466,6 +466,151 @@
     }
   },
 
+  "watched": {
+    "$comment": [
+      "Two sets of catalogue codes: what the user has watched, and what they never",
+      "want. Both are per-profile, stored as plain text, and matched by codeKey()",
+      "so every spelling of a work means the same work.",
+      "",
+      "Watched and blacklisted are not preferences. Watched is a log: importing adds",
+      "and never removes, so a code the user un-ticked by hand cannot come back from",
+      "a later import. Blacklisted is a veto: it is enforced at selection AND at the",
+      "send path, exactly as the advert rule is, because a work that reaches the send",
+      "path any other way must still not be sent.",
+      "",
+      "Precedence when several apply is blacklist > owned > watched, and each work is",
+      "counted under exactly one reason. A work can be owned and watched, so",
+      "independent tallies would not sum to the number skipped - which is a bug that",
+      "reported a negative count once already.",
+      "",
+      "A blacklisted card is dimmed rather than removed, so the toggle that undoes it",
+      "stays reachable. Only the content is filtered, never the card: a CSS filter on",
+      "the card creates a stacking context, and the absolutely-positioned toggles",
+      "would be dimmed inside it."
+    ],
+    "keys": {
+      "watched": "jav8-downloader-settings-watched",
+      "blocked": "jav8-downloader-settings-blocked"
+    },
+    "storage": {
+      "$comment": [
+        "GM storage rather than sessionStorage or localStorage, because the lifetime",
+        "is the profile: a work watched once stays watched, and it is the same answer",
+        "in every tab. Not JSON - the stored value IS the exported value, one code per",
+        "line, sorted, so re-exporting an unchanged set is byte-identical and the file",
+        "can be diffed.",
+        "",
+        "A stored key is read back as a key rather than re-extracted. This is not a",
+        "micro-optimisation: codeKey() drops leading zeros, so the site's fex-004",
+        "normalises to FEX4, and FEX4 has a one-digit number that codeKeys() will not",
+        "recognise on its own. Re-extracting would silently lose every code whose",
+        "number is a single digit - measured over a real set, it lost none because the",
+        "reader takes a canonical key as canonical."
+      ],
+      "format": "sorted newline-separated catalogue codes, no JSON, no metadata",
+      "commentPrefix": "#",
+      "oneEntryPerLine": true,
+      "aLineMayBe": "a bare code, a whole filename, or anything else with a code in it",
+      "sortOnWrite": true,
+      "deduplicateOnWrite": true,
+      "roundTripMustBeLossless": true
+    },
+    "precedence": ["blocked", "owned", "watched"],
+    "skipPhrase": "3 blacklisted, 2 in your library, 1 watched",
+    "countsAreDisjoint": true,
+    "enforcedAt": ["bulk selection", "career crawl", "the send path"],
+    "handTick": {
+      "watched": "still allowed - a hand tick is a deliberate request, and only a bulk action steps over a watched work",
+      "blocked": "refused, and the log names the toggle that lifts it"
+    },
+    "filters": {
+      "all": "All",
+      "vr": "VR only",
+      "non-vr": "non-VR only",
+      "blocked": "Blacklisted only"
+    },
+    "filterNotes": {
+      "all": "every work, with blacklisted ones dimmed rather than removed",
+      "blocked": "a way to find them, and cards render un-dimmed in this view"
+    },
+    "display": {
+      "watchedBadge": "a blue circle with a white check, top-right, pointer-events none so the cover link still works",
+      "toggles": "two buttons in the lower half, right-aligned, invisible until the cover is hovered",
+      "touch": "kept permanently visible under @media (hover: none), or they would be unreachable",
+      "blockedDim": "grayscale(1) blur(6px) brightness(.6) and opacity .5 on .work-cover and .work-intro only; revealed on hover",
+      "noFilterTransition": true,
+      "noFilterTransitionWhy": "animating a blur is a per-frame GPU cost for a decoration"
+    },
+    "history": {
+      "$comment": [
+        "Two sources that know different things, read only when the user presses the",
+        "button. An automatic re-import would keep resurrecting codes the user had just",
+        "un-ticked, so it is never a background job.",
+        "",
+        "The live library knows progress and a manual played flag but forgets an item",
+        "the moment it is deleted; the Playback Reporting plugin keeps a play log that",
+        "survives deletion but never sees a manual tick. Neither is complete alone.",
+        "",
+        "The live read passes userId explicitly. Without it Jellyfin omits UserData",
+        "entirely and every item looks unwatched - a silent no-op rather than an error.",
+        "For the same reason the server-side Filters=IsPlayed is not used: measured",
+        "against the per-item field it under-reported 46 where the field said 69. The",
+        "filtering happens on the fields, here."
+      ],
+      "livePath": "/Items",
+      "liveQuery": "Recursive=true&IncludeItemTypes=Movie,Episode,Video&Fields=Path,UserData&userId=<id>",
+      "livePaged": true,
+      "liveFilter": "played flag OR any progress > 0",
+      "historyPath": "/user_usage_stats/MoviesReport?days=10000",
+      "historyPlugin": "Playback Reporting (Jellyfin plugin)",
+      "historyAbsent": "404 means the plugin is not installed: skip the source with a message, do not fail",
+      "usersPath": "/Users",
+      "usersMeNote": "/Users/Me answers 400 to an API key, so the user list is the only way in",
+      "measuredOnRealServer": {
+        "version": "10.10.7",
+        "reportRows": 1127,
+        "reportRowsWithACodeBeforeCleaning": 808,
+        "reportRowsWithACodeAfterCleaning": 785,
+        "distinctCodesAfterCleaning": 799,
+        "codesTheLibraryNoLongerHas": 373,
+        "rowsDroppedAsJunk": 23,
+        "liveWatchedCodes": 409,
+        "unionOfBothSources": 914
+      }
+    },
+    "cleaning": {
+      "$comment": [
+        "The playback log spans every library on the server, so it is full of titles",
+        "that are not releases at all - films, dance videos, home video. Two rules",
+        "separate a JAV play from a film, and both are needed.",
+        "",
+        "GUIDs first: Jellyfin names some files with the item's GUID, and a GUID is",
+        "dense with hex pairs that satisfy the code pattern exactly. Measured, one GUID",
+        "produced BA13, and ten false codes came out of a single label. Stripping GUIDs",
+        "is what stops a false 'already watched' suppressing a download.",
+        "",
+        "Then position: a release file is named code-first. Measured, insisting the",
+        "code be the very first character dropped 170 real rows, so one optional",
+        "leading [ is allowed - [ABF-246] Arrogant office lady is a release. A",
+        "bracketed word is still not: [Dreamcatcher-Scream] has no code after the",
+        "bracket.",
+        "",
+        "Deliberately a test on the whole string, not a slice. An earlier version",
+        "looked for a code inside the first N characters, which cut codes in half -",
+        "[JAV] MIDA-801 truncated to [JAV] MIDA-80 and yielded MIDA80, a wrong code and",
+        "a short one, which is the shape most likely to collide with a real series."
+      ],
+      "stripGuids": true,
+      "uuidPattern": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
+      "guidReplacedWith": "a space",
+      "codeMustLead": true,
+      "leadingPattern": "^\\s*\\[?\\s*\\d{0,4}[A-Za-z]{2,7}[ _-]?\\d{2,5}",
+      "extractFromWholeLabel": true,
+      "junkCodesHarmless": "a junk code never matches a real card code; the dangerous ones were the short codes a GUID produced"
+    },
+    "neverWrites": "nothing is ever written back to the media server"
+  },
+
   "selection": {
     "$comment": [
       "Order of preference, and why the largest wins inside the window.",

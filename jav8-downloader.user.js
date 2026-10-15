@@ -2,7 +2,7 @@
 // @name         JAV8 Downloader
 // @namespace    https://github.com/mino29/jav8-dl
 // @homepage     https://github.com/mino29/jav8-dl
-// @version      1.11.3
+// @version      1.12.0
 // @icon          data:image/png;base64,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
 // @description  Tick covers to queue them, filter by VR, prefer uncensored / subtitled / 4K releases, send to aria2 or qBittorrent, and play or skip whatever your Jellyfin or Emby library already holds. Settings live in the browser, not in a config file.
 // @author       mino29
@@ -558,6 +558,167 @@
       if (!item) return false;
       return codeKeys(item.name).length > 0 || codeKeys(item.path).length > 0;
     }).length;
+  }
+
+  // ------------------------------------------------------- watched and blocked
+  // Two sets of codes, one meaning "I have seen this" and one meaning "I never
+  // want this". Both are stored as plain text, both are matched with codeKey(),
+  // and neither is ever written back to the media server.
+
+  /**
+   * A GUID, which is not a catalogue code however much it looks like one.
+   *
+   * Measured on a real server: Jellyfin names some files with the item's GUID in
+   * brackets, and a GUID is dense with hex pairs that satisfy the code pattern
+   * exactly. Extraction over the playback history produced `BA13` out of
+   * `[d982f695-fba6-48f1-ba13-2241d9856559]`, `AFA51` out of `[afa51b6a-...]`,
+   * and eight more like them from a single `[1ae8122f-bb18-4ae0-92ca-951ab88dd3b0]`.
+   * Stripping them first is what stops a false "already watched" suppressing a
+   * download the user actually wants.
+   */
+  var UUID_RE = /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/g;
+
+  function stripUuids(text) {
+    return String(text || "").replace(UUID_RE, " ");
+  }
+
+  /**
+   * A label that begins with a catalogue code, which is how release files are
+   * named.
+   *
+   * The history report spans every library on the server, so it is full of titles
+   * that are not releases at all - films, dance videos, home video. Requiring the
+   * name to *begin* with a code is what separates a JAV play from
+   * `Blade Runner 2049`.
+   *
+   * One optional `[` is allowed first, because a real library names plenty of
+   * releases that way: `[ABF-246] Arrogant office lady`. Measured on one server,
+   * insisting the code be the very first character dropped 170 real rows. A
+   * bracketed *word* still does not pass - `[Dreamcatcher-Scream]` has no code
+   * after the bracket - so the allowance costs no junk.
+   *
+   * Deliberately a test on the whole string rather than a slice of it. An earlier
+   * version looked for a code inside the first twenty characters, which cut codes
+   * in half: `[JAV] MIDA-801` truncated to `[JAV] MIDA-80` and yielded `MIDA80` -
+   * a wrong code, and a short one, which is the shape most likely to collide with
+   * a real two-letter series. Testing the start and then extracting from the whole
+   * label cannot produce a half-code.
+   */
+  var CODE_LEADS_RE = /^\s*\[?\s*\d{0,4}[A-Za-z]{2,7}[ _-]?\d{2,5}/;
+
+  /** The codes a playback-history label stands for, or none. */
+  function watchedKeysFromLabel(label) {
+    var text = stripUuids(label);
+    if (!CODE_LEADS_RE.test(text)) return [];
+    return codeKeys(text);
+  }
+
+  /**
+   * A line that is already a normalised key, and nothing else.
+   *
+   * This exists because the round trip is otherwise lossy in a way that is easy
+   * to miss: codeKey() drops leading zeros, so the site's `fex-004` becomes the
+   * key `FEX4` - and FEX4 has a *one*-digit number, which the extractor will not
+   * recognise, because it requires two digits to tell a code from noise. Writing
+   * the key out and reading it back would therefore silently lose every code
+   * ending in a single digit after zeros: fex-004, fanh-005, snos-038 and so on.
+   *
+   * A stored key is already canonical, so it is taken as one rather than being
+   * re-extracted. Anything else on the line still goes through the extractor.
+   */
+  var KEY_ALONE_RE = /^[0-9]{0,4}[A-Za-z]{2,7}[0-9]{1,5}$/;
+
+  /**
+   * A pasted list, as codes.
+   *
+   * One entry per line, and a line may be a bare code or a whole filename - both
+   * go through codeKeys(), so `MIDA-801`, `MIDA-801 新人 …` and a magnet URI all
+   * work. `#` starts a comment and blank lines are ignored, which is what makes
+   * an export round-trip through the same box that manual entry uses.
+   *
+   * Deliberately eager: anything code-shaped in the line is taken. That is why
+   * the dialog counts what it is about to add and asks before adding it - the
+   * extractor will happily read `Filler 10` as the code FILLER-10.
+   */
+  function parseCodeList(text) {
+    var out = [];
+    var seen = {};
+    function add(key) {
+      if (!key || seen[key]) return;
+      seen[key] = true;
+      out.push(key);
+    }
+    String(text || "")
+      .split(/\r?\n/)
+      .forEach(function (line) {
+        if (/^\s*#/.test(line)) return;
+        var trimmed = line.trim();
+        if (!trimmed) return;
+        // A line that is exactly a key is one; see KEY_ALONE_RE.
+        if (KEY_ALONE_RE.test(trimmed)) {
+          add(codeKey(trimmed));
+          return;
+        }
+        codeKeys(line).forEach(add);
+      });
+    return out;
+  }
+
+  /**
+   * A set of codes as the stored text.
+   *
+   * Sorted and deduplicated so that re-exporting an unchanged set produces a
+   * byte-identical file: a list that reshuffles itself cannot be diffed, and a
+   * diff is most of what makes a plain-text store worth having.
+   */
+  function serializeCodeList(codes) {
+    var seen = {};
+    var out = [];
+    (codes || []).forEach(function (code) {
+      if (!code || seen[code]) return;
+      seen[code] = true;
+      out.push(code);
+    });
+    out.sort();
+    return out.join("\n");
+  }
+
+  /**
+   * Has this item been watched, by the media server's reckoning?
+   *
+   * Any progress at all counts, not just the played flag. The user's call, and
+   * the measurement backs it up: of 607 items, 69 were flagged played and 303
+   * more had progress, and not one of those sat below 5% - so "barely started"
+   * turns out to mean "a few minutes in", not "opened by accident".
+   */
+  function isWatchedItem(item) {
+    if (!item) return false;
+    return !!(item.played || (item.progress || 0) > 0);
+  }
+
+  /**
+   * Why a work is left out of a bulk selection, or null.
+   *
+   * One reason, by precedence, and that is the whole point: a work can be owned
+   * *and* watched, and reporting both would double-count it, so the reasons would
+   * not sum to the number skipped. Blacklist wins because it is the only one that
+   * is a decision rather than a fact.
+   */
+  function skipReason(state) {
+    if (!state) return null;
+    if (state.blocked) return "blocked";
+    if (state.owned) return "owned";
+    if (state.watched) return "watched";
+    return null;
+  }
+
+  /** "3 in your library, 2 watched" - the reasons, in a fixed order. */
+  function skipReasonPhrase(counts) {
+    var parts = [];
+    if (counts.blocked) parts.push(counts.blocked + " blacklisted");
+    if (counts.owned) parts.push(counts.owned + " in your library");
+    if (counts.watched) parts.push(counts.watched + " watched");
+    return parts.join(", ");
   }
 
   /**
@@ -1425,6 +1586,86 @@
     }
   }
 
+  // ---------------------------------------------------- watched / blocked sets
+  // Long-lived, per-profile, and shared by every tab for free, which is exactly
+  // the lifetime these have: a work watched once stays watched, and it is the
+  // same answer in every tab. That is why they are GM storage rather than the
+  // sessionStorage the queue uses or the localStorage the selection uses.
+  //
+  // Stored as the plain text the dialog shows - not as JSON - so the stored value
+  // and the exported value are the same string. There is no metadata to carry:
+  // no timestamp, no progress, no source, because nothing reads one.
+
+  var WATCHED_KEY = STORE_KEY + "-watched";
+  var BLOCKED_KEY = STORE_KEY + "-blocked";
+
+  var watched = {};
+  var blocked = {};
+
+  /** Read one code set. Every failure path means "empty", which is a working state. */
+  function readCodeSet(key) {
+    var raw = null;
+    try {
+      raw = GM_getValue(key, null);
+    } catch (e) {
+      raw = null;
+    }
+    if (raw === null || raw === undefined || raw === "") {
+      try {
+        raw = window.localStorage.getItem(key);
+      } catch (e) {
+        raw = null;
+      }
+    }
+    var out = {};
+    parseCodeList(typeof raw === "string" ? raw : "").forEach(function (code) {
+      out[code] = true;
+    });
+    return out;
+  }
+
+  function writeCodeSet(key, set) {
+    var text = serializeCodeList(Object.keys(set || {}));
+    try {
+      GM_setValue(key, text);
+    } catch (e) {
+      try {
+        window.localStorage.setItem(key, text);
+      } catch (e2) {
+        /* nothing left to try; this run simply will not persist */
+      }
+    }
+  }
+
+  /** Replace a set wholesale and persist it. */
+  function setCodeSet(which, set) {
+    if (which === "watched") watched = set;
+    else blocked = set;
+    writeCodeSet(which === "watched" ? WATCHED_KEY : BLOCKED_KEY, set);
+    repaintMarks();
+  }
+
+  /** Add codes to a set without removing anything. Returns how many were new. */
+  function addCodes(which, codes) {
+    var set = which === "watched" ? watched : blocked;
+    var added = 0;
+    (codes || []).forEach(function (code) {
+      if (!code || set[code]) return;
+      set[code] = true;
+      added++;
+    });
+    if (added) writeCodeSet(which === "watched" ? WATCHED_KEY : BLOCKED_KEY, set);
+    if (added) repaintMarks();
+    return added;
+  }
+
+  /** The set a work's code belongs to, or null. */
+  function markFor(which, code) {
+    var key = codeKey(code);
+    if (!key) return null;
+    return (which === "watched" ? watched : blocked)[key] ? key : null;
+  }
+
   // Only what the user actually changed is persisted. Keeping the overrides
   // sparse is what lets the settings form show an empty box with the vendor
   // default as its placeholder: an empty field unambiguously means "use the
@@ -1844,6 +2085,242 @@
       libraryRepaint();
     }
     if (Date.now() - library.at > SERVER_TTL_MS) syncLibrary();
+  }
+
+  // ------------------------------------------------------- watch history read
+  // Reading what the user has already watched, from two places that know
+  // different things. Neither is complete on its own:
+  //
+  //   - the live library knows about progress, completion and the played flag
+  //     the user set by hand, but forgets everything the moment an item is
+  //     deleted;
+  //   - the Playback Reporting plugin keeps a play log that survives deletion,
+  //     but never sees a manual tick.
+  //
+  // Both are read only when the user asks, and both only ever add. An automatic
+  // re-import would keep resurrecting anything the user had just un-ticked by
+  // hand, so the read is a button and never a background job.
+
+  /**
+   * Which user's history to read.
+   *
+   * `/Users/Me` answers 400 to an API key, so the list is the only way in. One
+   * user is the overwhelmingly common case and is used without asking; with more
+   * than one the first is used and the log names whose history it read, which is
+   * visible rather than silent. A picker can be added if that ever bites.
+   */
+  function resolveUserId(cfg, apiKey) {
+    return request("GET", endpoint(cfg.host, cfg.port, "/Users"), {
+      headers: { "X-Emby-Token": apiKey, Accept: "application/json" },
+      timeout: 20000,
+    }).then(
+      function (res) {
+        var users;
+        try {
+          users = JSON.parse(res.responseText);
+        } catch (e) {
+          users = null;
+        }
+        if (!Array.isArray(users) || !users.length) return null;
+        if (users.length > 1) {
+          log(
+            "Jellyfin has " + users.length + " users; reading " + (users[0].Name || "the first") + "'s history.",
+            "wa",
+          );
+        }
+        return users[0].Id || null;
+      },
+      function () {
+        return null;
+      },
+    );
+  }
+
+  /**
+   * One page of the library with this user's watch state attached.
+   *
+   * `userId` is not optional: without it Jellyfin omits UserData entirely, so
+   * every item would look unwatched and the import would silently do nothing.
+   * The same parameter is why a server-side IsPlayed filter cannot be trusted -
+   * measured, it reported 46 where the per-item field reported 69 - so the
+   * filtering happens here, on the fields, rather than on the server.
+   */
+  function fetchWatchedPage(cfg, apiKey, parentId, userId, startIndex) {
+    var url =
+      endpoint(cfg.host, cfg.port, "/Items") +
+      "?Recursive=true&IncludeItemTypes=Movie,Episode,Video" +
+      "&Fields=Path,UserData&Limit=" + SERVER_LIMIT +
+      "&StartIndex=" + startIndex +
+      "&userId=" + encodeURIComponent(userId) +
+      (parentId ? "&ParentId=" + encodeURIComponent(parentId) : "");
+    return request("GET", url, {
+      headers: { "X-Emby-Token": apiKey, Accept: "application/json" },
+      timeout: 30000,
+    }).then(function (res) {
+      var parsed;
+      try {
+        parsed = JSON.parse(res.responseText);
+      } catch (e) {
+        parsed = null;
+      }
+      if (!parsed || !Array.isArray(parsed.Items)) {
+        throw new Error("that address did not answer with a Jellyfin item list");
+      }
+      var items = parsed.Items.map(function (it) {
+        var u = it.UserData || {};
+        return {
+          name: it.Name,
+          path: it.Path,
+          played: !!u.Played,
+          progress: Number(u.PlaybackPositionTicks) || 0,
+        };
+      });
+      return { items: items, total: Number(parsed.TotalRecordCount) || items.length };
+    });
+  }
+
+  /** Every watched code the live library knows, paged like the library read. */
+  function collectLiveWatched(cfg, apiKey, parentId, userId) {
+    // Distinct codes, not occurrences. One item yields its code twice - once from
+    // its path and once from its name - and counting the pair reported twice as
+    // many watched works as there were, which is the same trap as printing the
+    // number of match *keys* beside the number of items.
+    var codes = {};
+    var pages = 0;
+
+    function step(startIndex) {
+      return fetchWatchedPage(cfg, apiKey, parentId, userId, startIndex).then(function (page) {
+        page.items.forEach(function (item) {
+          if (!isWatchedItem(item)) return;
+          codeKeys(item.path).concat(codeKeys(item.name)).forEach(function (key) {
+            codes[key] = true;
+          });
+        });
+        pages++;
+        if (
+          morePages({
+            collected: startIndex + page.items.length,
+            lastPage: page.items.length,
+            total: page.total,
+            pageSize: SERVER_LIMIT,
+            pages: pages,
+            maxPages: SERVER_MAX_PAGES,
+          })
+        ) {
+          return step(startIndex + page.items.length);
+        }
+        return Object.keys(codes);
+      });
+    }
+
+    return step(0);
+  }
+
+  /**
+   * Every watched code the playback log knows, including deleted items.
+   *
+   * This is the only source that can answer for something the server no longer
+   * has, which is the whole reason it is worth a plugin dependency. It reports
+   * across every library, so the two cleaning rules in watchedKeysFromLabel()
+   * are what keep films, dance videos and GUIDs out of the result.
+   *
+   * A 404 means the plugin is not installed: not an error, just a source that is
+   * not there, and the caller says so rather than reporting a failure.
+   */
+  function collectPlaybackHistory(cfg, apiKey) {
+    var url = endpoint(cfg.host, cfg.port, "/user_usage_stats/MoviesReport") + "?days=10000";
+    return request("GET", url, {
+      headers: { "X-Emby-Token": apiKey, Accept: "application/json" },
+      timeout: 30000,
+    }).then(
+      function (res) {
+        var rows;
+        try {
+          rows = JSON.parse(res.responseText);
+        } catch (e) {
+          rows = null;
+        }
+        if (!Array.isArray(rows)) return { codes: [], available: false };
+        // Distinct, for the same reason the live read is: the log holds one row
+        // per play, so a work watched forty times is one code and not forty.
+        var codes = {};
+        rows.forEach(function (row) {
+          if (!row || typeof row.label !== "string") return;
+          watchedKeysFromLabel(row.label).forEach(function (key) {
+            codes[key] = true;
+          });
+        });
+        return { codes: Object.keys(codes), available: true };
+      },
+      function (err) {
+        // 404 is the plugin being absent, which is a state and not a fault.
+        if (statusOf(err) === 404) return { codes: [], available: false };
+        throw err;
+      },
+    );
+  }
+
+  /**
+   * The button: read both sources and add everything they know.
+   *
+   * Adds, never replaces, so a re-run can only ever grow the set. Reports how
+   * many were new and how many came only from the log, because "the history
+   * added 375 you could not otherwise know about" is the number that justifies
+   * the plugin dependency.
+   */
+  function importWatchHistory() {
+    var cfg = settings.mediaServer || DEFAULTS.mediaServer;
+    if (!cfg.enabled) {
+      log("Turn the Jellyfin / Emby integration on first.", "wa");
+      return Promise.resolve(null);
+    }
+    var apiKey = String(cfg.apiKey || "").trim();
+    if (!apiKey) {
+      log("Jellyfin / Emby: no API key set, so the watch history cannot be read.", "wa");
+      return Promise.resolve(null);
+    }
+    var base = mediaServerBase();
+    log("Reading your watch history from " + base + "…", "mu");
+    return resolveLibraryId(cfg, apiKey, base)
+      .then(function (parentId) {
+        return resolveUserId(cfg, apiKey).then(function (userId) {
+          if (!userId) {
+            log("Jellyfin / Emby: could not find a user to read the history for.", "er");
+            return null;
+          }
+          return collectLiveWatched(cfg, apiKey, parentId, userId).then(function (live) {
+            return collectPlaybackHistory(cfg, apiKey).then(function (history) {
+              var before = Object.keys(watched).length;
+              var added = addCodes("watched", live.concat(history.codes));
+              var after = Object.keys(watched).length;
+              log(
+                "Watched: " + live.length + " from the library" +
+                  (history.available ? " and " + history.codes.length + " from the playback log" : "") +
+                  " · " + added + " new (" + before + " → " + after + ").",
+                "ok",
+              );
+              if (!history.available) {
+                log(
+                  "Deleted items cannot be recovered without the Playback Reporting plugin; " +
+                    "everything the server still has was read.",
+                  "mu",
+                );
+              }
+              return { live: live.length, history: history.codes.length, added: added };
+            });
+          });
+        });
+      })
+      .catch(function (err) {
+        if (statusOf(err) === 401) {
+          log("Jellyfin / Emby rejected the API key. Create one in the server dashboard under API Keys.", "er");
+        } else if (!statusOf(err)) {
+          log("Jellyfin / Emby: no answer from " + base + ". Check the host and port in Settings.", "er");
+        } else {
+          log("Jellyfin / Emby: " + base + " answered " + statusOf(err) + ", so the history could not be read.", "er");
+        }
+        return null;
+      });
   }
 
   // ------------------------------------------------------------------- http
@@ -2286,6 +2763,73 @@
   border-width:.95em 0 .95em 1.65em;margin-left:.14em}
 .jd-inlib{color:#68d391;text-decoration:none}
 .jd-inlib:hover{text-decoration:underline}
+/* The two per-cover toggles: "watched" and "never download this". They sit in the
+  lower half, right-aligned so the VR badge keeps bottom-left, and are invisible
+  until the cover is hovered so the grid stays readable - the same reasoning as
+  Jellyfin's own card actions. Opacity rather than display, because a control that
+  is invisible but still hit-testable is worse than one that is merely faint; the
+  container only reaches opacity 1 while the card is hovered, and hovering the
+  button is hovering the card, so it is always visible by the time it is clickable. */
+.jd-marks{position:absolute;bottom:5px;right:5px;z-index:42;display:flex;gap:4px;
+  opacity:0;transition:opacity .12s}
+.work:hover .jd-marks,.work:focus-within .jd-marks{opacity:1}
+.jd-mark{width:26px;height:26px;padding:0;margin:0;border-radius:50%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;line-height:1;font-size:26px;
+  color:#fff;background:rgba(10,14,18,.72);border:2px solid rgba(255,255,255,.8);
+  transition:background .12s,border-color .12s,transform .12s}
+.jd-mark:hover{transform:scale(1.08)}
+.jd-mark.watch:hover{background:#276749;border-color:#68d391}
+.jd-mark.block:hover{background:#7b341e;border-color:#f6ad55}
+.jd-mark.watch.on{background:#2b6cb0;border-color:#63b3ed}
+.jd-mark.block.on{background:#822727;border-color:#fc8181}
+/* The check and the slash are drawn, not typed, so they scale with the element's
+  font-size and do not depend on which font the platform picks for a glyph. */
+.jd-watched::before,.jd-mark.watch::before{content:"";display:block;
+  width:.26em;height:.46em;border-right:.13em solid currentColor;
+  border-bottom:.13em solid currentColor;transform:rotate(45deg)}
+.jd-mark.block::before{content:"";display:block;width:.62em;height:.13em;
+  background:currentColor;border-radius:.07em;transform:rotate(-45deg)}
+/* The "watched" badge, in Jellyfin's own shape and place. Not interactive: the
+  card behind it is the link, and a badge that swallowed the click would be a
+  dead spot on the cover. pointer-events:none lets the click through, exactly as
+  the VR badge already does. */
+.jd-watched{position:absolute;top:4px;right:4px;z-index:41;width:24px;height:24px;
+  border-radius:50%;background:#2b6cb0;border:1px solid #63b3ed;color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:24px;
+  box-shadow:0 1px 5px rgba(0,0,0,.5);pointer-events:none}
+/* A blacklisted cover: the content is dimmed and unreadable at a glance, and the
+  controls stay crisp because dimming them would hide the way back. Only the
+  content is filtered, never the card - a filter on the card creates a stacking
+  context that the absolutely-positioned toggles would be dimmed inside.
+  No transition on the filter: animating a blur is a per-frame GPU cost for a
+  decoration, and the swap is instant either way. */
+.work.jd-blocked .work-cover,.work.jd-blocked .work-intro{
+  filter:grayscale(1) blur(6px) brightness(.6);opacity:.5;transition:opacity .12s}
+.work.jd-blocked:hover .work-cover,.work.jd-blocked:hover .work-intro{
+  filter:none;opacity:1}
+/* In the Blacklisted-only view they are un-dimmed. Dimming is a glance warning,
+  and a view whose entire contents are blacklisted needs none - it would hide the
+  covers of the one thing you came to look at. The attribute is on <html> because
+  the cards are not inside anything the script owns. */
+html[data-jd-filter="blocked"] .work.jd-blocked .work-cover,
+html[data-jd-filter="blocked"] .work.jd-blocked .work-intro{filter:none;opacity:1}
+/* No hover on a touch screen, so the toggles have to be permanently visible there
+  or they are unreachable. */
+@media (hover: none){.jd-marks{opacity:1}}
+/* On the work page the toggles sit in the panel, not on a cover, so there is no
+  hover to wait for and nothing to overlay - they are laid out inline. */
+.jd-detail-marks .jd-marks{position:static;opacity:1;margin:4px 0 2px}
+.jd-detail-marks .jd-mark{width:24px;height:24px;font-size:24px}
+/* The two code lists in Settings. A textarea is not covered by the input rules
+  above, and it is the one control here whose content is the whole point. */
+.jd-set textarea{width:100%;min-height:62px;resize:vertical;box-sizing:border-box;
+  background:#2b2d30;color:#fff;border:1px solid #474747;border-radius:3px;
+  padding:4px 6px;font-size:11px;line-height:1.45;
+  font-family:ui-monospace,Menlo,Consolas,monospace}
+.jd-set textarea::placeholder{color:#5a6472}
+.jd-set p.hint{margin:0 0 6px}
+.jd-wrap{flex-wrap:wrap}
+.jd-wrap .jd-btn{flex:1 1 auto;padding:4px 7px;font-size:10.5px}
 .jd-panel{position:fixed;top:12px;right:12px;z-index:2147483000;width:264px;
   background:#1d2126;color:#9ab;border:1px solid #303840;border-radius:6px;
   font:12px/1.5 -apple-system,Segoe UI,Roboto,"Helvetica Neue",sans-serif;
@@ -2954,71 +3498,195 @@
   }
 
   /**
-   * Put a "play" button on every card whose work the library already holds.
+   * Put the library play button, the watched badge and the two toggles on a card.
    *
    * Separate from decorateCard(), which runs once per card and bails on the
    * second call. This one has to be re-runnable: a library sync finishes long
-   * after the cards were decorated, and the buttons have to appear then rather
-   * than on the next page load - which may be a page the user never visits.
+   * after the cards were decorated, a toggle changes one of the sets, and the
+   * marks have to appear then rather than on the next page load - which may be a
+   * page the user never visits.
    *
-   * The card is an <a>, so the button carries an href of its own and stops the
+   * One pass over the cards for all four marks rather than one pass each, so the
+   * cost per listing is a single querySelectorAll however many things are drawn.
+   *
+   * The card is an <a>, so every control carries its own handler and stops the
    * click from reaching the card. stopPropagation() is what does that: the
-   * anchor's default action only runs if the event reaches it, and the button's
-   * own default (following its href, in a new tab) is untouched. It is a real
-   * anchor so middle-click and "open in new tab" work the way a link should.
+   * anchor's default action only runs if the event reaches it, and the control's
+   * own default is untouched. The play button is a real anchor so middle-click
+   * and "open in new tab" work the way they should.
    */
-  function decoratePlays() {
-    var on = !!(settings.mediaServer && settings.mediaServer.enabled);
+  function decorateCardState() {
+    var mediaOn = !!(settings.mediaServer && settings.mediaServer.enabled);
     worksOnPage().forEach(function (card) {
       var href = card.getAttribute("href");
       var info = known.get(href) || workInfoFromCard(card);
       var cover = card.querySelector(SELECTORS.cover);
-      var existing = card.querySelector(".jd-play");
-      var hit = on ? mediaServerHit(info.code) : null;
-      if (!hit) {
-        // Removed rather than left behind: switching the server off, or pointing
-        // at one that does not hold this work, must take the buttons with it.
-        if (existing) {
-          existing.remove();
-          if (cover && cover._jdPlay === existing) {
-            cover._jdPlay = null;
-            if (playSizer) playSizer.unobserve(cover);
-          }
-        }
-        return;
-      }
       if (!cover) return;
       // The button is positioned against the card, so the card has to be the
       // offsetParent. decorateCard() normally has done this already, but a sync
       // can finish before the cards are decorated at all.
       if (getComputedStyle(card).position === "static") card.style.position = "relative";
-      var url = mediaUrl(library.base, hit.id);
-      if (existing) {
-        existing.href = url;
-        placePlay(existing, cover);
-        return;
-      }
-      // No text child: the triangle is a CSS pseudo-element, so it scales with
-      // the disc instead of depending on which font the platform picks for ▶.
-      var play = el("a", "jd-play");
-      play.href = url;
-      play.target = "_blank";
-      play.rel = "noopener noreferrer";
-      var label = "Play " + (info.code || "this work") + " from your library";
-      play.title = label;
-      play.setAttribute("aria-label", label);
-      // None of these reach the card: the click opens the player in a new tab,
-      // and the other four are what would otherwise start a drag or select the
-      // cover text on the way past.
-      ["click", "auxclick", "mousedown", "mouseup", "contextmenu"].forEach(function (type) {
-        play.addEventListener(type, function (event) {
-          event.stopPropagation();
-        });
-      });
-      card.appendChild(play);
-      placePlay(play, cover);
-      watchPlay(cover, play);
+
+      var hit = mediaOn ? mediaServerHit(info.code) : null;
+      var watchedKey = markFor("watched", info.code);
+      var blockedKey = markFor("blocked", info.code);
+
+      paintPlay(card, cover, hit, info);
+      paintWatchedBadge(card, watchedKey);
+      paintMarks(card, info.code, watchedKey, blockedKey);
+      // The class drives the dimming in CSS; the content is filtered, never the
+      // card, so the toggles stay crisp.
+      card.classList.toggle("jd-blocked", !!blockedKey);
     });
+  }
+
+  /** The library play disc, sized and centred on the cover. */
+  function paintPlay(card, cover, hit, info) {
+    var existing = card.querySelector(".jd-play");
+    if (!hit) {
+      // Removed rather than left behind: switching the server off, or pointing
+      // at one that does not hold this work, must take the buttons with it.
+      if (existing) {
+        existing.remove();
+        if (cover._jdPlay === existing) {
+          cover._jdPlay = null;
+          if (playSizer) playSizer.unobserve(cover);
+        }
+      }
+      return;
+    }
+    var url = mediaUrl(library.base, hit.id);
+    if (existing) {
+      existing.href = url;
+      placePlay(existing, cover);
+      return;
+    }
+    // No text child: the triangle is a CSS pseudo-element, so it scales with the
+    // disc instead of depending on which font the platform picks for ▶.
+    var play = el("a", "jd-play");
+    play.href = url;
+    play.target = "_blank";
+    play.rel = "noopener noreferrer";
+    var label = "Play " + (info.code || "this work") + " from your library";
+    play.title = label;
+    play.setAttribute("aria-label", label);
+    // None of these reach the card: the click opens the player in a new tab, and
+    // the other four are what would otherwise start a drag or select the cover
+    // text on the way past.
+    ["click", "auxclick", "mousedown", "mouseup", "contextmenu"].forEach(function (type) {
+      play.addEventListener(type, function (event) {
+        event.stopPropagation();
+      });
+    });
+    card.appendChild(play);
+    placePlay(play, cover);
+    watchPlay(cover, play);
+  }
+
+  /** The blue check in the top-right corner, or nothing. */
+  function paintWatchedBadge(card, watchedKey) {
+    var existing = card.querySelector(".jd-watched");
+    if (!watchedKey) {
+      if (existing) existing.remove();
+      return;
+    }
+    if (existing) return;
+    var badge = el("span", "jd-watched");
+    badge.title = "Watched";
+    badge.setAttribute("aria-hidden", "true");
+    card.appendChild(badge);
+  }
+
+  /**
+   * The two toggles, created once per container and repainted after that.
+   *
+   * Takes a container rather than a card so the work page can use the same
+   * builder - the two must not drift, or the same work would show one state on a
+   * cover and another on its own page.
+   */
+  function paintMarks(container, code, watchedKey, blockedKey) {
+    // A card with no code cannot be matched against either set, so it gets no
+    // toggles rather than toggles that would silently do nothing.
+    if (!code || !container) return;
+    var row = container.querySelector(".jd-marks");
+    if (!row) {
+      row = el("div", "jd-marks");
+      row.appendChild(markButton("watch", code, "watched"));
+      row.appendChild(markButton("block", code, "blocked"));
+      container.appendChild(row);
+    }
+    paintMark(row.querySelector(".jd-mark.watch"), !!watchedKey, "watched");
+    paintMark(row.querySelector(".jd-mark.block"), !!blockedKey, "blocked");
+  }
+
+  function paintMark(btn, on, which) {
+    if (!btn) return;
+    btn.classList.toggle("on", on);
+    btn.setAttribute("aria-pressed", on ? "true" : "false");
+    var label =
+      which === "watched"
+        ? on ? "Watched - click to unmark" : "Mark as watched"
+        : on ? "Blacklisted - click to allow it again" : "Never download this";
+    btn.title = label;
+    btn.setAttribute("aria-label", label);
+  }
+
+  function markButton(cls, code, which) {
+    var btn = el("button", "jd-mark " + cls);
+    btn.type = "button";
+    btn.addEventListener("click", function (event) {
+      // Both of them, and unlike the tick box next door.
+      //
+      // stopPropagation() alone is not enough for a button inside the cover's
+      // <a>: the anchor's activation behaviour runs off the event's *target* rather
+      // than off the propagation path, so the click marks the work and then
+      // navigates to it anyway - about a frame later, which is why it looks like
+      // the toggle worked and the page went somewhere by itself.
+      //
+      // The tick box gets away with stopPropagation() alone only because it is a
+      // <label> around a checkbox, and preventDefault() there would cancel the
+      // label's forwarding of the click to the input - the toggle would stop
+      // working. A <button type="button"> has no default action and no forwarding
+      // to lose, so cancelling the event costs nothing.
+      event.preventDefault();
+      event.stopPropagation();
+      toggleMark(which, code);
+    });
+    // Drag and middle-click would otherwise be handled by the card underneath.
+    ["mousedown", "mouseup", "auxclick", "contextmenu"].forEach(function (type) {
+      btn.addEventListener(type, function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      });
+    });
+    return btn;
+  }
+
+  /** Flip one code in one set, persist it, and repaint. */
+  function toggleMark(which, code) {
+    var key = codeKey(code);
+    if (!key) return;
+    var set = which === "watched" ? watched : blocked;
+    var next = {};
+    Object.keys(set).forEach(function (k) {
+      next[k] = true;
+    });
+    var on = !next[key];
+    if (on) next[key] = true;
+    else delete next[key];
+    setCodeSet(which, next);
+    log(
+      (which === "watched" ? (on ? "Marked watched: " : "No longer watched: ")
+        : (on ? "Blacklisted, never download: " : "Allowed again: ")) + code,
+      on && which === "blocked" ? "wa" : "mu",
+    );
+  }
+
+  /** Is this work marked in one of the two sets? */
+  function markedFor(which, href) {
+    var info = known.get(href);
+    if (!info) return false;
+    return !!markFor(which, info.code);
   }
 
   /**
@@ -3057,6 +3725,10 @@
       info = workInfoFromCard(card);
       if (card.getAttribute("href")) known.set(card.getAttribute("href"), info);
     }
+    // The blacklist view is a way to *find* them, not a way to hide them. In every
+    // other view a blacklisted card stays on the page, dimmed, because that is
+    // what keeps the toggle to undo it reachable.
+    if (settings.filter === "blocked") return !!markFor("blocked", info.code);
     return (
       settings.filter === "all" ||
       (settings.filter === "vr" && info.vr) ||
@@ -3104,6 +3776,7 @@
    */
   var lastHidden = 0;
   var lastAds = 0;
+  var lastBlocked = 0;
 
   function applyFilter() {
     // Adverts first, and counted separately: they are hidden whatever the VR
@@ -3113,9 +3786,18 @@
     // does not own.
     var ads = hideAdCards();
     var hidden = 0;
+    var blockedHere = 0;
+    // Which filter is in force, as an attribute on <html>, because CSS needs it and
+    // the cards live outside anything this script owns. One write per filter
+    // change, not per card.
+    document.documentElement.setAttribute("data-jd-filter", settings.filter);
     worksOnPage().forEach(function (card) {
       var info = known.get(card.getAttribute("href"));
       if (!info) return;
+      // Blacklisted works are not hidden, so they are counted on their own line
+      // rather than added to the hidden tally - which is a count of what the
+      // filter removed, and would otherwise be describing two different things.
+      if (markFor("blocked", info.code)) blockedHere++;
       if (matchesFilter(card)) {
         card.style.display = "";
       } else {
@@ -3125,26 +3807,31 @@
     });
     lastHidden = hidden;
     lastAds = ads;
-    updateCount(hidden, ads);
+    lastBlocked = blockedHere;
+    updateCount(hidden, ads, blockedHere);
     // The buttons carry the filtered count in their label, so they are part of
     // what the filter changes - not just what decorates it.
     requestBulkRefresh();
   }
 
-  function updateCount(hidden, ads) {
+  function updateCount(hidden, ads, blockedHere) {
     var node = document.querySelector(".jd-count");
     if (!node) return;
-    // The two tallies are disjoint now: `hidden` counts works the VR filter
-    // removed, `ads` counts the injected advert cards. They were briefly folded
-    // together with a subtraction, which is only right while the caller mixes
-    // them - and it silently reported a filter count of -3 the moment it did not.
+    // The tallies are disjoint, and kept so at the source rather than reconciled
+    // here: `hidden` counts works the filter removed, `ads` counts the injected
+    // advert cards, and `blocked` counts blacklisted works that are still on the
+    // page but dimmed. Folding them together with a subtraction is only right
+    // while the caller mixes them, and it silently reported a filter count of -3
+    // the moment it did not.
     var byFilter = hidden === undefined ? lastHidden : hidden;
     var adverts = ads === undefined ? lastAds : ads;
+    var blacklisted = blockedHere === undefined ? lastBlocked : blockedHere;
     node.textContent = "";
     node.appendChild(document.createTextNode("Selected "));
     node.appendChild(el("b", null, String(selected.size)));
     if (byFilter) node.appendChild(document.createTextNode(" · " + byFilter + " hidden by filter"));
     if (adverts) node.appendChild(document.createTextNode(" · " + adverts + " advert" + (adverts === 1 ? "" : "s") + " hidden"));
+    if (blacklisted) node.appendChild(document.createTextNode(" · " + blacklisted + " blacklisted"));
   }
 
   function clearSelection() {
@@ -3179,23 +3866,33 @@
    * that it cannot disagree with `selected` however many cards there are, and so
    * the visible state and the model are always updated together.
    *
-   * Bulk selection, and only bulk selection, steps over what the library already
-   * holds. "Select all" means "everything on this page", and it is only worth
-   * having if it is everything you lack; a work you already own is not work, it
-   * is a second download of the same torrent. A hand tick is a deliberate
-   * request and is left alone - see pickMagnet() for what it does instead.
+   * Bulk selection, and only bulk selection, steps over three things. "Select
+   * all" means "everything on this page", and it is only worth having if it is
+   * everything you lack: a work you own is a second download of the same
+   * torrent, one you have watched is one you asked not to fetch again, and one
+   * you blacklisted is one you said you never want. A hand tick is a deliberate
+   * request and is left alone - except for the blacklist, which refuses; see
+   * sendOne().
    *
-   * Returns the ticked count and the skipped count, because a button that
-   * silently ticks fewer covers than it names is a button nobody can trust.
+   * Each skipped work is counted under exactly one reason, by precedence, because
+   * a work can be owned *and* watched and counting it twice would make the
+   * reasons not sum to the number skipped.
    */
   function setPageSelection(on) {
     var cards = selectableCards();
     var ticked = 0;
-    var skipped = 0;
+    var counts = { blocked: 0, owned: 0, watched: 0 };
     cards.forEach(function (card) {
       var href = card.getAttribute("href");
-      if (on && isOwned(href)) {
-        skipped++;
+      var reason = on
+        ? skipReason({
+            blocked: markedFor("blocked", href),
+            owned: isOwned(href),
+            watched: markedFor("watched", href),
+          })
+        : null;
+      if (reason) {
+        counts[reason]++;
         return;
       }
       ticked++;
@@ -3213,7 +3910,8 @@
     updateCount();
     requestBulkRefresh();
     selectionChanged();
-    return { ticked: ticked, skipped: skipped };
+    var skipped = counts.blocked + counts.owned + counts.watched;
+    return { ticked: ticked, skipped: skipped, counts: counts };
   }
 
   // ---------------------------------------------- performer links, site-wide
@@ -3322,12 +4020,17 @@
       }
       // Her whole filmography is the one selection that is worth having because
       // it is exhaustive, so it is the one that must not spend a download on a
-      // work the user already has. A hand tick is untouched by this - see
-      // pickMagnet() for what that does instead.
-      var owned = [];
+      // work the user already has, has watched, or has said never to fetch. A
+      // hand tick is untouched by this - see sendOne() for what that does.
+      var counts = { blocked: 0, owned: 0, watched: 0 };
       var keep = outcome.hrefs.filter(function (href) {
-        if (!isOwned(href)) return true;
-        owned.push(href);
+        var reason = skipReason({
+          blocked: markedFor("blocked", href),
+          owned: isOwned(href),
+          watched: markedFor("watched", href),
+        });
+        if (!reason) return true;
+        counts[reason]++;
         return false;
       });
       keep.forEach(function (href) {
@@ -3339,13 +4042,17 @@
 
       var where = pagesPhrase(result.pages);
       warnIfTruncated(result, where, "The works found so far are queued.");
-      if (owned.length) {
-        log(owned.length + " of her works are already in your library and were left unticked.", "mu");
+      var skipped = counts.blocked + counts.owned + counts.watched;
+      if (skipped) {
+        log(
+          skipped + " of her works were left unticked (" + skipReasonPhrase(counts) + ").",
+          "mu",
+        );
       }
       if (!keep.length) {
         log(
           job.label + ": " + result.works.length + " works found, but none match " +
-            filterScope() + (owned.length ? ", or they are all already in your library" : "") + ".",
+            filterScope() + (skipped ? ", or they are all already accounted for" : "") + ".",
           "wa",
         );
         return;
@@ -3621,7 +4328,7 @@
    * matchesFilter() is actually applying. `all` reads as a noun phrase on its
    * own, which is why it is not "all only".
    */
-  var FILTER_LABEL = { all: "all works", vr: "VR only", "non-vr": "non-VR only" };
+  var FILTER_LABEL = { all: "all works", vr: "VR only", "non-vr": "non-VR only", blocked: "blacklisted works" };
 
   /** The filter as a scope, for a sentence. */
   function filterScope() {
@@ -3637,9 +4344,9 @@
    * this page", which named no thing at all.
    */
   function countScope() {
-    return settings.filter === "all"
-      ? "works on this page"
-      : (settings.filter === "vr" ? "VR-only" : "non-VR-only") + " works on this page";
+    if (settings.filter === "all") return "works on this page";
+    if (settings.filter === "blocked") return "blacklisted works on this page";
+    return (settings.filter === "vr" ? "VR-only" : "non-VR-only") + " works on this page";
   }
 
   /**
@@ -3654,19 +4361,27 @@
   }
 
   /**
-   * Redraw everything that depends on the library snapshot.
+   * Redraw everything that depends on the library snapshot or the two code sets.
    *
-   * One funnel, called from every point that can change the answer - a sync
-   * finishing, settings being saved, the cache being dropped - so a play button
-   * cannot outlive the library entry it points at, and a work page cannot keep
-   * claiming a status that a sync has since changed.
+   * One funnel, called from every point that can change an answer - a sync
+   * finishing, a mark toggled, settings being saved, the cache being dropped - so
+   * a play button cannot outlive the library entry it points at, a badge cannot
+   * outlive the mark it stands for, and a work page cannot keep claiming a status
+   * that has since changed.
    */
   function libraryRepaint() {
-    decoratePlays();
+    decorateCardState();
     requestMagnetRefresh();
     requestBulkRefresh();
-    var status = document.querySelector(".jd-libstatus");
-    if (status && status._paint) status._paint();
+    updateCount();
+    document.querySelectorAll(".jd-libstatus, .jd-setstatus, .jd-detail-marks").forEach(function (node) {
+      if (node._paint) node._paint();
+    });
+  }
+
+  /** Same funnel, named for the callers that changed a mark. */
+  function repaintMarks() {
+    libraryRepaint();
   }
 
   /** "just now", "12 min ago", "3 hours ago" - coarse on purpose. */
@@ -3821,6 +4536,7 @@ function deselectWork(href) {
       ["all", "All"],
       ["non-vr", "non-VR only"],
       ["vr", "VR only"],
+      ["blocked", "Blacklisted only"],
     ].forEach(function (pair) {
       var opt = el("option", null, pair[1]);
       opt.value = pair[0];
@@ -3958,22 +4674,28 @@ function deselectWork(href) {
       }).length;
       var scoped = countScope();
       // The count on the button is what the click will actually tick, not what
-      // is on the page. A bulk action that steps over owned works has to say so
+      // is on the page. A bulk action that steps over marked works has to say so
       // on its face: "Select all (34)" that ticks 28 is the same lie as a button
-      // that ignores the filter, and the title is the only place that can
-      // explain why without a paragraph on the button itself.
-      var owned = settings.mediaServer && settings.mediaServer.enabled
-        ? cards.filter(function (card) {
-            return isOwned(card.getAttribute("href"));
-          }).length
-        : 0;
-      var tickable = cards.length - owned;
+      // that ignores the filter, and the title is the only place that can explain
+      // why without a paragraph on the button itself.
+      var counts = { blocked: 0, owned: 0, watched: 0 };
+      cards.forEach(function (card) {
+        var href = card.getAttribute("href");
+        var reason = skipReason({
+          blocked: markedFor("blocked", href),
+          owned: isOwned(href),
+          watched: markedFor("watched", href),
+        });
+        if (reason) counts[reason]++;
+      });
+      var skipped = counts.blocked + counts.owned + counts.watched;
+      var tickable = cards.length - skipped;
       selectAll.textContent = tickable ? "Select all (" + tickable + ")" : "Select all";
       selectAll.title = !cards.length
         ? "Nothing to select"
         : "Tick " + tickable + " " + scoped +
           (total > cards.length ? " (of " + total + " works)" : "") +
-          (owned ? " · " + owned + " already in your library, left alone" : "");
+          (skipped ? " · " + skipReasonPhrase(counts) + ", left alone" : "");
       var hidden = total - cards.length;
       clearBtn.title = selected.size
         ? "Untick all " + selected.size + " selected works, including " + hidden +
@@ -4168,6 +4890,17 @@ function deselectWork(href) {
     var target = engine();
     return fetchMagnets(href)
       .then(function (detail) {
+        // Enforced here as well as at selection, exactly as adverts are: a work
+        // that reaches the send path another way - blacklisted while it sat in
+        // the selection, or ticked on a page from another tab - still must not be
+        // sent. The blacklist is the one mark that is a decision rather than a
+        // fact, so it is the one that refuses instead of quietly complying.
+        if (markFor("blocked", detail.code)) {
+          return {
+            ok: false,
+            reason: "blacklisted, so nothing was sent - click the \u2298 on its cover to allow it",
+          };
+        }
         // Looked up here rather than captured when the work was ticked: a tick
         // and the send can be minutes and one library sync apart, and the answer
         // that matters is the one at the moment of sending.
@@ -4319,6 +5052,21 @@ function deselectWork(href) {
         inLib.style.display = "none";
         head.appendChild(inLib);
         box.appendChild(head);
+
+        // The same two toggles as a cover carries, on the page where the user is
+        // most likely to decide. Built by the same function, so the two cannot
+        // disagree about what is marked.
+        var detailMarks = el("div", "jd-detail-marks");
+        detailMarks._paint = function () {
+          paintMarks(
+            detailMarks,
+            detail.code,
+            markFor("watched", detail.code),
+            markFor("blocked", detail.code),
+          );
+        };
+        detailMarks._paint();
+        box.appendChild(detailMarks);
 
         /**
          * The library entry for this work, asked for afresh every time.
@@ -4706,6 +5454,149 @@ function deselectWork(href) {
     mediaSection.appendChild(syncRow);
     status._paint();
 
+    box.appendChild(el("h3", null, "Watched and blacklist"));
+    box.appendChild(
+      el(
+        "p",
+        "hint",
+        "Two lists of catalogue codes, stored in this browser as plain text. " +
+          "Watched works are left out of Select all and shown with a blue check; " +
+          "blacklisted works are dimmed, never selected, and refused if you tick one. " +
+          "Both are matched on the catalogue code, so MIDA-801, mida801 and " +
+          "h_259mida00801 all mean the same work.",
+      ),
+    );
+
+    /**
+     * One of the two lists, as a box and four buttons.
+     *
+     * Built once and used twice, because the two lists differ only in what the
+     * marks mean. The box starts empty and is an *input*: Show puts the current
+     * list in it, and Add unions what is in it while Replace swaps the whole list
+     * for it. That is what makes the same box serve manual entry, import and
+     * export - and an export you cannot paste back is not an export.
+     */
+    function markSection(title, which, hint) {
+      var wrap = el("div", "jd-set");
+      wrap.appendChild(el("h4", null, title));
+      wrap.appendChild(el("p", "hint", hint));
+
+      var area = el("textarea", "jd-list");
+      area.rows = 4;
+      area.spellcheck = false;
+      area.placeholder = "One code per line. Anything with codes in it works, including a whole filename.";
+      wrap.appendChild(area);
+
+      var status = el("div", "jd-count jd-setstatus");
+      status._paint = function () {
+        var set = which === "watched" ? watched : blocked;
+        var n = Object.keys(set).length;
+        status.textContent = n + (n === 1 ? " code" : " codes") + " stored.";
+      };
+      status._paint();
+
+      function say(message, tone) {
+        log(title + ": " + message, tone || "mu");
+        status._paint();
+        libraryRepaint();
+      }
+
+      function act(kind) {
+        var codes = parseCodeList(area.value);
+        var set = which === "watched" ? watched : blocked;
+        if (kind === "add") {
+          if (!codes.length) return say("nothing code-shaped in the box.");
+          return say(addCodes(which, codes) + " new of " + codes.length + " recognised.");
+        }
+        if (kind === "replace") {
+          if (!codes.length) return say("refusing to replace with an empty box - use Clear for that.", "wa");
+          if (!window.confirm("Replace all " + Object.keys(set).length + " with " + codes.length + " codes?")) return;
+          var next = {};
+          codes.forEach(function (code) {
+            next[code] = true;
+          });
+          setCodeSet(which, next);
+          return say("replaced with " + codes.length + " codes.");
+        }
+        if (kind === "show") {
+          area.value = serializeCodeList(Object.keys(set));
+          // Also put it on the clipboard when the browser allows it; the box
+          // still has it either way, so a refusal costs nothing.
+          try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(area.value).then(
+                function () {
+                  say("the list is in the box and on the clipboard.");
+                },
+                function () {
+                  say("the list is in the box - select and copy it.");
+                },
+              );
+              return;
+            }
+          } catch (e) {
+            /* fall through to the message below */
+          }
+          return say("the list is in the box - select and copy it.");
+        }
+        if (kind === "clear") {
+          var n = Object.keys(set).length;
+          if (!n) return say("already empty.");
+          if (!window.confirm("Clear all " + n + " codes? This cannot be undone.")) return;
+          area.value = "";
+          setCodeSet(which, {});
+          return say("cleared " + n + " codes.", "wa");
+        }
+      }
+
+      var row = el("div", "jd-actions jd-wrap");
+      if (which === "watched") {
+        var importBtn = el("button", "jd-btn", "Import from Jellyfin");
+        importBtn.type = "button";
+        importBtn.addEventListener("click", function () {
+          // Collected first, so the import reads the address on screen rather
+          // than the one saved last time.
+          collect();
+          importBtn.disabled = true;
+          importWatchHistory().then(function () {
+            importBtn.disabled = false;
+            status._paint();
+          });
+        });
+        row.appendChild(importBtn);
+      }
+      [
+        ["add", "Add pasted"],
+        ["replace", "Replace all"],
+        ["show", "Show list"],
+        ["clear", "Clear"],
+      ].forEach(function (pair) {
+        var btn = el("button", "jd-btn ghost", pair[1]);
+        btn.type = "button";
+        btn.addEventListener("click", function () {
+          act(pair[0]);
+        });
+        row.appendChild(btn);
+      });
+      wrap.appendChild(row);
+      wrap.appendChild(status);
+      box.appendChild(wrap);
+    }
+
+    markSection(
+      "Watched",
+      "watched",
+      "Works you have already seen, so they are not downloaded twice. Import reads " +
+        "both what your server still holds and its play log, which is the only place " +
+        "an item you have since deleted is still remembered.",
+    );
+    markSection(
+      "Blacklist",
+      "blocked",
+      "Works you never want. They are dimmed rather than removed, so the toggle that " +
+        "undoes it stays reachable; hover the cover to see it clearly again.",
+    );
+
     var actions = el("div", "jd-actions");
     var test = el("button", "jd-btn", "Test connection");
     var save = el("button", "jd-btn", "Save");
@@ -4826,9 +5717,9 @@ function deselectWork(href) {
       document.head.appendChild(style);
     }
     cards.forEach(decorateCard);
-    // After the ticks, because the play button is positioned relative to the
-    // same card and must never end up underneath one.
-    decoratePlays();
+    // After the ticks, because the marks are positioned relative to the same card
+    // and must never end up underneath one.
+    decorateCardState();
     applyFilter();
     updateCount();
     // Cards are only decorated now, so this is the first point at which the
@@ -4848,6 +5739,11 @@ function deselectWork(href) {
     // The cached library, before any card is decorated, so a page load paints
     // its play buttons from the cache instead of waiting for a request.
     readLibrary();
+    // The two code sets, likewise: a page load must paint its badges from what is
+    // already stored rather than waiting for anything. Both are plain text reads
+    // with no request behind them.
+    watched = readCodeSet(WATCHED_KEY);
+    blocked = readCodeSet(BLOCKED_KEY);
     // Live sync from sibling tabs. Registered once, and its handler only ever
     // reads - see onSharedChange().
     window.addEventListener("storage", onSharedChange);

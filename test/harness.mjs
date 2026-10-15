@@ -170,7 +170,7 @@ function inject(html) {
  * career than the test thought it was walking. That is the same class of bug as
  * matching on the pathname alone, arriving from the other direction.
  */
-const HARNESS_PARAMS = new Set(["media", "cached", "held", "badkey", "pages", "lib"]);
+const HARNESS_PARAMS = new Set(["media", "cached", "held", "badkey", "pages", "lib", "nohistory"]);
 
 function routeKey(url) {
   const q = new URLSearchParams(url.search);
@@ -244,9 +244,11 @@ const STUB_FOLDERS = [
 const STUB_ITEMS = [
   { Id: "lib-fex", Name: "FEX-004", Path: "/media/jav/FEX-004.mp4", Size: 5368709120, lib: "stub-jav-lib" },
   { Id: "lib-crpd", Name: "crpd 299", Path: "/media/jav/crpd 299.mp4", Size: 3221225472, lib: "stub-jav-lib" },
-  { Id: "lib-ddb", Name: "ddb068", Path: "/media/jav/ddb068.mp4", Size: 2147483648, lib: "stub-jav-lib" },
+  { Id: "lib-ddb", Name: "ddb068", Path: "/media/jav/ddb068.mp4", Size: 2147483648, lib: "stub-jav-lib", watched: "played" },
   { Id: "lib-mida", Name: "MIDA-817", Path: "/media/jav/h_259mida00817.mp4", Size: 4294967296, lib: "stub-jav-lib" },
-  { Id: "lib-skmj", Name: "SKMJ-039", Path: "/media/jav/SKMJ-039.mkv", Size: 0, lib: "stub-jav-lib" },
+  // Watched by progress only: no played flag, a small position. The other half of
+  // the watched rule, and the half a played-flag-only test would never exercise.
+  { Id: "lib-skmj", Name: "SKMJ-039", Path: "/media/jav/SKMJ-039.mkv", Size: 0, lib: "stub-jav-lib", watched: "progress" },
   { Id: "lib-ipzz", Name: "IPZZ-961", Path: "/media/jav/IPZZ-961 1.28GB.mp4", Size: 1374389535, lib: "stub-jav-lib" },
   // On the actress fixture's career, so the crawl's skip is observable.
   { Id: "lib-sone", Name: "SONE-991", Path: "/media/jav/SONE-991.mp4", Size: 6442450944, lib: "stub-jav-lib" },
@@ -255,6 +257,36 @@ const STUB_ITEMS = [
   { Id: "lib-wo", Name: "WO-027", Path: "/media/movies/WO-027.mp4", Size: 4370000000, lib: "stub-movies-lib" },
   // Not on the listing page, so nothing should be decorated from it.
   { Id: "lib-elsewhere", Name: "ZZZ-999", Path: "/media/jav/ZZZ-999.mp4", Size: 1073741824, lib: "stub-jav-lib" },
+];
+
+/**
+ * The playback log, as the Playback Reporting plugin returns it.
+ *
+ * Five rows, and each is there for a different reason:
+ *
+ *   - FEX-004            a release the live library also holds, so the two sources
+ *                        overlap and a union that double-counted would show;
+ *   - [QQQ-111] ...      a release the library no longer has, which is the entire
+ *                        reason the plugin is worth depending on. QQQ is invented
+ *                        on purpose: a deleted item cannot be in the library, and a
+ *                        code that *was* there could pass for a match.
+ *   - a dated title with a GUID   junk twice over: the film title is not a
+ *                        release, and the GUID invents BA13, a two-letter code of
+ *                        exactly the shape a real series uses;
+ *   - Blade Runner 2049  a film title that IS code-shaped in the middle, so the
+ *                        rule that keeps it out is the position rule;
+ *   - [Dreamcatcher-Scream]  a bracketed word, which the one-bracket allowance
+ *                        must still refuse.
+ *
+ * Transcribed from the shape of real rows, not invented to suit the rules: a stub
+ * whose junk were code-shaped would pass while the cleaning did nothing.
+ */
+const STUB_HISTORY = [
+  { label: "FEX-004 played once", playCount: 1, time: "00:42:11" },
+  { label: "[QQQ-111] A release the library no longer has", playCount: 2, time: "-00:03:00" },
+  { label: "2016-01-15 - Pillow Humping [d982f695-fba6-48f1-ba13-2241d9856559]", playCount: 1, time: "01:10:00" },
+  { label: "Blade Runner 2049", playCount: 1, time: "02:46:00" },
+  { label: "[Dreamcatcher-Scream] [99aybfwkygf613pzm]", playCount: 3, time: "00:19:00" },
 ];
 
 /** Filler items, for exercising the page loop. Carries no catalogue code at all. */
@@ -289,13 +321,26 @@ function stubLibrary(url) {
   const startIndex = Number(url.searchParams.get("StartIndex")) || 0;
   const limit = Number(url.searchParams.get("Limit")) || 5000;
   const slice = items.slice(startIndex, startIndex + limit);
+  // UserData only when a user is named, because that is what a real server does:
+  // asked without userId it omits the field entirely, and the script that forgot
+  // to pass one then sees every item unwatched and imports nothing - silently.
+  const forUser = !!url.searchParams.get("userId");
   return {
-    Items: slice.map((it) => ({
-      Id: it.Id,
-      Name: it.Name,
-      Path: it.Path,
-      MediaSources: it.Size ? [{ Size: it.Size }] : [],
-    })),
+    Items: slice.map((it) => {
+      const item = {
+        Id: it.Id,
+        Name: it.Name,
+        Path: it.Path,
+        MediaSources: it.Size ? [{ Size: it.Size }] : [],
+      };
+      if (forUser) {
+        item.UserData = {
+          Played: it.watched === "played",
+          PlaybackPositionTicks: it.watched === "progress" ? 12345678 : 0,
+        };
+      }
+      return item;
+    }),
     TotalRecordCount: items.length,
   };
 }
@@ -334,6 +379,17 @@ let rejectItems = false;
  */
 let pageSplit = false;
 
+/**
+ * Answer the playback log with 404, as a server without the plugin does.
+ *
+ * Set from the page's URL as ?nohistory=1, for the same reason as heldOverride:
+ * the script builds the report URL itself. This is the state every user without
+ * the plugin is permanently in, and it must degrade to "live state only, with a
+ * sentence saying so" rather than to an error - the plugin is an optional extra,
+ * so its absence is not a failure of anything.
+ */
+let noHistory = false;
+
 function handleStub(req, res, url) {
   const path = url.pathname;
   let body = "";
@@ -346,7 +402,7 @@ function handleStub(req, res, url) {
           ...stubHits,
           // The page-URL-driven switches, so a test can see what the stub
           // actually believed rather than what it was asked for.
-          overrides: { heldOverride, pageSplit, rejectItems },
+          overrides: { heldOverride, pageSplit, rejectItems, noHistory },
         }),
       );
       return;
@@ -372,12 +428,39 @@ function handleStub(req, res, url) {
       return;
     }
 
+    // Which user's history to read. One user, as the common case; the script
+    // asks for the list because /Users/Me answers 400 to an API key.
+    if (path === "/Users") {
+      stubHits.mediaServer.push({ path, token: req.headers["x-emby-token"] || null });
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify([{ Id: "stub-user-id", Name: "Harness User" }]));
+      return;
+    }
+
+    // The Playback Reporting plugin. 404 when switched off, which is exactly what
+    // a server without it answers.
+    if (path === "/user_usage_stats/MoviesReport") {
+      stubHits.mediaServer.push({ path, query: url.search, token: req.headers["x-emby-token"] || null });
+      if (noHistory) {
+        res.writeHead(404, { "Content-Type": "text/plain" });
+        res.end("Not Found");
+        return;
+      }
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify(STUB_HISTORY));
+      return;
+    }
+
     if (path === "/Items") {
       stubHits.mediaServer.push({
         path,
         query: url.search,
         startIndex: Number(url.searchParams.get("StartIndex")) || 0,
         parentId: url.searchParams.get("ParentId") || null,
+        // Recorded because its absence is a silent failure: a /Items read without
+        // a user returns no UserData at all, so the watched import does nothing
+        // and says nothing about having done nothing.
+        userId: url.searchParams.get("userId") || null,
         token: req.headers["x-emby-token"] || null,
         accept: req.headers.accept || null,
       });
@@ -482,6 +565,8 @@ const server = createServer((req, res) => {
     path === "/jsonrpc" ||
     path.startsWith("/api/v2/") ||
     path === "/Items" ||
+    path === "/Users" ||
+    path.startsWith("/user_usage_stats/") ||
     path === "/Library/VirtualFolders"
   ) {
     handleStub(req, res, url);
@@ -664,6 +749,7 @@ setTimeout(function () {
       heldOverride = Number(url.searchParams.get("held")) || 0;
       pageSplit = url.searchParams.get("pages") === "2";
       rejectItems = url.searchParams.get("badkey") === "1";
+      noHistory = url.searchParams.get("nohistory") === "1";
     }
     res.writeHead(200, {
       "Content-Type": "text/html; charset=utf-8",

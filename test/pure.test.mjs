@@ -1294,6 +1294,133 @@ group("DEFAULTS.mediaServer - off, and pointing nowhere in particular");
   check("no link-mode setting remains", d.link, undefined);
 }
 
+group("stripUuids / watchedKeysFromLabel - cleaning the playback log");
+// The playback log spans every library, so it is full of things that are not
+// releases. These are real rows from a real server.
+{
+  const uuidLabel = "[d982f695-fba6-48f1-ba13-2241d9856559] Pillow Humping";
+  // The rule is doing work: the raw label yields a false code from the GUID.
+  check("the raw label does yield a false code", api.codeKeys(uuidLabel).includes("BA13"), true);
+  check("stripping the GUID removes it", api.stripUuids(uuidLabel).includes("d982f695"), false);
+  check("so the label yields nothing", api.watchedKeysFromLabel(uuidLabel), []);
+  // The GUID is replaced by a space; the brackets around it are left, which is
+  // harmless because a bracket is not code-shaped.
+  check("the GUID becomes a space", api.stripUuids("a[d982f695-fba6-48f1-ba13-2241d9856559]b"), "a[ ]b");
+  check("text with no GUID is untouched", api.stripUuids("ABF-087 title"), "ABF-087 title");
+
+  // A release file is named code-first, and that is the second rule.
+  check("a release leads with its code", api.watchedKeysFromLabel("200GANA-3437 \u5996\u8276\u306a"), ["200GANA3437", "GANA3437"]);
+  check("and so does a padded one", api.watchedKeysFromLabel("259LUXU-1891 \u3010\u62d8\u675f\u3011"), ["259LUXU1891", "LUXU1891"]);
+  check("a plain release", api.watchedKeysFromLabel("ABF-087 \u4ffa\u306e\u5f93\u9806\u30da\u30c3\u30c8\u5019\u88dc\u751f 06"), ["ABF87"]);
+  check("a bare code", api.watchedKeysFromLabel("892OERO-008"), ["892OERO8", "OERO8"]);
+
+  // What the rule exists to exclude.
+  check("a film title yields nothing", api.watchedKeysFromLabel("Blade Runner 2049"), []);
+  check("a dated western title yields nothing", api.watchedKeysFromLabel("2016-10-23 - Wet Messy Lotion and Fingers"), []);
+  check("a dance video yields nothing", api.watchedKeysFromLabel("[Dreamcatcher-Scream] [99aybfwkygf613pzm]"), []);
+  check("a criterion edition yields nothing", api.watchedKeysFromLabel("Blue Is the Warmest Color (2013) Criterion (1080p Bluray x265)"), []);
+  // The control: the same words ARE code-shaped away from the start, which is why
+  // position is the discriminator rather than the pattern alone.
+  check("Blade Runner 2049 is code-shaped in the middle", api.codeKeys("Blade Runner 2049").length > 0, true);
+  // One optional leading bracket, because a real library names plenty of releases
+  // that way. Measured: insisting the code be the very first character dropped 170
+  // real rows, every one of them this shape.
+  check("a code inside a bracket is a release", api.watchedKeysFromLabel("[ABF-246] Arrogant office lady"), ["ABF246"]);
+  check("and so is a bracketed padded one", api.watchedKeysFromLabel("[259LUXU-1891] Title"), ["259LUXU1891", "LUXU1891"]);
+  check("a space after the bracket is fine", api.watchedKeysFromLabel("[  ABF-246] Title"), ["ABF246"]);
+  // A bracketed *word* is still not a release - there is no code after the bracket.
+  check("a bracketed word is not a release", api.watchedKeysFromLabel("[Dreamcatcher-Scream] [99aybfwkygf613pzm]"), []);
+  check("a bracketed tag is not a release", api.watchedKeysFromLabel("[JAV] MIDA-801"), []);
+  // And the reason it must not be a character window: truncating a label cuts the
+  // code in half and invents a shorter, wrong one.
+  check("truncating would have invented a wrong code", api.codeKeys("[JAV] MIDA-80"), ["MIDA80"]);
+  check("the rule does not truncate", api.watchedKeysFromLabel("[JAV] MIDA-801"), []);
+  check("the leading pattern is documented", api.CODE_LEADS_RE.source, "^\\s*\\[?\\s*\\d{0,4}[A-Za-z]{2,7}[ _-]?\\d{2,5}");
+}
+
+group("parseCodeList / serializeCodeList - one plain-text format, both ways");
+{
+  check("a bare code per line", api.parseCodeList("MIDA-801\nIPX-564"), ["MIDA801", "IPX564"]);
+  check("a whole filename works", api.parseCodeList("MIDA-801 \u65b0\u4eba \u96a0\u308c\u5de8\u4e73"), ["MIDA801"]);
+  // The DMM maker-prefix form yields both of its keys, exactly as the library
+  // match does - one spelling, two keys, and either may be the one that matches.
+  check("the dmm spelling works", api.parseCodeList("h_259fex00004.mp4"), ["259FEX4", "FEX4"]);
+  check("comments are ignored", api.parseCodeList("# jav8-dl watched\nABF-087"), ["ABF87"]);
+  check("blank lines are ignored", api.parseCodeList("\n\nABF-087\n\n"), ["ABF87"]);
+  check("an indented comment is ignored", api.parseCodeList("   # note\nABF-087"), ["ABF87"]);
+  check("a duplicate is dropped", api.parseCodeList("MIDA-801\nmida801\nMIDA 801"), ["MIDA801"]);
+  check("several codes on one line", api.parseCodeList("ABP-123 and IPX-456"), ["ABP123", "IPX456"]);
+  check("empty input", api.parseCodeList(""), []);
+  check("undefined input", api.parseCodeList(undefined), []);
+  check("nothing code-shaped yields nothing", api.parseCodeList("no codes here"), []);
+
+  // Sorted, so re-exporting an unchanged set is byte-identical - which is most of
+  // what makes a plain-text store worth having.
+  check("sorted", api.serializeCodeList(["ABP123", "MIDA801", "IPX564"]), "ABP123\nIPX564\nMIDA801");
+  check("deduplicated", api.serializeCodeList(["MIDA801", "MIDA801"]), "MIDA801");
+  check("empty", api.serializeCodeList([]), "");
+  check("a round trip is stable", api.serializeCodeList(api.parseCodeList("MIDA-801\nABF-087")), "ABF87\nMIDA801");
+  check("and idempotent", api.serializeCodeList(api.parseCodeList(api.serializeCodeList(["MIDA801", "ABF87"]))), "ABF87\nMIDA801");
+  check("nothing is lost through the round trip", api.parseCodeList(api.serializeCodeList(["MIDA801", "ABF87"])), ["ABF87", "MIDA801"]);
+
+  // The round trip has to survive a one-digit key, which is the case that would
+  // otherwise be silently lost: fex-004 normalises to FEX4, and FEX4 has a
+  // one-digit number that the extractor will not recognise on its own.
+  check("a one-digit key is extracted as nothing", api.codeKeys("FEX4"), []);
+  check("but a stored key is read back as itself", api.parseCodeList("FEX4"), ["FEX4"]);
+  check("so fex-004 survives a round trip", api.parseCodeList(api.serializeCodeList([api.codeKey("fex-004")])), ["FEX4"]);
+  check("and fanh-005 does", api.parseCodeList(api.serializeCodeList([api.codeKey("fanh-005")])), ["FANH5"]);
+  check("and snos-038 does", api.parseCodeList(api.serializeCodeList([api.codeKey("snos-038")])), ["SNOS38"]);
+  check("a numeric-prefix key survives", api.parseCodeList(api.serializeCodeList([api.codeKey("259LUXU-1900")])), ["259LUXU1900"]);
+  check("a dmm key survives", api.parseCodeList(api.serializeCodeList(api.codeKeys("h_259fex00004.mp4"))), ["259FEX4", "FEX4"]);
+  // A whole export, re-imported, must equal itself. This is the property the
+  // format exists for.
+  {
+    const original = ["MIDA801", "ABF87", "FEX4", "FANH5", "SNOS38", "259LUXU1900"];
+    check("a whole set survives the round trip", api.parseCodeList(api.serializeCodeList(original)), original.slice().sort());
+  }
+  // A line that is a key and a line that is prose still both work.
+  check("a key alone on its line", api.parseCodeList("FEX4\nMIDA-801"), ["FEX4", "MIDA801"]);
+  check("prose on its line", api.parseCodeList("ABF-087 title here"), ["ABF87"]);
+  check("a bare word is still not a key", api.parseCodeList("uncensored"), []);
+  check("a two-letter word is not a key", api.parseCodeList("ab"), []);
+  check("a word with one digit is not a key", api.parseCodeList("x264"), []);
+}
+
+group("isWatchedItem - any progress counts");
+// The user's call, and the measurement supports it: of 607 items, 69 were flagged
+// played and 303 more had progress, and none of those sat below 5%.
+{
+  check("the played flag", api.isWatchedItem({ played: true, progress: 0 }), true);
+  check("one tick of progress", api.isWatchedItem({ played: false, progress: 1 }), true);
+  check("a long way in", api.isWatchedItem({ played: false, progress: 900000000 }), true);
+  check("both", api.isWatchedItem({ played: true, progress: 5 }), true);
+  check("untouched", api.isWatchedItem({ played: false, progress: 0 }), false);
+  check("an item with no state at all", api.isWatchedItem({}), false);
+  check("null", api.isWatchedItem(null), false);
+  check("undefined", api.isWatchedItem(undefined), false);
+  // A missing progress field must not read as progress.
+  check("a missing progress field", api.isWatchedItem({ played: false }), false);
+}
+
+group("skipReason - one reason per work, by precedence");
+// A work can be owned *and* watched, so independent tallies would double-count it
+// and the reasons would not sum to the number skipped.
+{
+  check("blacklist wins over everything", api.skipReason({ blocked: true, owned: true, watched: true }), "blocked");
+  check("blacklist over watched", api.skipReason({ blocked: true, watched: true }), "blocked");
+  check("owned over watched", api.skipReason({ owned: true, watched: true }), "owned");
+  check("watched alone", api.skipReason({ watched: true }), "watched");
+  check("owned alone", api.skipReason({ owned: true }), "owned");
+  check("nothing marked", api.skipReason({}), null);
+  check("null", api.skipReason(null), null);
+
+  check("the phrase names every reason", api.skipReasonPhrase({ blocked: 3, owned: 2, watched: 1 }), "3 blacklisted, 2 in your library, 1 watched");
+  check("the phrase omits empty reasons", api.skipReasonPhrase({ blocked: 0, owned: 4, watched: 0 }), "4 in your library");
+  check("an empty phrase is empty", api.skipReasonPhrase({ blocked: 0, owned: 0, watched: 0 }), "");
+  check("the order is fixed", api.skipReasonPhrase({ watched: 1, owned: 1, blocked: 1 }), "1 blacklisted, 1 in your library, 1 watched");
+}
+
 // --------------------------------------------------------------------- report
 // The crawler is asynchronous, so its assertions have to land before the tally.
 await crawlerTests();

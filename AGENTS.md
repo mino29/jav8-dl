@@ -311,3 +311,42 @@ Kept here because they are the kind that come back:
   The assertion looked right because the number was plausible. Give fixture data
   no shape at all that the code under test looks for, and check the number is
   what you expect before trusting the thing it is measuring.
+- `stopPropagation()` is not `preventDefault()`, and which one is right depends on
+  what the control is. The queue's tick box is a `<label>` around a checkbox, so
+  `stopPropagation()` alone is correct there and `preventDefault()` would break it
+  by cancelling the label's forwarding to the input. The new per-cover marks are a
+  `<button type="button">`, which has no forwarding to lose - and `stopPropagation()`
+  alone left the cover's `<a>` free to navigate. That one is nastier than it
+  looks: the click marks the work, and the navigation happens a frame later, so
+  reading `location.pathname` *in the same script that clicked* reports the
+  pre-navigation value and the test passes. Check the URL from a second evaluate,
+  after the click's script has returned.
+- Extracting a code from the first N characters of a string cuts codes in half.
+  `[JAV] MIDA-801` truncated to 20 characters is `[JAV] MIDA-80`, which is the code
+  `MIDA80` - wrong, and short, which is the shape most likely to collide with a
+  real two-letter series. Test whether the name *begins* with a code and then
+  extract from the whole string; position is the discriminator, never a slice.
+  And do not over-tighten it either: demanding the code be the very first
+  character dropped 170 real rows on a live server, because `[ABF-246] Title` is a
+  release. One optional `[` is enough, and a bracketed *word* still fails it.
+- A normalising function can produce something its own inverse cannot read.
+  `codeKey("fex-004")` is `FEX4`, because leading zeros go; `codeKeys("FEX4")` is
+  empty, because the extractor wants two digits to tell a code from noise. So the
+  store wrote a value the reader dropped, and every code whose number is one digit
+  after zeros - `fex-004`, `fanh-005`, `snos-038` - vanished on the next page load.
+  The round trip has to be a *property test over the real output*, not a look at
+  one example: serialise everything the extractor produced and read it back.
+- Counting occurrences when the question is "how many". One watched item yields
+  its code twice - once from its path, once from its name - so "Watched: 4 from
+  the library" meant 2 works, and the log reported more codes than there were
+  items. Same family as printing match *keys* next to match *items*: distinct
+  counts, always.
+- A stub added to the request handler but not to the router that decides what
+  reaches it is silently dead. `/Users` was handled in `handleStub()` and never
+  arrived, because the list of paths in front of it had no `/Users` in it, so the
+  request fell through to the fixture server, got HTML back, failed to parse, and
+  the script reported "could not find a user to read the history for" - which
+  reads as the user's server being wrong. When a test fails with a plausible
+  message about the world rather than the harness, check that the harness is
+  actually being reached.
+

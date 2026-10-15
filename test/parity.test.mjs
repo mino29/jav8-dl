@@ -278,6 +278,99 @@ r.check("re-placed when the cover resizes", spec.mediaServer.playButton.repositi
 r.check("the library is chosen from a list", spec.mediaServer.libraryField.populatedFrom, "/Library/VirtualFolders");
 r.check("blank means every library", spec.mediaServer.libraryField.emptyMeans, "read every library");
 
+// ------------------------------------------------------ watched and blacklist
+// The constants the feature inlines are the ones that rot, and three of them are
+// not in the pure region - the storage keys and the filter labels are defined
+// beside the code that uses them. So the spec is held against the script text
+// directly, which is the whole point of a parity test.
+const script = readFileSync(join(here, "..", "jav8-downloader.user.js"), "utf8");
+const storeKey = /var STORE_KEY = "([^"]+)"/.exec(script);
+r.check("the settings key the script uses", storeKey && storeKey[1], "jav8-downloader-settings");
+// The two code sets hang off the settings key, so a change there is a change to
+// both of them - and a change to either suffix silently orphans the user's list.
+const keySuffix = (name) => {
+  const m = new RegExp('var ' + name + '_KEY = STORE_KEY \\+ "([^"]*)"').exec(script);
+  return m && storeKey && storeKey[1] + m[1];
+};
+r.check("the watched key matches the spec", keySuffix("WATCHED"), spec.watched.keys.watched);
+r.check("the blocked key matches the spec", keySuffix("BLOCKED"), spec.watched.keys.blocked);
+
+// The cleaning rules are inlined as regexes, and the spec states them as strings.
+// One of these is the fix for a bug that produced ten false codes out of one
+// label, so it must not be able to drift.
+r.check("the uuid pattern matches the script", api.UUID_RE.source, spec.watched.cleaning.uuidPattern);
+r.check("the leading-code pattern matches the script", api.CODE_LEADS_RE.source, spec.watched.cleaning.leadingPattern);
+r.check("GUIDs are stripped", spec.watched.cleaning.stripGuids, true);
+r.check("a code has to lead the label", spec.watched.cleaning.codeMustLead, true);
+r.check("the label is not sliced", spec.watched.cleaning.extractFromWholeLabel, true);
+
+// The filter options and the filters the code compares against have to be the
+// same set, or a label exists for a filter nothing reads.
+const filterLabels = {};
+for (const m of script.matchAll(/\[\s*"(all|vr|non-vr|blocked)",\s*"([^"]+)"\s*\]/g)) filterLabels[m[1]] = m[2];
+// Keyed as sorted pairs, not as an object: the reporter compares deeply and the
+// order the options happen to be written in is not part of the contract.
+r.check(
+  "the filter options match the spec",
+  Object.entries(filterLabels).sort(),
+  Object.entries(spec.watched.filters).sort(),
+);
+const filtersCompared = [...new Set([...script.matchAll(/settings\.filter === "([a-z-]+)"/g)].map((m) => m[1]))];
+r.check("every filter the code compares is an option", filtersCompared.sort(), Object.keys(spec.watched.filters).sort());
+
+// Precedence is the property that keeps the counts from disagreeing with the
+// number skipped, so it is checked as behaviour rather than read off the spec.
+r.check("the precedence is what the spec says", spec.watched.precedence, ["blocked", "owned", "watched"]);
+for (let i = 0; i < spec.watched.precedence.length; i++) {
+  const on = {};
+  spec.watched.precedence.slice(i).forEach((k) => {
+    on[k] = true;
+  });
+  r.check("everything but " + spec.watched.precedence[i] + " yields " + spec.watched.precedence[i], api.skipReason(on), spec.watched.precedence[i]);
+}
+r.check("one reason or none, never two", api.skipReason({ blocked: true, owned: true, watched: true }).split(",").length, 1);
+
+// The blacklist is a veto, so it has to be enforced where a work actually leaves
+// for the client - not only where it is selected.
+r.check("the send path refuses a blacklisted work", script.includes('markFor("blocked", detail.code)'), true);
+r.check("three places decide what is skipped", (script.match(/skipReason\(\{/g) || []).length >= 3, true);
+r.check("the count is not reconciled by subtraction", script.includes("hidden - ads"), false);
+
+// The history read is only correct if it asks for a user, and the failure without
+// one is a silent no-op rather than an error.
+r.check("the live read passes a userId", script.includes("&userId="), true);
+r.check("the server-side played filter is not trusted", script.includes("Filters=IsPlayed"), false);
+r.check("the user list is how the user is found", script.includes('"/Users"'), true);
+r.check("the playback log path matches the spec", script.includes(spec.watched.history.historyPath.split("?")[0]), true);
+r.check("the live path matches the spec", script.includes('"/Items"'), true);
+r.check("a missing plugin is a state, not a fault", spec.watched.history.historyAbsent.includes("404"), true);
+
+// Read-only is a promise to the user's server, so it is asserted rather than
+// documented: every request carrying the API key is a GET.
+const mediaWrites = [];
+for (const chunk of script.split(/request\(/).slice(1)) {
+  const unit = chunk.slice(0, 600);
+  if (!unit.includes("X-Emby-Token")) continue;
+  const verb = /^\s*"([A-Z]+)"/.exec(unit);
+  if (verb && verb[1] !== "GET") mediaWrites.push(verb[1]);
+}
+r.check("nothing is ever written to the media server", mediaWrites, []);
+r.check("and the spec says so", spec.watched.neverWrites.startsWith("nothing"), true);
+
+// The numbers the spec records are the ones the cleaning rules were measured on,
+// and the ordering is the finding: raw extraction invents codes, cleaning removes
+// almost all of the invented ones, and a small residue is the junk titles.
+const m = spec.watched.history.measuredOnRealServer;
+r.check("cleaning removes rows, not adds them", m.reportRowsWithACodeAfterCleaning < m.reportRowsWithACodeBeforeCleaning, true);
+r.check("and the residue is small", m.reportRowsWithACodeBeforeCleaning - m.reportRowsWithACodeAfterCleaning < 40, true);
+r.check("every dropped row was junk", m.rowsDroppedAsJunk === m.reportRowsWithACodeBeforeCleaning - m.reportRowsWithACodeAfterCleaning, true);
+r.check("the log knows about deleted items", m.codesTheLibraryNoLongerHas > 0, true);
+r.check("a deleted item is a real number here, not a token one", m.codesTheLibraryNoLongerHas > 100, true);
+r.check("the log knows more than the live state", m.unionOfBothSources > m.liveWatchedCodes, true);
+// And the property that makes the store worth having, asserted on the spec's own
+// numbers: every code the cleaning produced must survive being written and read.
+r.check("the stored form round-trips", api.serializeCodeList(api.parseCodeList(api.serializeCodeList(["FEX4", "ABF87", "MIDA801"]))), "ABF87\nFEX4\nMIDA801");
+
 // ------------------------------------------------------------------ ad cards
 // The facts the script relies on, restated from the live page. These are the
 // assertions that would have caught the previous rule: it assumed ad cards were
